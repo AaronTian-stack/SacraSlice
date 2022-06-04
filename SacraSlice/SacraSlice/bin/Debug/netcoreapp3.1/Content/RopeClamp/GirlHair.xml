@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RopeClamp>
+  <GirlHair begin="">
+    <Idle frames="4">
+      <Frame1 X="4" Y="2" />
+      <Frame2 X="4" Y="2" />
+      <Frame3 X="4" Y="3" />
+      <Frame4 X="4" Y="4" />
+    </Idle>
+    <Run frames="8">
+      <Frame1 X="4" Y="5" />
+      <Frame2 X="4" Y="4" />
+      <Frame3 X="4" Y="4" />
+      <Frame4 X="4" Y="5" />
+      <Frame5 X="4" Y="9" />
+      <Frame6 X="4" Y="5" />
+      <Frame7 X="4" Y="3" />
+      <Frame8 X="4" Y="5" />
+    </Run>
+    <Jump frames="6">
+      <Frame1 X="5" Y="6" />
+      <Frame2 X="5" Y="5" />
+      <Frame3 X="5" Y="10" />
+      <Frame4 X="6" Y="6" />
+      <Frame5 X="5" Y="4" />
+      <Frame6 X="5" Y="4" />
+    </Jump>
+    <Fall frames="2">
+      <Frame1 X="3" Y="2" />
+      <Frame2 X="3" Y="2" />
+    </Fall>
+  </GirlHair>
+</RopeClamp>
