@@ -12,6 +12,7 @@ using SacraSlice.GameCode.GameStates;
 using SacraSlice.GameCode.Screens;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SacraSlice.GameCode.GameECS
 {
@@ -20,7 +21,12 @@ namespace SacraSlice.GameCode.GameECS
         World world;
         //GraphicsDevice graphics;
         float dt;
-        public EntityFactory(World world, GraphicsDevice graphics, float dt)
+
+        public EntityFactory()
+        {
+
+        }
+        public void Initialize(World world, GraphicsDevice graphics, float dt)
         {
             this.world = world;
             //this.graphics = graphics;
@@ -57,7 +63,21 @@ namespace SacraSlice.GameCode.GameECS
             entity.Attach("Game Camera");
 
         }
-        Random rand = new Random();
+
+        public static void ResetPosition(Position p)
+        {
+            p.SetAllPosition(new Vector2(rand.NextSingle(-40, 40), -100), rand.NextSingle(0, 1));
+            //p.velocity.Y = rand.NextSingle(0, 10);
+        }
+
+        public static void ResetVelocity(Position p)
+        {
+            //p.SetAllPosition(new Vector2(rand.NextSingle(-40, 40), -100), rand.NextSingle(0, 1));
+            p.velocity.Y = rand.NextSingle(0, 10);
+        }
+
+
+        static Random rand = new Random();
         public Entity CreateDropper(float ppm)
         {
             var entity = world.CreateEntity();
@@ -68,10 +88,8 @@ namespace SacraSlice.GameCode.GameECS
             p.gravity = true;
 
 
-            p.SetAllPosition(new Vector2(rand.NextSingle(-40, 40), -100), rand.NextSingle(0, 1));
-
-            p.velocity.Y = rand.NextSingle(0, 10);
-
+            ResetPosition(p);
+            ResetVelocity(p);
 
             // maybe give random velocity
 
@@ -88,9 +106,13 @@ namespace SacraSlice.GameCode.GameECS
 
             Wrapper<bool> dead = new Wrapper<bool>(false);
 
-            CutState c = new CutState(sm, dt, p, t, hb, ppm, dead);
-            sm.AddState("Fall", f);
-            sm.AddState("Cut", c);
+            CutState c = new CutState(sm, dt, p, t, hb, ppm);
+
+            ShrinkState s = new ShrinkState(sm, p, t, dead, PlayScreen.score);
+
+            sm.AddState(f);
+            sm.AddState(c);
+            sm.AddState(s);
             sm.currentState = f;
 
             AnimationStateManager asm = new AnimationStateManager();
@@ -100,10 +122,12 @@ namespace SacraSlice.GameCode.GameECS
                 case 0:
                     asm.AddState(f, new Animation<TextureRegion>("Sphere", 0.5f, GameContainer.atlas.FindRegions("sphere"), PlayMode.LOOP));
                     asm.AddState(c, new Animation<TextureRegion>("Sphere", 0.5f, GameContainer.atlas.FindRegions("sphere"), PlayMode.LOOP));
+                    asm.AddState(s, new Animation<TextureRegion>("Sphere", 0.5f, GameContainer.atlas.FindRegions("sphere"), PlayMode.LOOP));
                     break;
                 case 1:
-                    asm.AddState(f, new Animation<TextureRegion>("Sphere", 0.5f, GameContainer.atlas.FindRegions("cube"), PlayMode.LOOP));
-                    asm.AddState(c, new Animation<TextureRegion>("Sphere", 0.5f, GameContainer.atlas.FindRegions("cube"), PlayMode.LOOP));
+                    asm.AddState(f, new Animation<TextureRegion>("Cube", 0.5f, GameContainer.atlas.FindRegions("cube"), PlayMode.LOOP));
+                    asm.AddState(c, new Animation<TextureRegion>("Cube", 0.5f, GameContainer.atlas.FindRegions("cube"), PlayMode.LOOP));
+                    asm.AddState(s, new Animation<TextureRegion>("Cube", 0.5f, GameContainer.atlas.FindRegions("cube"), PlayMode.LOOP));
                     break;
             }
 
@@ -112,8 +136,9 @@ namespace SacraSlice.GameCode.GameECS
 
             
 
-            hb.AddState(f, new RectangleF());
-            hb.AddState(c, new RectangleF());
+            hb.AddState(f, new RectangleF(0,0,25,25));
+            hb.AddState(c, new RectangleF(0,0,25,25));
+            hb.AddState(s, new RectangleF(0, 0, 25, 25));
 
             (Wrapper<float>, float) idleT = (t.GetTimer("Ground Time"), 3.5f);
             SquashValue idleSQ = new SquashValue(c, Interpolation.swingOut, 
@@ -123,7 +148,12 @@ namespace SacraSlice.GameCode.GameECS
             SquashValue fallSQ = new SquashValue(f, Interpolation.pow2In, 
                 Interpolation.pow2In, new Vector2(1f, 1f), new Vector2(0.5f, 1.2f), fallT, fallT);
 
-            SquashManager sqm = new SquashManager(idleSQ, fallSQ);
+            (Wrapper<float>, float) death = (t.GetTimer("State Time"), 6f);
+            (Wrapper<float>, float) death2 = (t.GetTimer("State Time"), 5.8f);
+            SquashValue dieSQ = new SquashValue(s, Interpolation.swingIn,
+                Interpolation.pow2In, new Vector2(1f, 1f), new Vector2(0, 0f), death, death2);
+
+            SquashManager sqm = new SquashManager(idleSQ, fallSQ, dieSQ);
 
             entity.Attach(new Sprite());
             entity.Attach(t);

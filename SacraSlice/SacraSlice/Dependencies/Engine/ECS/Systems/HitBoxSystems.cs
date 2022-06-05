@@ -29,7 +29,7 @@ namespace SacraSlice.Dependencies.Engine.ECS.Systems
                 var sm = stateMapper.Get(entity);
 
                 hb.SetRect(sm.currentState);
-                hb.SetRect(sm.currentState);
+                
 
             }
         }

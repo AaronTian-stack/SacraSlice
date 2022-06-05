@@ -29,8 +29,12 @@ namespace SacraSlice.GameCode.UserInterface
 
             float centerX = b.Center.X - v.X / 2;
             float y = 20;
+            float off = 4;
+            float off2 = 1;
 
-            sb.DrawString(font, s, new Vector2(centerX, y + 2), Color.Black, 0, new Vector2(), 1f, SpriteEffects.None, 0);
+            sb.DrawString(font, s, new Vector2(centerX, y + off), Color.Black, 0, new Vector2(), 1f, SpriteEffects.None, 0);
+            sb.DrawString(font, s, new Vector2(centerX + off2, y), Color.Black, 0, new Vector2(), 1f, SpriteEffects.None, 0);
+            sb.DrawString(font, s, new Vector2(centerX - off2, y), Color.Black, 0, new Vector2(), 1f, SpriteEffects.None, 0);
             sb.DrawString(font, s, new Vector2(centerX, y), Color.GhostWhite, 0, new Vector2(), 1f, SpriteEffects.None, 0);
         }
 

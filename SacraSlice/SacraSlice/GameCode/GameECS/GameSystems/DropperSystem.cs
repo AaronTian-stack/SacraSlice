@@ -3,6 +3,7 @@ using MonoGame.Extended.Collections;
 using MonoGame.Extended.Entities;
 using MonoGame.Extended.Entities.Systems;
 using SacraSlice.Dependencies.Engine;
+using SacraSlice.Dependencies.Engine.ECS.Component;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,17 +14,18 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
     {
         private ComponentMapper<string> stringMapper;
         private ComponentMapper<Wrapper<bool>> boolMapper;
-        //Bag<Entity> bag;
+        private ComponentMapper<Position> positionMapper;
         Wrapper<int> score;
-        public DropperSystem(Wrapper<int> score) : base(Aspect.All(typeof(string), typeof(Wrapper<bool>)))
+        public DropperSystem(Wrapper<int> score) : base(Aspect.All(typeof(string), typeof(Wrapper<bool>),
+            typeof(Position)))
         {
-            //this.bag = bag;
             this.score = score;
         }
         public override void Initialize(IComponentMapperService mapperService)
         {
             stringMapper = mapperService.GetMapper<string>();
             boolMapper = mapperService.GetMapper<Wrapper<bool>>();
+            positionMapper = mapperService.GetMapper<Position>();
         }
 
         
@@ -35,13 +37,12 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
 
                 var s = stringMapper.Get(entity);
                 var b = boolMapper.Get(entity);
-
+                var p = positionMapper.Get(entity);
 
                 if(s.Equals("Dropping Item") && b)
                 {
-                    // remove the entity
-                    score.Value++;                    
-                    DestroyEntity(entity);
+                    // reset
+                    b.Value = false;
                     
                 }
                 

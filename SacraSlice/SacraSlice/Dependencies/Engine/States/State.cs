@@ -21,7 +21,7 @@ namespace SacraSlice.Dependencies.Engine.States
                 throw new ArgumentNullException("State must have a name");
         }
 
-        public State(StateManager sm, float dt, Position p, Timer t = null, InputManager im = null)
+        public State(StateManager sm = null, float dt = 0, Position p = null, Timer t = null, InputManager im = null)
         {
             this.sm = sm;
             timer = t;

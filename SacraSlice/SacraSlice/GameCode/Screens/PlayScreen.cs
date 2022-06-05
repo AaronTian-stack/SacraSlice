@@ -45,11 +45,13 @@ namespace SacraSlice.GameCode.Screens
 
         public ScoreBoard scoreBoard;
 
-        public Wrapper<int> score = new Wrapper<int>(0);
+        public static Wrapper<int> score = new Wrapper<int>(0);
 
-        //Bag<Entity> bag = new Bag<Entity>();
         public PlayScreen(GameContainer game) : base(game)
         {
+            entityFactory = new EntityFactory();
+
+
             world = new WorldBuilder()
 
                 // Update Systems
@@ -92,12 +94,16 @@ namespace SacraSlice.GameCode.Screens
 
                 // Game Systems
 
-                .AddSystem(new ResizerSystem(ppm))
+                //.AddSystem(new ResizerSystem(ppm))
                 .AddSystem(new DropperSystem(score))
+                .AddSystem(new SpawnerSystem(entityFactory, ppm))
 
                 .Build();
 
-            entityFactory = new EntityFactory(world, GraphicsDevice, dtStatic);
+
+            
+
+            entityFactory.Initialize(world, GraphicsDevice, dtStatic);
 
             var viewportAdapter = new BoxingViewportAdapter(game.Window, GraphicsDevice, (int)(512 * ppm), (int)(288 * ppm));
 
@@ -107,7 +113,7 @@ namespace SacraSlice.GameCode.Screens
 
             //inputStack.Push(player.Get<InputManager>());
 
-            //entityFactory.CreateDropper(ppm);
+            entityFactory.CreateDropper(ppm);
 
             entityFactory.CreateCamera(camera, viewportAdapter);
 
@@ -116,10 +122,12 @@ namespace SacraSlice.GameCode.Screens
             scoreBoard = new ScoreBoard(game, score);
         }
 
-
+        Cursor cursor = new Cursor(0.01f, 10);
+        public static MouseStateExtended mouse;
         public override void Draw(GameTime gameTime)
         {
-            if(inputStack.Count > 0)
+            mouse = MouseExtended.GetState();
+            if (inputStack.Count > 0)
                 inputStack.Peek().Poll();
 
             GameContainer.GuiRenderer.BeginLayout(gameTime);
@@ -180,6 +188,14 @@ namespace SacraSlice.GameCode.Screens
 
             world.Draw(gameTime);
 
+            if (mouse.WasButtonJustDown(MouseButton.Left))
+                cursor.Set(mouseCoordinate);
+
+            cursor.Update(mouseCoordinate, gameTime.GetElapsedSeconds(),
+                    mouse.IsButtonDown(MouseButton.Left));
+
+            cursor.Draw(GameContainer._spriteBatch, ppm, 2f);
+
             ImGui.End();
 
             GameContainer._spriteBatch.End();
@@ -211,15 +227,17 @@ namespace SacraSlice.GameCode.Screens
         Wrapper<float> dt = new Wrapper<float>(1f / ticks); // change so rate at which game updates is different. Dramatic Slow Motion effect!
         static int ticks = 30;
         public float alpha;
-
         public override void Update(GameTime gameTime)
         {
 
             MouseState ms = Mouse.GetState();
             mouseCoordinate = camera.orthoCamera.ScreenToWorld(ms.X, ms.Y);
 
-            if (KeyboardExtended.GetState().WasKeyJustDown(Keys.K))
+            /*if (KeyboardExtended.GetState().WasKeyJustDown(Keys.K))
+            {
                 entityFactory.CreateDropper(ppm);
+            }*/
+                
 
             accum += gameTime.GetElapsedSeconds();
 

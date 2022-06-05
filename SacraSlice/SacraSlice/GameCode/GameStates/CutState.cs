@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
+using MonoGame.Extended.Input;
 using SacraSlice.Dependencies.Engine;
 using SacraSlice.Dependencies.Engine.ECS.Component;
 using SacraSlice.Dependencies.Engine.States;
@@ -17,15 +18,12 @@ namespace SacraSlice.GameCode.GameStates
         HitBox hb;
         float ppm;
 
-        Wrapper<bool> dead;
-
         int direction; // 0 is left to right 1 is right to left
-        public CutState(StateManager sm, float dt, Position p, Timer t, HitBox hb, float ppm, Wrapper<bool> dead) : base(sm, dt, p, t)
+        public CutState(StateManager sm, float dt, Position p, Timer t, HitBox hb, float ppm) : base(sm, dt, p, t)
         {
             name = "Cut";
             this.hb = hb;
             this.ppm = ppm;
-            this.dead = dead;
             tolerance = radius;
         }
         bool begin;
@@ -41,11 +39,9 @@ namespace SacraSlice.GameCode.GameStates
         {
             // generate the hitboxes
 
-           
-
             float off = 50;
 
-            CircleF c = new CircleF(hb.rect.Center, hb.rect.Width / 2 * 1.5f);
+            CircleF c = new CircleF(pos.currPosition, hb.rect.Width / 2 * 1.5f);
 
             Vector2 p = c.BoundaryPointAt(MathHelper.ToRadians(random.NextSingle(90 + off, 270 - off)));
             leftHitbox = new CircleF(p, radius);
@@ -66,15 +62,19 @@ namespace SacraSlice.GameCode.GameStates
                 rightHitbox = hold;
             }
 
-
+            
         }
 
         public void Logic()
         {
+            
             if (leftHitbox.Contains(PlayScreen.mouseCoordinate))
             {
                 begin = true;
             }
+
+            if(!PlayScreen.mouse.IsButtonDown(MouseButton.Left))
+                begin = false;
 
             if (begin)
             {
@@ -85,7 +85,8 @@ namespace SacraSlice.GameCode.GameStates
 
                 else if (rightHitbox.Contains(PlayScreen.mouseCoordinate))
                 {
-                    dead.Value = true;
+                    //dead.Value = true;
+                    sm.SetStateUpdate("Shrink", timer);
                 }
 
             }
@@ -120,6 +121,8 @@ namespace SacraSlice.GameCode.GameStates
                 sb.DrawLine(leftHitbox.Center, rightHitbox.Center, Color.Yellow, ppm * tolerance);
 
             sb.DrawCircle(new CircleF(rightHitbox.Center, radius * 2), 12, Color.Red, ppm);
+
+            
         }
     }
 }

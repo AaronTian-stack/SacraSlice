@@ -13,7 +13,7 @@ namespace SacraSlice.GameCode.GameStates
 
         public FallState(StateManager sm, float dt, Position p, Timer t) : base(sm, dt, p, t)
         {
-            name = "Drop";
+            name = "Fall";
         }
         public override void Act()
         {
