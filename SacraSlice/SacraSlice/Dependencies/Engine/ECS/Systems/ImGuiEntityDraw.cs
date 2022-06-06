@@ -41,6 +41,7 @@ namespace SacraSlice.Dependencies.Engine.ECS.Systems
             if (ImGui.CollapsingHeader("Entities"))
             {
                 int count = 0;
+                ImGui.TextColored(new System.Numerics.Vector4(255, 0, 0, 1), ActiveEntities.Count + " TOTAL ENTITES");
                 foreach (var entity in ActiveEntities)
                 {
 
@@ -114,8 +115,6 @@ namespace SacraSlice.Dependencies.Engine.ECS.Systems
                     count++;
 
                 }
-
-                ImGui.TextColored(new System.Numerics.Vector4(255, 0, 0, 1), count + " TOTAL ENTITES");
 
             }
         }

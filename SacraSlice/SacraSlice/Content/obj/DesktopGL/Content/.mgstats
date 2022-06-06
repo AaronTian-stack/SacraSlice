@@ -1,4 +1,8 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/Font.spritefont","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Content/Fonts/Font.xnb","FontDescriptionProcessor","SpriteFontContent",2012,267298,0.2967075
+"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/CandyBeans.fnt","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Content/Fonts/CandyBeans.xnb","BitmapFontProcessor","BitmapFontProcessorResult",87014,20800,0.1392095
+"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/CandyBeans_0.png","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Content/Fonts/CandyBeans_0.xnb","TextureProcessor","Texture2DContent",50947,1048661,0.0695564
+"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/Font.spritefont","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Content/Fonts/Font.xnb","FontDescriptionProcessor","SpriteFontContent",2012,267298,0.2490999
+"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/LanaPixel.fnt","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Content/Fonts/LanaPixel.xnb","BitmapFontProcessor","BitmapFontProcessorResult",16127,4503,0.1506877
+"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/LanaPixel_0.png","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Content/Fonts/LanaPixel_0.xnb","TextureProcessor","Texture2DContent",5066,1048661,0.0662372
 "C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sprites/Sprites.atlas","C:\Aaron\Monogame\SacraSlice\SacraSlice\Content\bin\DesktopGL\Content\Sprites/Sprites.atlas","CopyItem","File",1253,1253,0.0025133
 "C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sprites/Sprites.png","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Content/Sprites/Sprites.xnb","TextureProcessor","Texture2DContent",23632,1048661,0.1858631

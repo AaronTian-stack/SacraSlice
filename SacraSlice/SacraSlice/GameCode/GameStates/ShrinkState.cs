@@ -14,19 +14,22 @@ namespace SacraSlice.GameCode.GameStates
 {
     public class ShrinkState : State
     {
-        Wrapper<bool> dead;
-        Wrapper<int> p;
-        public ShrinkState(StateManager sm, Position pos, Timer t, Wrapper<bool> dead, Wrapper<int> p) : base(sm: sm, p: pos, t: t)
+        //Wrapper<bool> dead;
+        Wrapper<int> p, l;
+        public ShrinkState(StateManager sm, Position pos, Timer t, Wrapper<int> p,
+            Wrapper<int> l) : base(sm: sm, p: pos, t: t)
         {
             name = "Shrink";
-            this.dead = dead;
             this.p = p;
-
+            this.l = l;
         }
 
         public override void OnEnter()
         {
-            p.Value++;
+            if (timer.GetTimer("Life") > 0)
+                p.Value++;
+            else
+                l.Value--;
         }
 
         public override void Act()
@@ -34,14 +37,12 @@ namespace SacraSlice.GameCode.GameStates
 
         }
 
-        public override void Draw(SpriteBatch sb)
+        public override void Draw(SpriteBatch sb, float dt)
         {
             if(timer.GetTimer("State Time") > 5)
             {
-                dead.Value = true;
-                //pos.gravity = false;
-                //sm.SetStateUpdate("Fall", timer);
-                //pos.ground = false;
+                //dead.Value = true;
+                timer.GetSwitch("dead").Value = true;
             }
         }
     }

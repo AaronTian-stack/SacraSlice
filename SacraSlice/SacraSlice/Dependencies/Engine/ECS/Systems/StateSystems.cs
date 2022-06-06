@@ -80,7 +80,7 @@ namespace SacraSlice.Dependencies.Engine.ECS.Systems
             {
 
                 var sm = managerMapper.Get(entity);
-                sm.currentState.Draw(sb);
+                sm.currentState.Draw(sb, gameTime.GetElapsedSeconds());
             }
         }
 

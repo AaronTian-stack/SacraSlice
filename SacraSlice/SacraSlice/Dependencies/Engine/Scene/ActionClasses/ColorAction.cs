@@ -14,12 +14,11 @@ namespace SacraSlice.Dependencies.Engine.Scene.ActionClasses
         public Interpolation interpolation;
 
         public Pool<ColorAction> pool;
-        public ColorAction(Actor a, Color c, float duration, Interpolation interpolation) : base(a)
+        public ColorAction(Actor a, Color startColor, Color c, float duration, Interpolation interpolation) : base(a)
         {
             this.duration = duration; this.interpolation = interpolation;
             this.c = c;
-            if (a != null)
-                startColor = a.color;
+            this.startColor = startColor;
         }
 
         public override bool Act(float elapsedTime)

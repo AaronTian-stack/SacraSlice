@@ -8,9 +8,9 @@ namespace SacraSlice.Dependencies.Engine.ECS.Component
     {
 
         Dictionary<string, Wrapper<float>> lookup = new Dictionary<string, Wrapper<float>>();
-        Dictionary<string, bool> lookupSwitch = new Dictionary<string, bool>(); // on and off switches
+        Dictionary<string, Wrapper<bool>> lookupSwitch = new Dictionary<string, Wrapper<bool>>(); // on and off switches
         Wrapper<float> r;
-        bool b;
+        Wrapper<bool> b;
         /// <summary>
         /// Adds a timer by format "Name Timer". If not present a new one is created
         /// </summary>
@@ -27,19 +27,12 @@ namespace SacraSlice.Dependencies.Engine.ECS.Component
             return GetTimer(name);
 
         }
-        public void SetSwitch(String name, bool v)
-        {
-            if (lookupSwitch.TryGetValue(name, out b))
-                lookupSwitch[name] = v;
-            else
-                lookupSwitch.Add(name, v);
-        }
-        public bool GetSwitch(String name)
+        public Wrapper<bool> GetSwitch(String name)
         {
             if (lookupSwitch.TryGetValue(name, out b))
                 return b;
             else
-                lookupSwitch.Add(name, false);
+                lookupSwitch.Add(name, new Wrapper<bool>(false));
 
             return GetSwitch(name);
         }

@@ -15,12 +15,12 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
     {
         private ComponentMapper<string> stringMapper;
         private ComponentMapper<Position> posMapper;
-        private ComponentMapper<Wrapper<bool>> boolMapper;
+        //private ComponentMapper<Wrapper<bool>> boolMapper;
         private ComponentMapper<StateManager> smMapper;
         private ComponentMapper<Timer> timeMapper;
         EntityFactory ef;
         float ppm;
-        public SpawnerSystem(EntityFactory ef, float ppm) : base(Aspect.All(typeof(string), typeof(Position), typeof(Wrapper<bool>),
+        public SpawnerSystem(EntityFactory ef, float ppm) : base(Aspect.All(typeof(string), typeof(Position),
             typeof(StateManager), typeof(Timer)))
         {
             this.ef = ef;
@@ -31,7 +31,7 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
         {
             stringMapper = mapperService.GetMapper<string>();
             posMapper = mapperService.GetMapper<Position>();
-            boolMapper = mapperService.GetMapper<Wrapper<bool>>();
+            //boolMapper = mapperService.GetMapper<Wrapper<bool>>();
             smMapper = mapperService.GetMapper<StateManager>();
             timeMapper = mapperService.GetMapper<Timer>();
         }
@@ -50,9 +50,9 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                 foreach (var entity in ActiveEntities)
                 {
 
-                    var b = boolMapper.Get(entity);
+                    var t = timeMapper.Get(entity);
 
-                    if (!b) 
+                    if (!t.GetSwitch("dead")) 
                     {
                         //DebugLog.Print("Spawner", "still alive");
                         continue;

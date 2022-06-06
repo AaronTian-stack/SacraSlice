@@ -11,6 +11,7 @@ using MonoGame.Extended.ViewportAdapters;
 using SacraSlice.Dependencies.Engine;
 using SacraSlice.Dependencies.Engine.ECS.Component;
 using SacraSlice.Dependencies.Engine.ECS.Systems;
+using SacraSlice.Dependencies.Engine.InterfaceLayout;
 using SacraSlice.Dependencies.Engine.Scene;
 using SacraSlice.GameCode.GameECS;
 using SacraSlice.GameCode.GameECS.GameSystems;
@@ -47,6 +48,7 @@ namespace SacraSlice.GameCode.Screens
         public ScoreBoard scoreBoard;
 
         public static Wrapper<int> score = new Wrapper<int>(0);
+        public static Wrapper<int> life = new Wrapper<int>(3);
 
         Narrator narrator;
         public PlayScreen(GameContainer game) : base(game)
@@ -119,14 +121,14 @@ namespace SacraSlice.GameCode.Screens
 
             var e = world.CreateEntity();
             Position p = new Position();
-            p.SetAllPosition(new Vector2(0, -20));
+            p.SetAllPosition(new Vector2(0, -30));
 
             e.Attach("CAMERA TARGET");
             e.Attach(p);
 
             entityFactory.CreateCamera(camera, viewportAdapter, p);
 
-            scoreBoard = new ScoreBoard(game, score);
+            scoreBoard = new ScoreBoard(score, life);
         }
 
         Cursor cursor = new Cursor(0.01f, 10);
@@ -207,15 +209,14 @@ namespace SacraSlice.GameCode.Screens
 
             GameContainer._spriteBatch.End();
 
-            
-
             GraphicsDevice.SetRenderTarget(null);
 
             GameContainer._spriteBatch.Begin(samplerState: SamplerState.PointClamp, blendState: BlendState.NonPremultiplied);
             GameContainer._spriteBatch.Draw(renderTarget, GraphicsDevice.PresentationParameters.Bounds, Color.White);
 
-            scoreBoard.Draw(GameContainer._spriteBatch);
+            scoreBoard.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds());
             narrator.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds());
+            TextDrawer.BatchDraw(camera.orthoCamera);
 
             GameContainer._spriteBatch.End();
 
@@ -243,8 +244,10 @@ namespace SacraSlice.GameCode.Screens
 
             if (ks.WasKeyJustDown(Keys.K))
             {
-                DebugLog.Print("Narrator", "Added message");
-                narrator.AddMessage("LanaPixel72", "Hello World!", 2, Interpolation.smooth, Interpolation.smooth, 0.5f, 0f, 0.5f, 0.5f);
+                float scale = 0.2f;
+
+                narrator.AddMessage("CandyBeans", "Hello World!",
+                    duration: 1.5f, delay: 2, size: scale, Interpolation.smooth, Interpolation.smooth, 0.5f, 1+scale/2, 0.5f, 1-scale/2);
             }
 
             accum += gameTime.GetElapsedSeconds();

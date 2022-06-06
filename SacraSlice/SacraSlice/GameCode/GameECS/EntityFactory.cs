@@ -107,11 +107,9 @@ namespace SacraSlice.GameCode.GameECS
 
             FallState f = new FallState(sm, dt, p, t);
 
-            Wrapper<bool> dead = new Wrapper<bool>(false);
-
             CutState c = new CutState(sm, dt, p, t, hb, ppm);
 
-            ShrinkState s = new ShrinkState(sm, p, t, dead, PlayScreen.score);
+            ShrinkState s = new ShrinkState(sm, p, t, PlayScreen.score, PlayScreen.life);
 
             sm.AddState(f);
             sm.AddState(c);
@@ -165,8 +163,6 @@ namespace SacraSlice.GameCode.GameECS
             entity.Attach(sm);
 
             entity.Attach(sqm);
-
-            entity.Attach(dead);
 
             return entity;
         }

@@ -1,10 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.BitmapFonts;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.Screens.Transitions;
 using MonoGame.ImGui;
 using SacraSlice.Dependencies.Engine;
+using SacraSlice.Dependencies.Engine.InterfaceLayout;
 using SacraSlice.GameCode.Screens;
 using System;
 
@@ -84,7 +86,11 @@ namespace SacraSlice
 
             atlas = new TextureAtlas(atlasTexture, "Sprites/Sprites.atlas");
 
-            TextDrawer.AddSpriteFont("LanaPixel72", Content.Load<SpriteFont>("Fonts/Font"));
+            TextDrawer.AddFont("CandyBeans", Content.Load<BitmapFont>("Fonts/CandyBeans"));
+            TextDrawer.sb = _spriteBatch;
+            TextDrawer.gd = GraphicsDevice;
+            SpriteAligner.sb = _spriteBatch;
+            SpriteAligner.gd = GraphicsDevice;
         }
 
         public static float alpha;

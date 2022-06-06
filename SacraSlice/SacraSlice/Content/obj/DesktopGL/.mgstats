@@ -1,4 +1,8 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/Font.spritefont","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Fonts/Font.xnb","FontDescriptionProcessor","SpriteFontContent",2008,529442,0.2515963
-"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sprites/Sprites.atlas","C:\Aaron\Monogame\SacraSlice\SacraSlice\Content\bin\DesktopGL\Sprites/Sprites.atlas","CopyItem","File",760,760,0.0020053
-"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sprites/Sprites.png","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Sprites/Sprites.xnb","TextureProcessor","Texture2DContent",12531,1048661,0.0413086
+"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/CandyBeans.fnt","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Fonts/CandyBeans.xnb","BitmapFontProcessor","BitmapFontProcessorResult",87014,20800,0.1390951
+"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/CandyBeans_0.png","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Fonts/CandyBeans_0.xnb","TextureProcessor","Texture2DContent",50947,1048661,0.0666074
+"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/Font.spritefont","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Fonts/Font.xnb","FontDescriptionProcessor","SpriteFontContent",2012,267298,0.1510195
+"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/LanaPixel.fnt","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Fonts/LanaPixel.xnb","BitmapFontProcessor","BitmapFontProcessorResult",16127,4503,0.0021457
+"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/LanaPixel_0.png","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Fonts/LanaPixel_0.xnb","TextureProcessor","Texture2DContent",5066,1048661,0.0425436
+"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sprites/Sprites.atlas","C:\Aaron\Monogame\SacraSlice\SacraSlice\Content\bin\DesktopGL\Sprites/Sprites.atlas","CopyItem","File",1253,1253,0.0020084
+"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sprites/Sprites.png","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Sprites/Sprites.xnb","TextureProcessor","Texture2DContent",23632,1048661,0.0314018

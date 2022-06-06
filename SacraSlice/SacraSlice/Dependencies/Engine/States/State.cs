@@ -30,7 +30,7 @@ namespace SacraSlice.Dependencies.Engine.States
             this.dt = dt;
         }
         public abstract void Act();
-        public virtual void Draw(SpriteBatch sb) { }
+        public virtual void Draw(SpriteBatch sb, float dt) { }
         public virtual void OnEnter() { }
         public virtual void OnLeave() { }
         public override string ToString()

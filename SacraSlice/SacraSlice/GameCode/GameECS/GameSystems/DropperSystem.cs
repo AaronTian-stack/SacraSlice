@@ -13,19 +13,19 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
     public class DropperSystem : EntityUpdateSystem
     {
         private ComponentMapper<string> stringMapper;
-        private ComponentMapper<Wrapper<bool>> boolMapper;
+        private ComponentMapper<Timer> timerMapper;
         private ComponentMapper<Position> positionMapper;
         Wrapper<int> score;
-        public DropperSystem(Wrapper<int> score) : base(Aspect.All(typeof(string), typeof(Wrapper<bool>),
-            typeof(Position)))
+        public DropperSystem(Wrapper<int> score) : base(Aspect.All(typeof(string), typeof(Timer)
+            ))
         {
             this.score = score;
         }
         public override void Initialize(IComponentMapperService mapperService)
         {
             stringMapper = mapperService.GetMapper<string>();
-            boolMapper = mapperService.GetMapper<Wrapper<bool>>();
-            positionMapper = mapperService.GetMapper<Position>();
+            timerMapper = mapperService.GetMapper<Timer>();
+            //positionMapper = mapperService.GetMapper<Position>();
         }
 
         
@@ -36,13 +36,13 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
 
 
                 var s = stringMapper.Get(entity);
-                var b = boolMapper.Get(entity);
-                var p = positionMapper.Get(entity);
+                var t = timerMapper.Get(entity);
+                //var p = positionMapper.Get(entity);
 
-                if(s.Equals("Dropping Item") && b)
+                if(s.Equals("Dropping Item") && t.GetSwitch("dead"))
                 {
                     // reset
-                    b.Value = false;
+                    t.GetSwitch("dead").Value = false;
                     
                 }
                 

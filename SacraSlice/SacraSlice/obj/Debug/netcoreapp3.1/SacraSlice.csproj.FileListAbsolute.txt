@@ -43,3 +43,10 @@ C:\Aaron\Monogame\SacraSlice\SacraSlice\obj\Debug\netcoreapp3.1\SacraSlice.cspro
 C:\Aaron\Monogame\SacraSlice\SacraSlice\obj\Debug\netcoreapp3.1\SacraSlice.dll
 C:\Aaron\Monogame\SacraSlice\SacraSlice\obj\Debug\netcoreapp3.1\SacraSlice.pdb
 C:\Aaron\Monogame\SacraSlice\SacraSlice\obj\Debug\netcoreapp3.1\SacraSlice.genruntimeconfig.cache
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Fonts\LanaPixel_0.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Fonts\LanaPixel.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Fonts\04b.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Fonts\04b_0.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Fonts\04b_1.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Fonts\CandyBeans.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Fonts\CandyBeans_0.xnb

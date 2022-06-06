@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using SacraSlice.Dependencies.Engine;
+using SacraSlice.Dependencies.Engine.InterfaceLayout;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,32 +11,69 @@ namespace SacraSlice.GameCode.UserInterface
 {
     public class ScoreBoard
     {
-        //SpriteFont font;
-        Game game;
-        Wrapper<int> score;
-        public ScoreBoard(Game game, Wrapper<int> score)
+        Wrapper<int> score, life;
+
+        // TODO: add the x's
+        public ScoreBoard(Wrapper<int> score, Wrapper<int> life)
         {
-            this.game = game;
-
-            
-
-            this.score = score;
+            this.score = score; this.life = life; old = life;
         }
+        Sprite X = new Sprite(GameContainer.atlas.FindRegion("xBlank"));
+        Sprite XRed = new Sprite(GameContainer.atlas.FindRegion("xRed"));
 
-        public void Draw(SpriteBatch sb)
+        float shakeTimer = 999;
+        float shakeAmount = 0.005f;
+        float shakeDuration = 2;
+
+        float old;
+        FastRandom fastRandom = new FastRandom();
+        public void Draw(SpriteBatch sb, float dt)
         {
-            var b = game.GraphicsDevice.Viewport.Bounds;
 
             var s = "Score: " + score;
 
-            var f = TextDrawer.GetFont("LanaPixel72");
+            TextDrawer.DrawTextStatic("CandyBeans", s, new Vector2(.5f + CalculateShake(),
+                .07f + CalculateShake()), .15f, Color.GhostWhite, Color.Black,
+                1, 1, 1, 5);
 
-            var v = f.MeasureString(s);
+            X.Color = Color.White;
+            X.Scale = new Vector2(0.8f);
+            X.Rotation = 45;
+            XRed.Color = Color.White;
+            XRed.Scale = new Vector2(0.8f);
+            XRed.Rotation = 45;
 
-            float centerX = b.Center.X - v.X / 2;
+            float pOff = 0.075f;
 
-            TextDrawer.DrawText(sb, "LanaPixel72", s, new Vector2(centerX, 20), 1f, Color.GhostWhite, Color.Black,
-                1, 1, 1, 4);
+            if (old != life)
+                shakeTimer = 0;
+
+            shakeTimer += dt;
+
+            if (life < 3)
+                SpriteAligner.DrawSprite(XRed, 0.5f + pOff + CalculateShake(), 0.2f + CalculateShake());
+            else
+                SpriteAligner.DrawSprite(X, 0.5f + pOff + CalculateShake(), 0.2f + CalculateShake());
+
+
+            if (life < 2)
+                SpriteAligner.DrawSprite(XRed, 0.5f + CalculateShake(), 0.2f + CalculateShake());
+            else
+                SpriteAligner.DrawSprite(X, 0.5f + CalculateShake(), 0.2f + CalculateShake());
+
+            if (life < 1)
+                SpriteAligner.DrawSprite(XRed, 0.5f - pOff + CalculateShake(), 0.2f + CalculateShake());
+            else
+                SpriteAligner.DrawSprite(X, 0.5f - pOff + CalculateShake(), 0.2f + CalculateShake());
+
+            old = life;
+            
+
+        }
+
+        public float CalculateShake()
+        {
+            return fastRandom.NextSingle(-1, 1) * shakeAmount * Math.Clamp((shakeDuration - shakeTimer) / shakeDuration, 0, 1);
         }
 
     }

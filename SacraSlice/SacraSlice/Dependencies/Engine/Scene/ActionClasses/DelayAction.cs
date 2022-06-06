@@ -7,7 +7,7 @@ namespace SacraSlice.Dependencies.Engine.Scene.ActionClasses
     /// </summary>
     public class DelayAction : Action
     {
-        float duration;
+        public float duration;
 
         public Pool<DelayAction> pool;
         public DelayAction(Actor a, float duration) : base(a)

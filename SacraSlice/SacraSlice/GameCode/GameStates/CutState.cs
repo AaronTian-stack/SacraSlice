@@ -4,6 +4,8 @@ using MonoGame.Extended;
 using MonoGame.Extended.Input;
 using SacraSlice.Dependencies.Engine;
 using SacraSlice.Dependencies.Engine.ECS.Component;
+using SacraSlice.Dependencies.Engine.InterfaceLayout;
+using SacraSlice.Dependencies.Engine.Scene;
 using SacraSlice.Dependencies.Engine.States;
 using SacraSlice.GameCode.GameECS.GameComponents;
 using SacraSlice.GameCode.Screens;
@@ -36,6 +38,7 @@ namespace SacraSlice.GameCode.GameStates
 
         }
         Random random = new Random();
+        float max;
         public override void OnEnter()
         {
             // generate the hitboxes
@@ -62,8 +65,12 @@ namespace SacraSlice.GameCode.GameStates
                 leftHitbox = rightHitbox;
                 rightHitbox = hold;
             }
+            timer.GetTimer("Life").Value = 2;
+            max = timer.GetTimer("Life");
 
-            
+            timer.GetTimer("leeway").Value = 0.5f;
+
+            a.ClearActions();
         }
 
         public void CutLogic()
@@ -86,7 +93,6 @@ namespace SacraSlice.GameCode.GameStates
 
                 else if (rightHitbox.Contains(PlayScreen.mouseCoordinate))
                 {
-                    //dead.Value = true;
                     sm.SetStateUpdate("Shrink", timer);
                 }
 
@@ -102,10 +108,42 @@ namespace SacraSlice.GameCode.GameStates
                 (leftHitbox.Center.Y - point.Y) -
                 (leftHitbox.Center.X - point.X) * (y)) / MathF.Sqrt(x * x + y * y);
         }
+        Actor a = new Actor();
+        public void Explode(SpriteBatch sb, float dt)
+        {
+            a.Act(dt);
+            
+            float s = 0.2f;
 
-        public override void Draw(SpriteBatch sb)
+            var ds = timer.GetTimer("Life").Value.ToString("0.0");
+            float scale = 0.2f;
+            var si = TextDrawer.MeasureFont("CandyBeans", ds);
+
+            if (timer.GetTimer("Life") < max / 2)
+            {
+                a.AddAction(Actions.ColorAction(a, Color.White, Color.Red, 0.2f, Interpolation.smooth));
+                a.AddAction(Actions.ColorAction(a, Color.Red, Color.White, 0.2f, Interpolation.smooth));
+            } 
+
+            TextDrawer.BatchQueue("CandyBeans", ds, 
+                new Vector2(pos.renderPosition.X, pos.renderPosition.Y - si.Height * scale * 0.8f),
+                a.color, Color.Black, scale, 1, 1, 1, 4);
+
+            timer.GetTimer("Life").Value -= dt;
+            if (timer.GetTimer("Life") <= 0)
+            {
+                timer.GetTimer("Life").Value = 0;
+                if(timer.GetTimer("leeway") <= 0)
+                    sm.SetStateUpdate("Shrink", timer);
+                timer.GetTimer("leeway").Value -= dt;
+            }
+
+        }
+
+        public override void Draw(SpriteBatch sb, float dt)
         {
             CutLogic();
+            Explode(sb, dt);
 
             if(leftHitbox.Contains(PlayScreen.mouseCoordinate))
                 sb.DrawCircle(leftHitbox, 12, Color.Green, ppm);
