@@ -84,6 +84,7 @@ namespace SacraSlice
 
             atlas = new TextureAtlas(atlasTexture, "Sprites/Sprites.atlas");
 
+            TextDrawer.AddSpriteFont("LanaPixel72", Content.Load<SpriteFont>("Fonts/Font"));
         }
 
         public static float alpha;

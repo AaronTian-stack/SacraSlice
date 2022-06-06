@@ -5,6 +5,7 @@ using MonoGame.Extended.Input;
 using SacraSlice.Dependencies.Engine;
 using SacraSlice.Dependencies.Engine.ECS.Component;
 using SacraSlice.Dependencies.Engine.States;
+using SacraSlice.GameCode.GameECS.GameComponents;
 using SacraSlice.GameCode.Screens;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace SacraSlice.GameCode.GameStates
         CircleF leftHitbox, rightHitbox;
         HitBox hb;
         float ppm;
-
+        public Sword s;
         int direction; // 0 is left to right 1 is right to left
         public CutState(StateManager sm, float dt, Position p, Timer t, HitBox hb, float ppm) : base(sm, dt, p, t)
         {
@@ -38,7 +39,7 @@ namespace SacraSlice.GameCode.GameStates
         public override void OnEnter()
         {
             // generate the hitboxes
-
+            begin = false;
             float off = 50;
 
             CircleF c = new CircleF(pos.currPosition, hb.rect.Width / 2 * 1.5f);
@@ -65,7 +66,7 @@ namespace SacraSlice.GameCode.GameStates
             
         }
 
-        public void Logic()
+        public void CutLogic()
         {
             
             if (leftHitbox.Contains(PlayScreen.mouseCoordinate))
@@ -104,7 +105,7 @@ namespace SacraSlice.GameCode.GameStates
 
         public override void Draw(SpriteBatch sb)
         {
-            Logic();
+            CutLogic();
 
             if(leftHitbox.Contains(PlayScreen.mouseCoordinate))
                 sb.DrawCircle(leftHitbox, 12, Color.Green, ppm);
@@ -121,6 +122,7 @@ namespace SacraSlice.GameCode.GameStates
                 sb.DrawLine(leftHitbox.Center, rightHitbox.Center, Color.Yellow, ppm * tolerance);
 
             sb.DrawCircle(new CircleF(rightHitbox.Center, radius * 2), 12, Color.Red, ppm);
+
 
             
         }

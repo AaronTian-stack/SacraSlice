@@ -17,14 +17,20 @@ namespace SacraSlice.Dependencies.Engine.Scene.ActionClasses
         {
             if (a != null)
             {
-                startX = a.x;
-                startY = a.y;
+                //startX = a.x;
+                //startY = a.y;
             }
             this.x = x; this.y = y; this.duration = duration; this.interpolation = interpolation;
         }
-
+        bool start;
         public override bool Act(float elapsedTime)
         {
+
+            if (!start)
+            {
+                startX = a.x; startY = a.y;
+                start = true;
+            }
 
             if (a.x == x && a.y == y)
                 return true;

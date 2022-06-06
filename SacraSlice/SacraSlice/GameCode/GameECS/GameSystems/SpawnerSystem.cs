@@ -35,8 +35,8 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
             smMapper = mapperService.GetMapper<StateManager>();
             timeMapper = mapperService.GetMapper<Timer>();
         }
-        float timer;
-        float gap = 2;
+        float timer = 0;
+        float gap = 5;
         public override void Draw(GameTime gameTime)
         {
             bool created = false;
@@ -45,7 +45,7 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
             if(timer > gap)
             {
                 timer = 0;
-                DebugLog.Print("Spawner", "trying to spawn");
+                //DebugLog.Print("Spawner", "trying to spawn");
 
                 foreach (var entity in ActiveEntities)
                 {
@@ -54,7 +54,7 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
 
                     if (!b) 
                     {
-                        DebugLog.Print("Spawner", "still alive");
+                        //DebugLog.Print("Spawner", "still alive");
                         continue;
                     } 
                       
@@ -66,7 +66,7 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
 
                         var p = posMapper.Get(entity);
                         var sm = smMapper.Get(entity);
-                        DebugLog.Print("Spawner", "FOUND ONE! "+entity);
+                        //DebugLog.Print("Spawner", "FOUND ONE! "+entity);
 
                         EntityFactory.ResetPosition(p);
                         EntityFactory.ResetVelocity(p);

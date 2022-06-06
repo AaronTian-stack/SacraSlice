@@ -32,6 +32,7 @@ namespace SacraSlice.Dependencies.Engine.ECS.Component
                 
             currPosition = pos;
             prevPosition = pos;
+            renderPosition = pos;
         }
 
         public override void CustomRender()

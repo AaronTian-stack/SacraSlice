@@ -14,6 +14,7 @@ using SacraSlice.Dependencies.Engine.ECS.Systems;
 using SacraSlice.Dependencies.Engine.Scene;
 using SacraSlice.GameCode.GameECS;
 using SacraSlice.GameCode.GameECS.GameSystems;
+using SacraSlice.GameCode.Managers;
 using SacraSlice.GameCode.UserInterface;
 using System;
 using System.Collections.Generic;
@@ -47,10 +48,11 @@ namespace SacraSlice.GameCode.Screens
 
         public static Wrapper<int> score = new Wrapper<int>(0);
 
+        Narrator narrator;
         public PlayScreen(GameContainer game) : base(game)
         {
             entityFactory = new EntityFactory();
-
+            narrator = new Narrator(game);
 
             world = new WorldBuilder()
 
@@ -115,9 +117,14 @@ namespace SacraSlice.GameCode.Screens
 
             entityFactory.CreateDropper(ppm);
 
-            entityFactory.CreateCamera(camera, viewportAdapter);
+            var e = world.CreateEntity();
+            Position p = new Position();
+            p.SetAllPosition(new Vector2(0, -20));
 
-            camera.Position = new Vector2(0, -20);
+            e.Attach("CAMERA TARGET");
+            e.Attach(p);
+
+            entityFactory.CreateCamera(camera, viewportAdapter, p);
 
             scoreBoard = new ScoreBoard(game, score);
         }
@@ -208,7 +215,7 @@ namespace SacraSlice.GameCode.Screens
             GameContainer._spriteBatch.Draw(renderTarget, GraphicsDevice.PresentationParameters.Bounds, Color.White);
 
             scoreBoard.Draw(GameContainer._spriteBatch);
-
+            narrator.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds());
 
             GameContainer._spriteBatch.End();
 
@@ -231,13 +238,14 @@ namespace SacraSlice.GameCode.Screens
         {
 
             MouseState ms = Mouse.GetState();
+            var ks = KeyboardExtended.GetState();
             mouseCoordinate = camera.orthoCamera.ScreenToWorld(ms.X, ms.Y);
 
-            /*if (KeyboardExtended.GetState().WasKeyJustDown(Keys.K))
+            if (ks.WasKeyJustDown(Keys.K))
             {
-                entityFactory.CreateDropper(ppm);
-            }*/
-                
+                DebugLog.Print("Narrator", "Added message");
+                narrator.AddMessage("LanaPixel72", "Hello World!", 2, Interpolation.smooth, Interpolation.smooth, 0.5f, 0f, 0.5f, 0.5f);
+            }
 
             accum += gameTime.GetElapsedSeconds();
 

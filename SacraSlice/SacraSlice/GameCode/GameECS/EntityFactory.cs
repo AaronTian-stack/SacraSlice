@@ -45,13 +45,16 @@ namespace SacraSlice.GameCode.GameECS
                 camera.LookAt(new Vector2(0, 0));
                
 
-            camera.interpolationP.Push(Interpolation.linear);
-            camera.interpolationZ.Push(Interpolation.linear);
+            camera.interpolationPosition.Push(Interpolation.linear);
+            camera.interpolationZoom.Push(Interpolation.linear);
+            camera.interpolationRotation.Push(Interpolation.linear);
 
-            //camera.targetZooms.Push(1);
+            camera.targetRotations.Push(0);
 
-            camera.speedP.Push(0.06f);
-            camera.speedZ.Push(0.125f);
+
+            camera.speedPosition.Push(0.06f);
+            camera.speedZoom.Push(0.125f);
+            camera.speedRotation.Push(0.125f);
 
             entity.Attach(camera);
             entity.Attach(viewportAdapter);

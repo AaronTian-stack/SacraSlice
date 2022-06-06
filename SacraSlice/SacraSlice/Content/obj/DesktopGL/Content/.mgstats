@@ -1,4 +1,4 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/Font.spritefont","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Content/Fonts/Font.xnb","FontDescriptionProcessor","SpriteFontContent",2012,267298,0.2876894
-"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sprites/Sprites.atlas","C:\Aaron\Monogame\SacraSlice\SacraSlice\Content\bin\DesktopGL\Content\Sprites/Sprites.atlas","CopyItem","File",760,760,0.0019777
-"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sprites/Sprites.png","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Content/Sprites/Sprites.xnb","TextureProcessor","Texture2DContent",12531,1048661,0.1852308
+"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/Font.spritefont","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Content/Fonts/Font.xnb","FontDescriptionProcessor","SpriteFontContent",2012,267298,0.2967075
+"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sprites/Sprites.atlas","C:\Aaron\Monogame\SacraSlice\SacraSlice\Content\bin\DesktopGL\Content\Sprites/Sprites.atlas","CopyItem","File",1253,1253,0.0025133
+"C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sprites/Sprites.png","C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Content/Sprites/Sprites.xnb","TextureProcessor","Texture2DContent",23632,1048661,0.1858631

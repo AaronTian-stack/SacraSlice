@@ -9,13 +9,15 @@ namespace SacraSlice.GameCode.UserInterface
 {
     public class ScoreBoard
     {
-        SpriteFont font;
+        //SpriteFont font;
         Game game;
         Wrapper<int> score;
         public ScoreBoard(Game game, Wrapper<int> score)
         {
             this.game = game;
-            font = game.Content.Load<SpriteFont>("Fonts/Font");
+
+            
+
             this.score = score;
         }
 
@@ -25,17 +27,14 @@ namespace SacraSlice.GameCode.UserInterface
 
             var s = "Score: " + score;
 
-            var v = font.MeasureString(s);
+            var f = TextDrawer.GetFont("LanaPixel72");
+
+            var v = f.MeasureString(s);
 
             float centerX = b.Center.X - v.X / 2;
-            float y = 20;
-            float off = 4;
-            float off2 = 1;
 
-            sb.DrawString(font, s, new Vector2(centerX, y + off), Color.Black, 0, new Vector2(), 1f, SpriteEffects.None, 0);
-            sb.DrawString(font, s, new Vector2(centerX + off2, y), Color.Black, 0, new Vector2(), 1f, SpriteEffects.None, 0);
-            sb.DrawString(font, s, new Vector2(centerX - off2, y), Color.Black, 0, new Vector2(), 1f, SpriteEffects.None, 0);
-            sb.DrawString(font, s, new Vector2(centerX, y), Color.GhostWhite, 0, new Vector2(), 1f, SpriteEffects.None, 0);
+            TextDrawer.DrawText(sb, "LanaPixel72", s, new Vector2(centerX, 20), 1f, Color.GhostWhite, Color.Black,
+                1, 1, 1, 4);
         }
 
     }

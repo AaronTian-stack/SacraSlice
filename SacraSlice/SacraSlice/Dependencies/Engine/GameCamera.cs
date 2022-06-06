@@ -13,22 +13,26 @@ namespace SacraSlice.Dependencies.Engine
         public Stack<Position> targets = new Stack<Position>();
 
         public Stack<float> targetZooms = new Stack<float>();
+        public Stack<float> targetRotations = new Stack<float>();
 
+        public Stack<float> speedRotation = new Stack<float>();
         /// <summary>
         /// Position speed
         /// </summary>
-        public Stack<float> speedP = new Stack<float>();
+        public Stack<float> speedPosition = new Stack<float>();
 
         /// <summary>
         /// Zoom speed
         /// </summary>
-        public Stack<float> speedZ = new Stack<float>();
+        public Stack<float> speedZoom = new Stack<float>();
 
         // TODO: camera interpolations, lag speed 
 
-        public Stack<Interpolation> interpolationP = new Stack<Interpolation>();
+        public Stack<Interpolation> interpolationPosition = new Stack<Interpolation>();
 
-        public Stack<Interpolation> interpolationZ = new Stack<Interpolation>();
+        public Stack<Interpolation> interpolationRotation = new Stack<Interpolation>();
+
+        public Stack<Interpolation> interpolationZoom = new Stack<Interpolation>();
 
 
 
@@ -45,7 +49,7 @@ namespace SacraSlice.Dependencies.Engine
         }
         public Vector2 Position { get => orthoCamera.Center; set => orthoCamera.LookAt(value); }
         public float Zoom { get => orthoCamera.Zoom; set => orthoCamera.Zoom = value; }
-        public float Rotation { get => orthoCamera.Rotation; set => orthoCamera.Rotation = value; }
+        public float Rotation { get => MathHelper.ToDegrees(orthoCamera.Rotation); set => orthoCamera.Rotation = MathHelper.ToRadians(value); }
         public Matrix ViewMatrix { get => orthoCamera.GetViewMatrix(); }
 
         public bool manual;
@@ -64,8 +68,37 @@ namespace SacraSlice.Dependencies.Engine
             orthoCamera.LookAt(look);
         }
 
-        System.Numerics.Vector2 vec2 = new System.Numerics.Vector2();
+        float shakePosition = 0;
+        float shakeRotation = 0;
+        float shakeDuration = 0;
+        float shakeTimer = 999;
+        public void AddShake(float position, float rotation, float duration)
+        {
+            shakePosition = position;
+            shakeRotation = rotation;
+            shakeDuration = duration;
+            shakeTimer = 0;
+        }
 
+        FastRandom fastRandom = new FastRandom();
+        //Vector2 oldPos;
+        public void Shake(float dt)
+        {
+            if (shakeTimer < shakeDuration)
+            {
+                //oldPos = this.Position;
+                Rotation += fastRandom.NextSingle(-1, 1) * shakeRotation * ((shakeDuration - shakeTimer) / shakeDuration);
+
+                shakeTimer += dt;
+
+                float offset = shakePosition * ((shakeDuration - shakeTimer) / shakeDuration);
+
+                this.Position += new Vector2(fastRandom.NextSingle(-1, 1) * offset, fastRandom.NextSingle(-1, 1) * offset);
+
+            }
+        }
+
+        System.Numerics.Vector2 vec2 = new System.Numerics.Vector2();
         public override void CustomRender()
         {
             if (ImGui.CollapsingHeader("Game Camera"))
@@ -94,12 +127,16 @@ namespace SacraSlice.Dependencies.Engine
                     }
                     ImGui.TreePop();
                 }
-                FloatStack(speedP, "Position Speeds");
-                InterpolationStack(interpolationP, "Position Interpolations");
+                FloatStack(speedPosition, "Position Speeds");
+                InterpolationStack(interpolationPosition, "Position Interpolations");
+
+                FloatStack(targetRotations, "Target Rotations");
+                FloatStack(speedRotation, "Rotation Speeds");
+                InterpolationStack(interpolationRotation, "Rotation Interpolations");
 
                 FloatStack(targetZooms, "Target Zooms");
-                FloatStack(speedZ, "Zoom Speeds");
-                InterpolationStack(interpolationZ, "Zoom Interpolations");
+                FloatStack(speedZoom, "Zoom Speeds");
+                InterpolationStack(interpolationZoom, "Zoom Interpolations");
 
             }
         }

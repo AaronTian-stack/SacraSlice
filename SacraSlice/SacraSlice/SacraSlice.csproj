@@ -32,7 +32,6 @@
   <ItemGroup>
     <Folder Include="Dependencies\Engine\Collision\" />
     <Folder Include="Dependencies\Extended\" />
-    <Folder Include="GameCode\GameECS\GameComponents\" />
     <Folder Include="GameCode\Managers\" />
   </ItemGroup>
   <ItemGroup>
