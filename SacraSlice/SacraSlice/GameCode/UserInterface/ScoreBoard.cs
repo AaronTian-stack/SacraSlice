@@ -12,8 +12,6 @@ namespace SacraSlice.GameCode.UserInterface
     public class ScoreBoard
     {
         Wrapper<int> score, life;
-
-        // TODO: add the x's
         public ScoreBoard(Wrapper<int> score, Wrapper<int> life)
         {
             this.score = score; this.life = life; old = life;
@@ -36,11 +34,8 @@ namespace SacraSlice.GameCode.UserInterface
                 .07f + CalculateShake()), .15f, Color.GhostWhite, Color.Black,
                 1, 1, 1, 5);
 
-            X.Color = Color.White;
-            X.Scale = new Vector2(0.8f);
+
             X.Rotation = 45;
-            XRed.Color = Color.White;
-            XRed.Scale = new Vector2(0.8f);
             XRed.Rotation = 45;
 
             float pOff = 0.075f;
@@ -50,21 +45,23 @@ namespace SacraSlice.GameCode.UserInterface
 
             shakeTimer += dt;
 
+            var scale = new Vector2(0.15f);
+
             if (life < 3)
-                SpriteAligner.DrawSprite(XRed, 0.5f + pOff + CalculateShake(), 0.2f + CalculateShake());
+                SpriteAligner.DrawSprite(XRed, 0.5f + pOff + CalculateShake(), 0.2f + CalculateShake(), scale);
             else
-                SpriteAligner.DrawSprite(X, 0.5f + pOff + CalculateShake(), 0.2f + CalculateShake());
+                SpriteAligner.DrawSprite(X, 0.5f + pOff + CalculateShake(), 0.2f + CalculateShake(), scale);
 
 
             if (life < 2)
-                SpriteAligner.DrawSprite(XRed, 0.5f + CalculateShake(), 0.2f + CalculateShake());
+                SpriteAligner.DrawSprite(XRed, 0.5f + CalculateShake(), 0.2f + CalculateShake(), scale);
             else
-                SpriteAligner.DrawSprite(X, 0.5f + CalculateShake(), 0.2f + CalculateShake());
+                SpriteAligner.DrawSprite(X, 0.5f + CalculateShake(), 0.2f + CalculateShake(), scale);
 
             if (life < 1)
-                SpriteAligner.DrawSprite(XRed, 0.5f - pOff + CalculateShake(), 0.2f + CalculateShake());
+                SpriteAligner.DrawSprite(XRed, 0.5f - pOff + CalculateShake(), 0.2f + CalculateShake(), scale);
             else
-                SpriteAligner.DrawSprite(X, 0.5f - pOff + CalculateShake(), 0.2f + CalculateShake());
+                SpriteAligner.DrawSprite(X, 0.5f - pOff + CalculateShake(), 0.2f + CalculateShake(), scale);
 
             old = life;
             

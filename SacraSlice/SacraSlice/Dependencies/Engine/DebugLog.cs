@@ -67,13 +67,13 @@ namespace SacraSlice.Dependencies.Engine
 
 
         }
-        public static void Print(string classname, string message)
+        public static void Print(string classname, object message)
         {
             Print(classname, MessageType.info, message);
         }
-        public static void Print(string id, MessageType type, string message)
+        public static void Print(string id, MessageType type, object message)
         {
-            messages.Add((DateTime.Now.ToString("yy.MM.dd:HH.mm.ss"), id, type, message));
+            messages.Add((DateTime.Now.ToString("yy.MM.dd:HH.mm.ss"), id, type, message.ToString()));
             if (messages.Count > 500)
                 messages.Clear();
         }

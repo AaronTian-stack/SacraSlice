@@ -29,7 +29,7 @@ namespace SacraSlice.GameCode.Screens
 
         EntityFactory entityFactory;
 
-        GameCamera camera;
+        public static GameCamera camera;
 
         Stack<InputManager> inputStack = new Stack<InputManager>();
 
@@ -49,6 +49,10 @@ namespace SacraSlice.GameCode.Screens
 
         public static Wrapper<int> score = new Wrapper<int>(0);
         public static Wrapper<int> life = new Wrapper<int>(3);
+
+        public static int threshold = 1; // 4
+
+        public static float lifeTime = 2;
 
         Narrator narrator;
         public PlayScreen(GameContainer game) : base(game)
@@ -98,9 +102,10 @@ namespace SacraSlice.GameCode.Screens
 
                 // Game Systems
 
-                //.AddSystem(new ResizerSystem(ppm))
+                .AddSystem(new SwordSquash())
+                .AddSystem(new SwordDraw(GameContainer._spriteBatch, ppm))
                 .AddSystem(new DropperSystem(score))
-                .AddSystem(new SpawnerSystem(entityFactory, ppm))
+                .AddSystem(new SpawnerSystem(entityFactory, ppm, score))
 
                 .Build();
 
@@ -115,13 +120,11 @@ namespace SacraSlice.GameCode.Screens
 
             renderTarget = new RenderTarget2D(GraphicsDevice, 512, 288);
 
-            //inputStack.Push(player.Get<InputManager>());
-
-            entityFactory.CreateDropper(ppm);
+            entityFactory.CreateDropper(ppm, score);
 
             var e = world.CreateEntity();
             Position p = new Position();
-            p.SetAllPosition(new Vector2(0, -30));
+            p.SetAllPosition(new Vector2(0, -25));
 
             e.Attach("CAMERA TARGET");
             e.Attach(p);
@@ -235,11 +238,15 @@ namespace SacraSlice.GameCode.Screens
         Wrapper<float> dt = new Wrapper<float>(1f / ticks); // change so rate at which game updates is different. Dramatic Slow Motion effect!
         static int ticks = 30;
         public float alpha;
+        public static KeyboardStateExtended ks;
+
+        public static Random random = new Random();
+
         public override void Update(GameTime gameTime)
         {
 
             MouseState ms = Mouse.GetState();
-            var ks = KeyboardExtended.GetState();
+            ks = KeyboardExtended.GetState();
             mouseCoordinate = camera.orthoCamera.ScreenToWorld(ms.X, ms.Y);
 
             if (ks.WasKeyJustDown(Keys.K))

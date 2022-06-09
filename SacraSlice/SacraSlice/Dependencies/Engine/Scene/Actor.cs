@@ -11,7 +11,7 @@ namespace SacraSlice.Dependencies.Engine.Scene
         public float rotation;
         public Color color = Color.White;
 
-        private List<Action> actions = new List<Action>();
+        public List<Action> actions = new List<Action>();
 
         public Actor() { }
         public Actor(float x, float y)

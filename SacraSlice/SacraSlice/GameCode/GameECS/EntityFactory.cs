@@ -8,6 +8,7 @@ using SacraSlice.Dependencies.Engine;
 using SacraSlice.Dependencies.Engine.Animation;
 using SacraSlice.Dependencies.Engine.ECS.Component;
 using SacraSlice.Dependencies.Engine.States;
+using SacraSlice.GameCode.GameECS.GameComponents;
 using SacraSlice.GameCode.GameStates;
 using SacraSlice.GameCode.Screens;
 using System;
@@ -67,21 +68,57 @@ namespace SacraSlice.GameCode.GameECS
 
         }
 
-        public static void ResetPosition(Position p)
+        Vector2 lastSpawnPosition;
+        public void ResetPosition(Position p)
         {
-            p.SetAllPosition(new Vector2(rand.NextSingle(-40, 40), -100), rand.NextSingle(0, 1));
-            //p.velocity.Y = rand.NextSingle(0, 10);
+            float ra = 30f;
+            p.SetAllPosition(new Vector2(rand.NextSingle(-ra, ra), -100), rand.NextSingle(0, 1));
+
+            lastSpawnPosition = p.currPosition;
         }
 
-        public static void ResetVelocity(Position p)
+        public void ResetVelocity(Position p)
         {
-            //p.SetAllPosition(new Vector2(rand.NextSingle(-40, 40), -100), rand.NextSingle(0, 1));
             p.velocity.Y = rand.NextSingle(0, 10);
         }
 
+        public void RandomAnimation(AnimationStateManager asm, int score)
+        {
+            List<TextureRegion> frames = null;
+            var bruh = rand.Next(0, 2);
+            string sphere, cube;
+            if(score > PlayScreen.threshold)
+            {
+                PlayScreen.lifeTime = 10;
+                sphere = "sphereLegs";
+                cube = "cubeLegs";
+            }
+            else
+            {
+                sphere = "sphere";
+                cube = "cube";
+            }
+          
 
-        static Random rand = new Random();
-        public Entity CreateDropper(float ppm)
+            switch (bruh)
+            {
+                case 0:
+                    frames = GameContainer.atlas.FindRegions(sphere);
+                    break;
+                case 1:
+                    frames = GameContainer.atlas.FindRegions(cube);
+                    break;
+            }
+
+            foreach (var s in asm.states)
+            {
+                asm.GetAnimation(s).KeyFrames = frames;
+            }
+        }
+
+        Random rand = new Random();
+        float boxSize = 25f;
+        public Entity CreateDropper(float ppm, int score)
         {
             var entity = world.CreateEntity();
 
@@ -93,8 +130,6 @@ namespace SacraSlice.GameCode.GameECS
 
             ResetPosition(p);
             ResetVelocity(p);
-
-            // maybe give random velocity
 
             entity.Attach(p);
 
@@ -109,37 +144,38 @@ namespace SacraSlice.GameCode.GameECS
 
             CutState c = new CutState(sm, dt, p, t, hb, ppm);
 
-            ShrinkState s = new ShrinkState(sm, p, t, PlayScreen.score, PlayScreen.life);
+            var sprite = new Sprite();
+            ShrinkState s = new ShrinkState(sm, p, t, PlayScreen.score, PlayScreen.life, sprite);
 
             sm.AddState(f);
             sm.AddState(c);
             sm.AddState(s);
+
             sm.currentState = f;
 
             AnimationStateManager asm = new AnimationStateManager();
 
+            //string sphere = "sphereLegs";
+            //string cube = "cubeLegs";
+
             switch (rand.Next(0, 2)) 
             {
                 case 0:
-                    asm.AddState(f, new Animation<TextureRegion>("Sphere", 0.5f, GameContainer.atlas.FindRegions("sphere"), PlayMode.LOOP));
-                    asm.AddState(c, new Animation<TextureRegion>("Sphere", 0.5f, GameContainer.atlas.FindRegions("sphere"), PlayMode.LOOP));
-                    asm.AddState(s, new Animation<TextureRegion>("Sphere", 0.5f, GameContainer.atlas.FindRegions("sphere"), PlayMode.LOOP));
+                    asm.AddAnimation(f, new Animation<TextureRegion>("Sphere", 0.5f, null, PlayMode.LOOP));
+                    asm.AddAnimation(c, new Animation<TextureRegion>("Sphere", 0.5f, null, PlayMode.LOOP));
+                    asm.AddAnimation(s, new Animation<TextureRegion>("Sphere", 0.5f, null, PlayMode.LOOP));
                     break;
                 case 1:
-                    asm.AddState(f, new Animation<TextureRegion>("Cube", 0.5f, GameContainer.atlas.FindRegions("cube"), PlayMode.LOOP));
-                    asm.AddState(c, new Animation<TextureRegion>("Cube", 0.5f, GameContainer.atlas.FindRegions("cube"), PlayMode.LOOP));
-                    asm.AddState(s, new Animation<TextureRegion>("Cube", 0.5f, GameContainer.atlas.FindRegions("cube"), PlayMode.LOOP));
+                    asm.AddAnimation(f, new Animation<TextureRegion>("Cube", 0.5f, null, PlayMode.LOOP));
+                    asm.AddAnimation(c, new Animation<TextureRegion>("Cube", 0.5f, null, PlayMode.LOOP));
+                    asm.AddAnimation(s, new Animation<TextureRegion>("Cube", 0.5f, null, PlayMode.LOOP));
                     break;
             }
+            RandomAnimation(asm, score);
 
-            
-
-
-            
-
-            hb.AddState(f, new RectangleF(0,0,25,25));
-            hb.AddState(c, new RectangleF(0,0,25,25));
-            hb.AddState(s, new RectangleF(0, 0, 25, 25));
+            hb.AddState(f, new RectangleF(0, 0, boxSize, boxSize));
+            hb.AddState(c, new RectangleF(0, 0, boxSize, boxSize));
+            hb.AddState(s, new RectangleF(0, 0, boxSize, boxSize));
 
             (Wrapper<float>, float) idleT = (t.GetTimer("Ground Time"), 3.5f);
             SquashValue idleSQ = new SquashValue(c, Interpolation.swingOut, 
@@ -156,13 +192,19 @@ namespace SacraSlice.GameCode.GameECS
 
             SquashManager sqm = new SquashManager(idleSQ, fallSQ, dieSQ);
 
-            entity.Attach(new Sprite());
+            entity.Attach(sprite);
             entity.Attach(t);
             entity.Attach(hb);
             entity.Attach(asm);
             entity.Attach(sm);
 
             entity.Attach(sqm);
+
+            if(score > PlayScreen.threshold)
+            {
+                Sword sword = new Sword(rand.Next(1000));
+                entity.Attach(sword);
+            }
 
             return entity;
         }

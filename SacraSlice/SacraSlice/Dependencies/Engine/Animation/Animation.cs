@@ -8,7 +8,7 @@ namespace SacraSlice.Dependencies.Engine.Animation
     public class Animation<T>
     {
 
-        List<T> keyFrames; // internal array
+        private List<T> keyFrames; // internal array
         private float frameDuration;
         private float animationDuration;
         private int lastFrameNumber;
@@ -26,7 +26,8 @@ namespace SacraSlice.Dependencies.Engine.Animation
 
             this.keyFrames = keyframes;
 
-            this.animationDuration = keyFrames.Count * frameDuration;
+            if(keyFrames != null)
+                this.animationDuration = keyFrames.Count * frameDuration;
 
         }
 
@@ -92,6 +93,15 @@ namespace SacraSlice.Dependencies.Engine.Animation
         public float AnimationDuration { get => animationDuration; set => animationDuration = value; }
         public int LastFrameNumber { get => lastFrameNumber; set => lastFrameNumber = value; }
         public float LastStateTime { get => lastStateTime; set => lastStateTime = value; }
+        public List<T> KeyFrames 
+        { 
+            get => keyFrames; 
+            set 
+            { 
+                keyFrames = value; 
+                this.animationDuration = keyFrames.Count * frameDuration; 
+            } 
+        }
 
         public override string ToString()
         {

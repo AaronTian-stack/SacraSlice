@@ -6,21 +6,21 @@ filter: Nearest, Nearest
 repeat: none
 cube
   rotate: false
-  xy: 153, 1
+  xy: 305, 103
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 1
 cube
   rotate: false
-  xy: 255, 1
+  xy: 377, 1
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 0
 cubeLegs
   rotate: false
-  xy: 203, 357
+  xy: 153, 307
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
@@ -32,23 +32,30 @@ cubeLegs
   orig: 150, 150
   offset: 0, 0
   index: 0
+hand
+  rotate: false
+  xy: 457, 261
+  size: 42, 196
+  orig: 42, 196
+  offset: 0, 0
+  index: -1
 pause
   rotate: false
-  xy: 355, 235
+  xy: 153, 33
   size: 120, 120
   orig: 120, 120
   offset: 0, 0
   index: -1
 sphere
   rotate: false
-  xy: 197, 103
+  xy: 305, 205
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 1
 sphere
   rotate: false
-  xy: 299, 103
+  xy: 275, 1
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
@@ -62,21 +69,21 @@ sphereLegs
   index: 0
 sphereLegs
   rotate: false
-  xy: 203, 205
+  xy: 305, 307
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: 1
 sword
   rotate: false
-  xy: 153, 109
+  xy: 407, 109
   size: 42, 196
   orig: 42, 196
   offset: 0, 0
   index: -1
 xBlank
   rotate: false
-  xy: 355, 357
+  xy: 153, 155
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
@@ -84,7 +91,7 @@ xBlank
 xRed
   rotate: false
   xy: 1, 307
-  size: 200, 200
-  orig: 200, 200
+  size: 150, 150
+  orig: 150, 150
   offset: 0, 0
   index: -1

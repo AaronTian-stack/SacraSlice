@@ -35,6 +35,11 @@ namespace SacraSlice.Dependencies.Engine.States
             if (currentState != null)
                 currentState.Act();
         }
+
+        public State GetState(string s)
+        {
+            return lookup[s];
+        }
         public void AddState(State st)
         {
             lookup.Add(st.name, st);

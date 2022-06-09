@@ -9,15 +9,16 @@ namespace SacraSlice.Dependencies.Engine.Animation
     {
 
         public Animation<TextureRegion> currAnim;
-        List<Animation<TextureRegion>> animations;
-        List<State> states;
+        public List<Animation<TextureRegion>> animations;
+        public List<State> states;
 
         public float scaleX, scaleY;
 
         Dictionary<State, Animation<TextureRegion>> lookup = new Dictionary<State, Animation<TextureRegion>>();
         public AnimationStateManager()
         {
-
+            animations = new List<Animation<TextureRegion>>();
+            states = new List<State>();
         }
         public AnimationStateManager(List<State> states, List<Animation<TextureRegion>> animations)
         {
@@ -37,15 +38,33 @@ namespace SacraSlice.Dependencies.Engine.Animation
             }
         }
 
-        public void AddState(State s, Animation<TextureRegion> a)
+        public void AddAnimation(State s, Animation<TextureRegion> a)
         {
             lookup.Add(s, a);
+            states.Add(s);
+            animations.Add(a);
+        }
+
+        public Animation<TextureRegion> GetAnimation(State s)
+        {
+            Animation<TextureRegion> an;
+            if (!lookup.TryGetValue(s, out an))
+                throw new KeyNotFoundException($"Could not find animation {s} in AnimationStateManager");
+            return an;
         }
 
         public void SetAnimation(State s)
         {
             if (!lookup.TryGetValue(s, out currAnim))
                 throw new KeyNotFoundException($"Could not find animation {s} in AnimationStateManager");
+        }
+
+        public void EditAnimation(State s, Animation<TextureRegion> a)
+        {
+            if (!lookup.TryGetValue(s, out currAnim))
+                throw new KeyNotFoundException($"Could not find animation {s} in AnimationStateManager");
+            lookup.Remove(s);
+            lookup.Add(s, a);
         }
 
         public override void CustomRender()

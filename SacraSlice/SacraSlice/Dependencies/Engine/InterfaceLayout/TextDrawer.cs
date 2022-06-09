@@ -57,7 +57,6 @@ namespace SacraSlice.Dependencies.Engine.InterfaceLayout
             var view = gd.Viewport;
 
 
-
             //var targetX = scale * gd.Viewport.Width;
             var targetY = scale * gd.Viewport.Height; // number of pixels you want
             //var scaleX = targetX / di.X;

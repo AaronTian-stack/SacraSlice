@@ -50,11 +50,9 @@ namespace SacraSlice
 
             base.Initialize();
 
-
-
             play = new PlayScreen(this);
 
-            _screenManager.LoadScreen(play, new FadeTransition(GraphicsDevice, Color.Black, 0f));
+            _screenManager.LoadScreen(play, new FadeTransition(GraphicsDevice, Color.Black, 1f));
 
             GuiRenderer = new ImGUIRenderer(this).Initialize().RebuildFontAtlas();
 
@@ -69,13 +67,6 @@ namespace SacraSlice
             }
 
             IsFixedTimeStep = false;
-
-            //TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0f / 120);
-
-            //graphics.SynchronizeWithVerticalRetrace = false;
-
-            //Window.IsBorderless = true;
-            //ShapeDrawer.LoadContent(graphics.GraphicsDevice);
 
         }
         protected override void LoadContent()
