@@ -40,19 +40,18 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
         float waitingTime;
         float timer;
         float rotation;
-        float duration = 1.5f;
+        float min = 0.1f;
+        float duration = 2f;
         public void ChangeAngle(float dt)
         {
 
-            
-
-            // Change rotataion after random intervals of 0-3 seconds
+            // Change rotataion after random intervals
             if (!swing)
                 timer += dt;
             if (timer > waitingTime)
             {
                 timer = 0;
-                waitingTime = random.NextSingle(0, duration);
+                waitingTime = random.NextSingle(min, duration);
                 rotation = random.NextSingle(-60, 90);
                 //DebugLog.Print("Sword Rotate", duration);
             }
@@ -80,7 +79,7 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
 
             if (!swing)
             {
-                s.Rotation = Interpolation.linear.apply(s.Rotation, rotation, 0.15f);
+                s.Rotation = Interpolation.linear.apply(s.Rotation, rotation, 0.11f);
                 hand.Rotation = s.Rotation;
             }
             else

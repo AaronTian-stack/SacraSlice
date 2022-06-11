@@ -111,10 +111,6 @@ namespace SacraSlice.Dependencies.Engine
         {
             FlipX = x; FlipY = y;
         }
-        public void Rotate(float d)
-        {
-            Rotation += d;
-        }
 
         System.Numerics.Vector2 vec2;
         System.Numerics.Vector4 vec4;

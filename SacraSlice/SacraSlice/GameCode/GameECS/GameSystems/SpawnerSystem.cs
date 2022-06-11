@@ -44,13 +44,20 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
             swordMapper = mapperService.GetMapper<Sword>();
         }
         float timer = 0;
-        float gap = 5;
+        float gap = 2;
         public override void Draw(GameTime gameTime)
         {
             bool created = false;
-            timer += gameTime.GetElapsedSeconds();
+            bool stop = false;
 
-            if(PlayScreen.ks.WasKeyJustDown(Keys.L))
+
+            //DebugLog.Print("SCREEN", PlayScreen.enemiesOnScreen);
+            if(PlayScreen.enemiesOnScreen < PlayScreen.MaxEnemiesOnScreen)
+                timer += gameTime.GetElapsedSeconds();
+
+            // PlayScreen.ks.WasKeyJustDown(Keys.L)
+
+            if (timer > gap) // timer > gap
             {
                 timer = 0;
                 //DebugLog.Print("Spawner", "trying to spawn");
@@ -76,7 +83,10 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                         var sm = smMapper.Get(entity);
                         //DebugLog.Print("Spawner", "FOUND ONE! "+entity);
 
-                        ef.ResetPosition(p);
+                        
+
+                        ef.ResetPosition(p, 0);
+                            
                         ef.ResetVelocity(p);
 
                         ef.RandomAnimation(aMapper.Get(entity), score);
@@ -85,16 +95,17 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                         {
                             GetEntity(entity).Attach(new Sword(PlayScreen.random.Next(1000)));
                         }
-                           
+
 
                         p.ground = false;
                         sm.SetStateUpdate("Fall", timeMapper.Get(entity));
                         created = true;
+                        PlayScreen.enemiesOnScreen.Value++;
                         break;
 
                     }
                 }
-                if(!created)
+                if(!created && PlayScreen.enemiesOnScreen < PlayScreen.MaxEnemiesOnScreen)
                     ef.CreateDropper(ppm, score);
 
 

@@ -1,90 +1,111 @@
 
 Sprites.png
-size: 512, 512
+size: 1024, 512
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 cube
   rotate: false
-  xy: 153, 1
+  xy: 225, 21
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 1
 cube
   rotate: false
-  xy: 255, 1
+  xy: 429, 81
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 0
 cubeLegs
   rotate: false
-  xy: 203, 357
+  xy: 581, 335
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: 1
 cubeLegs
   rotate: false
-  xy: 1, 3
+  xy: 581, 183
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: 0
+hand
+  rotate: false
+  xy: 885, 289
+  size: 42, 196
+  orig: 42, 196
+  offset: 0, 0
+  index: -1
 pause
   rotate: false
-  xy: 355, 235
+  xy: 1, 1
   size: 120, 120
   orig: 120, 120
   offset: 0, 0
   index: -1
 sphere
   rotate: false
-  xy: 197, 103
+  xy: 123, 21
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 1
 sphere
   rotate: false
-  xy: 299, 103
+  xy: 327, 21
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 0
 sphereLegs
   rotate: false
-  xy: 1, 155
+  xy: 429, 183
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: 0
 sphereLegs
   rotate: false
-  xy: 203, 205
+  xy: 733, 183
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: 1
+spook1
+  rotate: false
+  xy: 1, 123
+  size: 212, 362
+  orig: 212, 362
+  offset: 0, 0
+  index: -1
+spook2
+  rotate: false
+  xy: 215, 123
+  size: 212, 362
+  orig: 212, 362
+  offset: 0, 0
+  index: -1
 sword
   rotate: false
-  xy: 153, 109
+  xy: 929, 289
   size: 42, 196
   orig: 42, 196
   offset: 0, 0
   index: -1
 xBlank
   rotate: false
-  xy: 355, 357
+  xy: 733, 335
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 xRed
   rotate: false
-  xy: 1, 307
-  size: 200, 200
-  orig: 200, 200
+  xy: 429, 335
+  size: 150, 150
+  orig: 150, 150
   offset: 0, 0
   index: -1

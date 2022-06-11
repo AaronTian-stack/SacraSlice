@@ -61,7 +61,7 @@ namespace SacraSlice.Dependencies.Engine.ECS.Systems
                 var sprite = spriteMapper.Get(entity);
                 var timer = timerMapper.Get(entity);
 
-                sprite.Textureregion = asm.currAnim.getKeyFrame(timer.GetTimer("State Time"));
+                sprite.Textureregion = asm.currAnim.GetKeyFrame(timer.GetTimer("State Time"));
 
                 timer.GetTimer("State Time").Value += gameTime.GetElapsedSeconds() * (dtStatic / dt);
 

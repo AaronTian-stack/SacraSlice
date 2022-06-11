@@ -26,7 +26,8 @@ namespace SacraSlice
 
         public static int fps;
 
-        PlayScreen play;
+        public PlayScreen play;
+        public SplashScreen title;
 
         public GameContainer()
         {
@@ -51,8 +52,12 @@ namespace SacraSlice
             base.Initialize();
 
             play = new PlayScreen(this);
+            title = new SplashScreen(this);
 
-            _screenManager.LoadScreen(play, new FadeTransition(GraphicsDevice, Color.Black, 1f));
+            //_screenManager.LoadScreen(play, new FadeTransition(GraphicsDevice, Color.Black, 1f));
+            //_screenManager.LoadScreen(title, new FadeTransition(GraphicsDevice, Color.Black, 1f));
+
+            LoadScreen(play, 1f);
 
             GuiRenderer = new ImGUIRenderer(this).Initialize().RebuildFontAtlas();
 
@@ -69,6 +74,12 @@ namespace SacraSlice
             IsFixedTimeStep = false;
 
         }
+
+        public void LoadScreen(GameScreen screen, float duration)
+        {
+            _screenManager.LoadScreen(screen, new FadeTransition(GraphicsDevice, Color.Black, duration));
+        }
+
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -77,7 +88,7 @@ namespace SacraSlice
 
             atlas = new TextureAtlas(atlasTexture, "Sprites/Sprites.atlas");
 
-            TextDrawer.AddFont("CandyBeans", Content.Load<BitmapFont>("Fonts/CandyBeans"));
+            TextDrawer.AddFont("Main Font", Content.Load<BitmapFont>("Fonts/JollyGoodSans"));
             TextDrawer.sb = _spriteBatch;
             TextDrawer.gd = GraphicsDevice;
             SpriteAligner.sb = _spriteBatch;

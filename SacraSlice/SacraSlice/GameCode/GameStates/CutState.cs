@@ -27,12 +27,12 @@ namespace SacraSlice.GameCode.GameStates
             name = "Cut";
             this.hb = hb;
             this.ppm = ppm;
-            tolerance = radius;
+            //tolerance = radius;
         }
         bool begin;
 
-        float radius = 6;
-        float tolerance;
+        float radius = 5;
+        //float tolerance;
         public override void Act()
         {
 
@@ -54,8 +54,8 @@ namespace SacraSlice.GameCode.GameStates
             p = c.BoundaryPointAt(MathHelper.ToRadians(random.NextSingle(-90 + off, 90 - off)));
             rightHitbox = new CircleF(p, radius);
 
-            bounds = RectangleF.CreateFrom(leftHitbox.Center - new Vector2(tolerance), 
-                rightHitbox.Center + new Vector2(tolerance));
+            bounds = RectangleF.CreateFrom(leftHitbox.Center - new Vector2(radius), 
+                rightHitbox.Center + new Vector2(radius));
 
             // pick a direction
             direction = random.Next(0, 2);
@@ -71,6 +71,8 @@ namespace SacraSlice.GameCode.GameStates
                 leftHitbox = rightHitbox;
                 rightHitbox = hold;
             }
+
+            rightHitbox.Radius *= 2;
             timer.GetTimer("Life").Value = PlayScreen.lifeTime;
             max = timer.GetTimer("Life");
 
@@ -113,7 +115,7 @@ namespace SacraSlice.GameCode.GameStates
 
             if (begin)
             {
-                if (CalculateDistanceFromLine(PlayScreen.mouseCoordinate) > tolerance)
+                if (CalculateDistanceFromLine(PlayScreen.mouseCoordinate) > radius)
                 {
                     begin = false;
                 }
@@ -139,13 +141,10 @@ namespace SacraSlice.GameCode.GameStates
         Actor a = new Actor();
         public void Explode(SpriteBatch sb, float dt)
         {
-            
-            
-            float s = 0.2f;
 
             var ds = timer.GetTimer("Life").Value.ToString("0.0");
             float scale = 0.2f;
-            var si = TextDrawer.MeasureFont("CandyBeans", ds);
+            var si = TextDrawer.MeasureFont("Main Font", ds);
 
             if (!timer.GetSwitch("Protect"))
             {
@@ -165,15 +164,15 @@ namespace SacraSlice.GameCode.GameStates
             if (timer.GetSwitch("Protect"))
                 a.color = Color.Gold;
 
-            TextDrawer.BatchQueue("CandyBeans", ds, 
-                new Vector2(pos.renderPosition.X, pos.renderPosition.Y - si.Height * scale * 0.8f),
-                a.color, Color.Black, scale, 1, 1, 1, 4);
+            TextDrawer.BatchQueue("Main Font", ds, 
+                new Vector2(pos.renderPosition.X, pos.renderPosition.Y - si.Height * 0.3f * scale),
+                a.color, Color.Black, scale, 2, 2, 2, 4);
 
            
             if (timer.GetTimer("Life") <= 0)
             {
                 timer.GetTimer("Life").Value = 0;
-                if(timer.GetTimer("leeway") <= 0)
+                if(timer.GetTimer("leeway") < 0)
                 {
                     sm.SetStateUpdate("Shrink", timer);
                     timer.GetSwitch("Sword Active").Value = false;
@@ -200,9 +199,9 @@ namespace SacraSlice.GameCode.GameStates
                 sb.DrawCircle(rightHitbox, 12, Color.Red, ppm);
 
             if(begin)
-                sb.DrawLine(leftHitbox.Center, rightHitbox.Center, Color.HotPink, ppm * tolerance);
+                sb.DrawLine(leftHitbox.Center, rightHitbox.Center, Color.HotPink, ppm * radius);
             else
-                sb.DrawLine(leftHitbox.Center, rightHitbox.Center, Color.Yellow, ppm * tolerance);
+                sb.DrawLine(leftHitbox.Center, rightHitbox.Center, Color.Yellow, ppm * radius);
 
             sb.DrawCircle(new CircleF(rightHitbox.Center, radius * 2), 12, Color.Red, ppm);
 

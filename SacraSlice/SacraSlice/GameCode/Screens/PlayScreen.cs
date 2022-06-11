@@ -49,6 +49,9 @@ namespace SacraSlice.GameCode.Screens
 
         public static Wrapper<int> score = new Wrapper<int>(0);
         public static Wrapper<int> life = new Wrapper<int>(3);
+        public static Wrapper<int> enemiesOnScreen = new Wrapper<int>(0);
+
+        public static int MaxEnemiesOnScreen = 3;
 
         public static int threshold = 1; // 4
 
@@ -59,6 +62,9 @@ namespace SacraSlice.GameCode.Screens
         {
             entityFactory = new EntityFactory();
             narrator = new Narrator(game);
+
+            var slope = new Timer();
+            slope.GetTimer("slope").Value = -0.7f;
 
             world = new WorldBuilder()
 
@@ -81,10 +87,9 @@ namespace SacraSlice.GameCode.Screens
                 .AddSystem(new TimerUpdater(dt, dtStatic))
                 .AddSystem(new StateDrawUpdate(GameContainer._spriteBatch))
 
-
-
-
                 // Drawing Systems
+
+                .AddSystem(new BackGroundSystem(GameContainer._spriteBatch, slope, ppm))
 
                 .AddSystem(new PositionInterpolator())
                 .AddSystem(new ImGuiEntityDraw())
@@ -104,7 +109,7 @@ namespace SacraSlice.GameCode.Screens
 
                 .AddSystem(new SwordSquash())
                 .AddSystem(new SwordDraw(GameContainer._spriteBatch, ppm))
-                .AddSystem(new DropperSystem(score))
+                .AddSystem(new DropperSystem(score, entityFactory))
                 .AddSystem(new SpawnerSystem(entityFactory, ppm, score))
 
                 .Build();
@@ -120,7 +125,7 @@ namespace SacraSlice.GameCode.Screens
 
             renderTarget = new RenderTarget2D(GraphicsDevice, 512, 288);
 
-            entityFactory.CreateDropper(ppm, score);
+            //entityFactory.CreateDropper(ppm, score);
 
             var e = world.CreateEntity();
             Position p = new Position();
@@ -128,6 +133,10 @@ namespace SacraSlice.GameCode.Screens
 
             e.Attach("CAMERA TARGET");
             e.Attach(p);
+
+            e = world.CreateEntity();
+            e.Attach("BACKGROUND SLOPE");
+            e.Attach(slope);
 
             entityFactory.CreateCamera(camera, viewportAdapter, p);
 
@@ -192,7 +201,7 @@ namespace SacraSlice.GameCode.Screens
             //TODO: get a rendertarget
 
             GraphicsDevice.SetRenderTarget(renderTarget);
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(new Color(72 / 255f, 74 / 255f, 119 / 255f));
             GameContainer._spriteBatch.Begin(SpriteSortMode.BackToFront, samplerState: SamplerState.PointClamp
                 , transformMatrix: camera.ViewMatrix
                 , blendState: BlendState.NonPremultiplied
@@ -216,6 +225,9 @@ namespace SacraSlice.GameCode.Screens
 
             GameContainer._spriteBatch.Begin(samplerState: SamplerState.PointClamp, blendState: BlendState.NonPremultiplied);
             GameContainer._spriteBatch.Draw(renderTarget, GraphicsDevice.PresentationParameters.Bounds, Color.White);
+            GameContainer._spriteBatch.End();
+
+            GameContainer._spriteBatch.Begin(samplerState: SamplerState.LinearWrap, blendState: BlendState.NonPremultiplied);
 
             scoreBoard.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds());
             narrator.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds());
@@ -253,7 +265,7 @@ namespace SacraSlice.GameCode.Screens
             {
                 float scale = 0.2f;
 
-                narrator.AddMessage("CandyBeans", "Hello World!",
+                narrator.AddMessage("Main Font", "Hello World!",
                     duration: 1.5f, delay: 2, size: scale, Interpolation.smooth, Interpolation.smooth, 0.5f, 1+scale/2, 0.5f, 1-scale/2);
             }
 

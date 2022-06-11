@@ -7,6 +7,7 @@ using SacraSlice.Dependencies.Engine.ECS.Component;
 using SacraSlice.Dependencies.Engine.Scene;
 using SacraSlice.Dependencies.Engine.Scene.ActionClasses;
 using SacraSlice.Dependencies.Engine.States;
+using SacraSlice.GameCode.GameECS;
 using SacraSlice.GameCode.Screens;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace SacraSlice.GameCode.GameStates
         Wrapper<int> p, l;
         Sprite sprite;
         public ShrinkState(StateManager sm, Position pos, Timer t, Wrapper<int> p,
-            Wrapper<int> l, Sprite sprite) : base(sm: sm, p: pos, t: t)
+            Wrapper<int> l, Sprite sprite, EntityFactory ef) : base(sm: sm, p: pos, t: t)
         {
             name = "Shrink";
             this.p = p;
@@ -28,16 +29,22 @@ namespace SacraSlice.GameCode.GameStates
             ra = new RepeatAction(a,
                 new ColorAction(a, Color.White, Color.Red, 0.1f, Interpolation.smooth)
                 , new ColorAction(a, Color.White, Color.Red, 0.1f, Interpolation.smooth));
+            this.ef = ef;
         }
         RepeatAction ra;
+        EntityFactory ef;
+
         public override void OnEnter()
         {
+            PlayScreen.enemiesOnScreen.Value--;
+            
             a.actions.Clear();
-            if (timer.GetTimer("Life") > 0)
+            if (timer.GetTimer("leeway") > 0)
                 p.Value++;
             else
                 l.Value--;
 
+            ef.Free((int)pos.start);
             if (timer.GetSwitch("Killed"))
             {
 
@@ -50,6 +57,7 @@ namespace SacraSlice.GameCode.GameStates
         {
             a.actions.Clear();
             sprite.Color = Color.White;
+
         }
 
         public override void Act()

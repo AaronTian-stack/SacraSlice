@@ -4,6 +4,7 @@ using MonoGame.Extended.Entities;
 using MonoGame.Extended.Entities.Systems;
 using SacraSlice.Dependencies.Engine;
 using SacraSlice.Dependencies.Engine.ECS.Component;
+using SacraSlice.GameCode.Screens;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,10 +17,12 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
         private ComponentMapper<Timer> timerMapper;
         private ComponentMapper<Position> positionMapper;
         Wrapper<int> score;
-        public DropperSystem(Wrapper<int> score) : base(Aspect.All(typeof(string), typeof(Timer)
+        EntityFactory ef;
+        public DropperSystem(Wrapper<int> score, EntityFactory ef) : base(Aspect.All(typeof(string), typeof(Timer)
             ))
         {
             this.score = score;
+            this.ef = ef;
         }
         public override void Initialize(IComponentMapperService mapperService)
         {
@@ -42,6 +45,7 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                 if(s.Equals("Dropping Item") && t.GetSwitch("dead"))
                 {
                     // reset
+                    
                     t.GetSwitch("dead").Value = false;
                     
                 }

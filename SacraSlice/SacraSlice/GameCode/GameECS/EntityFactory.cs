@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
+using MonoGame.Extended.Collections;
 using MonoGame.Extended.Entities;
 using MonoGame.Extended.ViewportAdapters;
 using SacraSlice.Dependencies.Engine;
@@ -25,7 +26,7 @@ namespace SacraSlice.GameCode.GameECS
 
         public EntityFactory()
         {
-
+            occupy = new bool[3];
         }
         public void Initialize(World world, GraphicsDevice graphics, float dt)
         {
@@ -68,13 +69,32 @@ namespace SacraSlice.GameCode.GameECS
 
         }
 
-        Vector2 lastSpawnPosition;
-        public void ResetPosition(Position p)
+        float ra = 40f;
+        bool[] occupy;
+        public void Free(int t)
         {
-            float ra = 30f;
-            p.SetAllPosition(new Vector2(rand.NextSingle(-ra, ra), -100), rand.NextSingle(0, 1));
+            occupy[t] = false;
+        }
+        public bool ResetPosition(Position p, int counter)
+        {
 
-            lastSpawnPosition = p.currPosition;
+            var bruh2 = rand.Next(0, 3);
+
+            p.start = bruh2;
+
+            if (occupy[bruh2])
+            {
+                ResetPosition(p, 0);
+                return false;
+            }
+            occupy[bruh2] = true;
+
+            bruh2 -= 1;
+            Vector2 pos = new Vector2(bruh2 * ra, -100);
+
+            p.SetAllPosition(pos, rand.NextSingle(0, .8f));
+
+            return true;
         }
 
         public void ResetVelocity(Position p)
@@ -87,11 +107,13 @@ namespace SacraSlice.GameCode.GameECS
             List<TextureRegion> frames = null;
             var bruh = rand.Next(0, 2);
             string sphere, cube;
+            bool b = false;
             if(score > PlayScreen.threshold)
             {
                 PlayScreen.lifeTime = 10;
                 sphere = "sphereLegs";
                 cube = "cubeLegs";
+                b = true;
             }
             else
             {
@@ -113,22 +135,25 @@ namespace SacraSlice.GameCode.GameECS
             foreach (var s in asm.states)
             {
                 asm.GetAnimation(s).KeyFrames = frames;
+                if(b)
+                    asm.GetAnimation(s).SetFrameDuration(0.2f);
             }
         }
 
         Random rand = new Random();
-        float boxSize = 25f;
+        float boxSize = 20f;
+        float height = 22f;
         public Entity CreateDropper(float ppm, int score)
         {
             var entity = world.CreateEntity();
-
+            PlayScreen.enemiesOnScreen.Value++;
             entity.Attach("Dropping Item");
 
             Position p = new Position();
             p.gravity = true;
 
 
-            ResetPosition(p);
+            ResetPosition(p, 0);
             ResetVelocity(p);
 
             entity.Attach(p);
@@ -145,7 +170,7 @@ namespace SacraSlice.GameCode.GameECS
             CutState c = new CutState(sm, dt, p, t, hb, ppm);
 
             var sprite = new Sprite();
-            ShrinkState s = new ShrinkState(sm, p, t, PlayScreen.score, PlayScreen.life, sprite);
+            ShrinkState s = new ShrinkState(sm, p, t, PlayScreen.score, PlayScreen.life, sprite, this);
 
             sm.AddState(f);
             sm.AddState(c);
@@ -173,9 +198,9 @@ namespace SacraSlice.GameCode.GameECS
             }
             RandomAnimation(asm, score);
 
-            hb.AddState(f, new RectangleF(0, 0, boxSize, boxSize));
-            hb.AddState(c, new RectangleF(0, 0, boxSize, boxSize));
-            hb.AddState(s, new RectangleF(0, 0, boxSize, boxSize));
+            hb.AddState(f, new RectangleF(0, 0, boxSize, height));
+            hb.AddState(c, new RectangleF(0, 0, boxSize, height));
+            hb.AddState(s, new RectangleF(0, 0, boxSize, height));
 
             (Wrapper<float>, float) idleT = (t.GetTimer("Ground Time"), 3.5f);
             SquashValue idleSQ = new SquashValue(c, Interpolation.swingOut, 

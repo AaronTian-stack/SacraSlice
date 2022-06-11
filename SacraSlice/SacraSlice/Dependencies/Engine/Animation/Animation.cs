@@ -32,7 +32,7 @@ namespace SacraSlice.Dependencies.Engine.Animation
         }
 
         Random rnd = new Random();
-        public int getKeyFrameIndex(float stateTime)
+        public int GetKeyFrameIndex(float stateTime)
         {
             if (keyFrames.Count == 1) return 0;
 
@@ -71,19 +71,19 @@ namespace SacraSlice.Dependencies.Engine.Animation
             return frameNumber;
         }
 
-        public T getKeyFrame(float stateTime)
+        public T GetKeyFrame(float stateTime)
         {
-            int frameNumber = getKeyFrameIndex(stateTime);
+            int frameNumber = GetKeyFrameIndex(stateTime);
             return keyFrames[frameNumber];
         }
 
-        public bool isAnimationFinished(float stateTime)
+        public bool IsAnimationFinished(float stateTime)
         {
             int frameNumber = (int)(stateTime / frameDuration);
             return keyFrames.Count - 1 < frameNumber;
         }
 
-        public void setFrameDuration(float frameDuration)
+        public void SetFrameDuration(float frameDuration)
         {
             this.frameDuration = frameDuration;
             this.animationDuration = keyFrames.Count * frameDuration;

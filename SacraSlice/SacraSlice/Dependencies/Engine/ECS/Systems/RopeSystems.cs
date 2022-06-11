@@ -191,7 +191,7 @@ namespace SacraSlice.Dependencies.Engine.ECS.Systems
                 var array = ropeClamper.GetArray(rope.name, asm.currAnim.name);
 
                 // get frame number based off State Timer and current animation
-                int frame = asm.currAnim.getKeyFrameIndex(timer.GetTimer("State Time"));
+                int frame = asm.currAnim.GetKeyFrameIndex(timer.GetTimer("State Time"));
 
                 // find the new target position based off sprite bounding box and Array[frame] X and Y
 

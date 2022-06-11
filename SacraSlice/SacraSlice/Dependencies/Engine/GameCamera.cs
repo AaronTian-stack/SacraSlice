@@ -41,7 +41,7 @@ namespace SacraSlice.Dependencies.Engine
         /// </summary>
         public OrthographicCamera orthoCamera;
 
-        BoxingViewportAdapter _viewportAdapter;
+        public BoxingViewportAdapter _viewportAdapter;
         public GameCamera(BoxingViewportAdapter viewportAdapter)
         {
             this._viewportAdapter = viewportAdapter;
@@ -51,6 +51,7 @@ namespace SacraSlice.Dependencies.Engine
         public float Zoom { get => orthoCamera.Zoom; set => orthoCamera.Zoom = value; }
         public float Rotation { get => MathHelper.ToDegrees(orthoCamera.Rotation); set => orthoCamera.Rotation = MathHelper.ToRadians(value); }
         public Matrix ViewMatrix { get => orthoCamera.GetViewMatrix(); }
+        public bool IsShaking { get => shakeTimer < shakeDuration; }
 
         public bool manual;
         public void Move(Vector2 move)
@@ -81,7 +82,6 @@ namespace SacraSlice.Dependencies.Engine
         }
 
         FastRandom fastRandom = new FastRandom();
-        //Vector2 oldPos;
         public void Shake(float dt)
         {
             if (shakeTimer < shakeDuration)

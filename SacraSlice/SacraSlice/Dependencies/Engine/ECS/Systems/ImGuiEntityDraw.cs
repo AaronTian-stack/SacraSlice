@@ -24,6 +24,7 @@ namespace SacraSlice.Dependencies.Engine.ECS.Systems
         private ComponentMapper<SquashManager> squashMapper;
         private ComponentMapper<VerletRope> ropeMapper;
         private ComponentMapper<RopeClamper> ropeclamperMapper;
+        private bool floatMapper;
 
         public ImGuiEntityDraw() : base(Aspect.One())
         {

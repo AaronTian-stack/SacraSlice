@@ -30,8 +30,8 @@ namespace SacraSlice.GameCode.UserInterface
 
             var s = "Score: " + score;
 
-            TextDrawer.DrawTextStatic("CandyBeans", s, new Vector2(.5f + CalculateShake(),
-                .07f + CalculateShake()), .15f, Color.GhostWhite, Color.Black,
+            TextDrawer.DrawTextStatic("Main Font", s, new Vector2(.5f + CalculateShake(),
+                .04f + CalculateShake()), .25f, Color.GhostWhite, Color.Black,
                 1, 1, 1, 5);
 
 

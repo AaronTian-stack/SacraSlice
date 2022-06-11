@@ -44,10 +44,8 @@ namespace SacraSlice.Dependencies.Engine.ECS.Component
                 foreach (var item in lookup)
                 {
                     float f = item.Value.Value;
-                    ImGui.DragFloat(item.Key, ref f);
+                    ImGui.DragFloat(item.Key, ref f, 0.5f);
                     item.Value.Value = f;
-                    if (item.Value.Value < 0)
-                        item.Value.Value = 0;
                 }
                 foreach (var item in lookupSwitch)
                 {
