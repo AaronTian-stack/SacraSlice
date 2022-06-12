@@ -27,12 +27,11 @@ namespace SacraSlice.GameCode.GameStates
             name = "Cut";
             this.hb = hb;
             this.ppm = ppm;
-            //tolerance = radius;
+            sprite.Rotation = 45;
         }
         bool begin;
 
         float radius = 5;
-        //float tolerance;
         public override void Act()
         {
 
@@ -70,6 +69,7 @@ namespace SacraSlice.GameCode.GameStates
                 var hold = leftHitbox;
                 leftHitbox = rightHitbox;
                 rightHitbox = hold;
+                timer.GetTimer("Angle").Value += 180;
             }
 
             rightHitbox.Radius *= 2;
@@ -79,8 +79,6 @@ namespace SacraSlice.GameCode.GameStates
             timer.GetTimer("leeway").Value = 0.5f;
 
             timer.GetSwitch("Sword Active").Value = true;
-
-            //DebugLog.Print("Cutstate",timer.GetTimer("Angle"));
 
             a.ClearActions();
         }
@@ -98,13 +96,21 @@ namespace SacraSlice.GameCode.GameStates
                 begin = false;
                 reset = true;
             }
-               
 
             if (timer.GetSwitch("Protect"))
             {
                 if (begin)
                 {
                     // swing sword
+                    var dur = 0.25f;
+                    var sc = 0.9f;
+                    a1.AddAction(Actions.MoveFrom(a1, 0, 0, sc, sc, dur, Interpolation.swingOut));
+                    a1.AddAction(Actions.Delay(a1, 0.5f));
+                    a1.AddAction(Actions.MoveFrom(a1, sc, sc, 0, 0, dur, Interpolation.swingIn));
+                    a1.scaleX = leftHitbox.Center.X; 
+                    a1.scaleY = leftHitbox.Center.Y;
+                    
+
                     timer.GetSwitch("Attack").Value = true;
                     PlayScreen.life.Value--;
                     begin = false;
@@ -139,6 +145,7 @@ namespace SacraSlice.GameCode.GameStates
                 (leftHitbox.Center.X - point.X) * (y)) / MathF.Sqrt(x * x + y * y);
         }
         Actor a = new Actor();
+        Actor a1 = new Actor();
         public void Explode(SpriteBatch sb, float dt)
         {
 
@@ -159,16 +166,22 @@ namespace SacraSlice.GameCode.GameStates
                 a.AddAction(Actions.ColorAction(a, Color.Red, Color.White, 0.2f, Interpolation.smooth));
             }
             a.Act(dt);
-
+            a1.Act(dt);
 
             if (timer.GetSwitch("Protect"))
                 a.color = Color.Gold;
 
-            TextDrawer.BatchQueue("Main Font", ds, 
-                new Vector2(pos.renderPosition.X, pos.renderPosition.Y - si.Height * 0.3f * scale),
-                a.color, Color.Black, scale, 2, 2, 2, 4);
 
-           
+            if(timer.GetSwitch("sword"))
+                TextDrawer.BatchQueue("Main Font", ds, 
+                    new Vector2(pos.renderPosition.X, pos.renderPosition.Y - hb.rect.Height),
+                    a.color, Color.Black, scale, 2, 2, 2, 4);
+            else
+                TextDrawer.BatchQueue("Main Font", ds,
+                    new Vector2(pos.renderPosition.X, pos.renderPosition.Y - hb.rect.Height * 0.6f),
+                    a.color, Color.Black, scale, 2, 2, 2, 4);
+
+
             if (timer.GetTimer("Life") <= 0)
             {
                 timer.GetTimer("Life").Value = 0;
@@ -181,6 +194,9 @@ namespace SacraSlice.GameCode.GameStates
             }
 
         }
+        Sprite sprite = new Sprite(GameContainer.atlas.FindRegion("xRed"));
+        Sprite arrow = new Sprite(GameContainer.atlas.FindRegion("arrow"));
+        Sprite shield = new Sprite(GameContainer.atlas.FindRegion("shield"));
 
         public override void Draw(SpriteBatch sb, float dt)
         {
@@ -189,7 +205,7 @@ namespace SacraSlice.GameCode.GameStates
 
             //sb.DrawRectangle(bounds, Color.BlueViolet, ppm);
 
-            if(leftHitbox.Contains(PlayScreen.mouseCoordinate))
+            /*if(leftHitbox.Contains(PlayScreen.mouseCoordinate))
                 sb.DrawCircle(leftHitbox, 12, Color.Green, ppm);
             else
                 sb.DrawCircle(leftHitbox, 12, Color.Red, ppm);
@@ -198,15 +214,48 @@ namespace SacraSlice.GameCode.GameStates
             else
                 sb.DrawCircle(rightHitbox, 12, Color.Red, ppm);
 
-            if(begin)
+            //sb.DrawCircle(new CircleF(rightHitbox.Center, radius * 2), 12, Color.Red, ppm);
+
+            if (begin)
                 sb.DrawLine(leftHitbox.Center, rightHitbox.Center, Color.HotPink, ppm * radius);
             else
-                sb.DrawLine(leftHitbox.Center, rightHitbox.Center, Color.Yellow, ppm * radius);
+                sb.DrawLine(leftHitbox.Center, rightHitbox.Center, Color.Yellow, ppm * radius);*/
 
-            sb.DrawCircle(new CircleF(rightHitbox.Center, radius * 2), 12, Color.Red, ppm);
+            SpriteAligner.BatchQueue(sprite, new Vector2(a1.scaleX, a1.scaleY), new Vector2(a1.x, a1.y), 0);
 
+            arrow.Origin = new Vector2(0, arrow.Textureregion.height / 2);
+            arrow.Rotation = timer.GetTimer("Angle");
 
+            var scale = new Vector2(1, 1f);
+
+            float width = 0.5f;
+
+            arrow.Scale = scale;
+
+            if(begin)
+                arrow.Color = new Color(0, 1, 0, 0.8f);
+            else if (timer.GetSwitch("Protect") && leftHitbox.Contains(PlayScreen.mouseCoordinate))
+                arrow.Color = new Color(1, 0, 0, 0.8f);
+            else
+                arrow.Color = new Color(1, 1, 1, 0.8f);
+
+            arrow.Scale *= ppm;
+            arrow.Position = leftHitbox.Center;
+            arrow.Draw(sb, 0.001f);
             
+
+            arrow.Scale /= ppm;
+
+            if (timer.GetSwitch("Protect"))
+            {
+                shield.Scale = new Vector2(0.8f);
+                shield.Scale *= ppm;
+                shield.Position = new Vector2(pos.renderPosition.X, pos.renderPosition.Y - hb.rect.Height * 0.3f);
+                shield.Draw(sb, 0.0011f);
+                shield.Scale /= ppm;
+            }
+
+
         }
     }
 }

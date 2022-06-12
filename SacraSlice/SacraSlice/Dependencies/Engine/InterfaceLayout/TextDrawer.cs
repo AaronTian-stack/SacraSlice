@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.BitmapFonts;
+using MonoGame.Extended.Collections;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -58,7 +59,7 @@ namespace SacraSlice.Dependencies.Engine.InterfaceLayout
 
 
             //var targetX = scale * gd.Viewport.Width;
-            var targetY = scale * gd.Viewport.Height; // number of pixels you want
+            var targetY = scale * view.Height; // number of pixels you want
             //var scaleX = targetX / di.X;
             scale = targetY / di.Height;
 
@@ -98,8 +99,8 @@ namespace SacraSlice.Dependencies.Engine.InterfaceLayout
             sb.DrawString(sf, text, pos, color, 0, new Vector2(), scale, SpriteEffects.None, depth);
         }
 
-        static List<(string, string, Vector2, Color, Color, float, float, float, float, float, float)> batch
-            = new List<(string, string, Vector2, Color, Color, float, float, float, float, float, float)>();
+        static Bag<(string, string, Vector2, Color, Color, float, float, float, float, float, float)> batch
+            = new Bag<(string, string, Vector2, Color, Color, float, float, float, float, float, float)>();
         public static void BatchQueue(string font, string text, Vector2 pos, Color color, Color outlineColor, float scale,
             float outlineLeft = 0, float outlineRight = 0, float outlineUp = 0, float outlineDown = 0, float depth = 0)
         {

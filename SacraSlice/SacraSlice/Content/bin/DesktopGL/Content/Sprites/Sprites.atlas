@@ -4,142 +4,163 @@ size: 2048, 512
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+arrow
+  rotate: false
+  xy: 1277, 354
+  size: 124, 32
+  orig: 124, 32
+  offset: 0, 0
+  index: -1
 cube
   rotate: false
-  xy: 225, 21
+  xy: 1379, 388
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 1
 cube
   rotate: false
-  xy: 327, 21
+  xy: 429, 84
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 0
 cubeLegs
   rotate: false
-  xy: 429, 335
+  xy: 429, 338
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: 2
 cubeLegs
   rotate: false
-  xy: 733, 335
+  xy: 733, 338
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: 1
 cubeLegs
   rotate: false
-  xy: 885, 335
+  xy: 885, 338
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: 3
 cubeLegs
   rotate: false
-  xy: 885, 183
+  xy: 885, 186
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: 0
 hand
   rotate: false
-  xy: 1189, 289
+  xy: 1189, 292
   size: 42, 196
   orig: 42, 196
   offset: 0, 0
   index: -1
 pause
   rotate: false
-  xy: 1, 1
+  xy: 1, 4
   size: 120, 120
   orig: 120, 120
   offset: 0, 0
   index: -1
 randomcube
   rotate: false
-  xy: 123, 21
+  xy: 123, 24
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+shield
+  rotate: false
+  xy: 225, 24
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 sphere
   rotate: false
-  xy: 1277, 385
+  xy: 1277, 388
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 1
 sphere
   rotate: false
-  xy: 1379, 385
+  xy: 327, 24
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 0
 sphereLegs
   rotate: false
-  xy: 429, 183
+  xy: 429, 186
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: 3
 sphereLegs
   rotate: false
-  xy: 581, 183
+  xy: 581, 186
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: 0
 sphereLegs
   rotate: false
-  xy: 733, 183
+  xy: 733, 186
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: 2
 sphereLegs
   rotate: false
-  xy: 1037, 183
+  xy: 1037, 186
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: 1
 spook1
   rotate: false
-  xy: 1, 123
+  xy: 1, 126
   size: 212, 362
   orig: 212, 362
   offset: 0, 0
   index: -1
 spook2
   rotate: false
-  xy: 215, 123
+  xy: 215, 126
   size: 212, 362
   orig: 212, 362
   offset: 0, 0
   index: -1
 sword
   rotate: false
-  xy: 1233, 289
+  xy: 1233, 292
   size: 42, 196
   orig: 42, 196
   offset: 0, 0
   index: -1
+whitepixel
+  rotate: false
+  xy: 1, 1
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
 xBlank
   rotate: false
-  xy: 1037, 335
+  xy: 1037, 338
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 xRed
   rotate: false
-  xy: 581, 335
+  xy: 581, 338
   size: 150, 150
   orig: 150, 150
   offset: 0, 0

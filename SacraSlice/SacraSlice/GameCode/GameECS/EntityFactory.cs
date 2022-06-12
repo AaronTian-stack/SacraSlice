@@ -34,7 +34,7 @@ namespace SacraSlice.GameCode.GameECS
             //this.graphics = graphics;
             this.dt = dt;
         }
-        public void CreateCamera(GameCamera camera, BoxingViewportAdapter viewportAdapter, Position target = null)
+        public void CreateCamera(GameCamera camera, ViewportAdapter viewportAdapter, Position target = null)
         {
             var entity = world.CreateEntity();
 
@@ -69,7 +69,7 @@ namespace SacraSlice.GameCode.GameECS
 
         }
 
-        float ra = 40f;
+        float ra = 48f;
         bool[] occupy;
         public void Free(int t)
         {
@@ -92,7 +92,7 @@ namespace SacraSlice.GameCode.GameECS
             bruh2 -= 1;
             Vector2 pos = new Vector2(bruh2 * ra, -100);
 
-            p.SetAllPosition(pos, rand.NextSingle(0, .8f));
+            p.SetAllPosition(pos, rand.NextSingle(0.004f, .8f));
 
             return true;
         }
@@ -142,13 +142,14 @@ namespace SacraSlice.GameCode.GameECS
 
         Random rand = new Random();
         float boxSize = 20f;
-        float height = 22f;
+        float height = 30f;
+        int bruh;
         public Entity CreateDropper(float ppm, int score)
         {
             var entity = world.CreateEntity();
             PlayScreen.enemiesOnScreen.Value++;
-            entity.Attach("Dropping Item");
-
+            entity.Attach("Dropping Item "+bruh);
+            bruh++;
             Position p = new Position();
             p.gravity = true;
 
@@ -201,6 +202,7 @@ namespace SacraSlice.GameCode.GameECS
             hb.AddState(f, new RectangleF(0, 0, boxSize, height));
             hb.AddState(c, new RectangleF(0, 0, boxSize, height));
             hb.AddState(s, new RectangleF(0, 0, boxSize, height));
+            hb.renderFlag = HitBoxFlag.Bottom;
 
             (Wrapper<float>, float) idleT = (t.GetTimer("Ground Time"), 3.5f);
             SquashValue idleSQ = new SquashValue(c, Interpolation.swingOut, 
@@ -227,6 +229,7 @@ namespace SacraSlice.GameCode.GameECS
 
             if(score > PlayScreen.threshold)
             {
+                t.GetSwitch("sword").Value = true;
                 Sword sword = new Sword(rand.Next(1000));
                 entity.Attach(sword);
             }

@@ -6,6 +6,7 @@ using MonoGame.Extended.Entities;
 using MonoGame.Extended.Entities.Systems;
 using SacraSlice.Dependencies.Engine;
 using SacraSlice.Dependencies.Engine.ECS.Component;
+using SacraSlice.Dependencies.Engine.InterfaceLayout;
 using SacraSlice.Dependencies.Engine.Scene;
 using System;
 using System.Collections.Generic;
@@ -18,21 +19,23 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
         public Sprite sprite = new Sprite(GameContainer.atlas.FindRegion("randomcube"));
         public Actor a = new Actor();
         float rotation;
-        public RandomCube()
+        GameCamera cam;
+        public RandomCube(GameCamera cam)
         {
-
+            this.cam = cam;
         }
 
         public void Draw(SpriteBatch sb, float dt)
         {
             a.Act(dt);
             
-            sprite.Position.X = a.x;
-            sprite.Position.Y = a.y;
+            sprite.Position.X = a.x / cam.Zoom;
+            sprite.Position.Y = a.y / cam.Zoom;
             sprite.Rotation += rotation;
             sprite.Color = BackGroundSystem.blueDark;
-
+            sprite.Scale /= cam.Zoom;
             sprite.Draw(sb, 1);
+            sprite.Scale *= cam.Zoom;
         }
 
         public void Reset(float duration, float rotation, Vector2 start, Vector2 finish, Vector2 scale)
@@ -65,12 +68,11 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
         public static Color blueDark = new Color(50 / 255f, 51 / 255f, 83 / 255f);
         Vector2 lastpos;
 
-        Actor a = new Actor();
-        bool bruh;
         FastRandom rnd = new FastRandom(69);
         float timer = 0;
         float change;
 
+        Sprite pixel = new Sprite(GameContainer.atlas.FindRegion("whitepixel"));
         public void ResetCube(RandomCube cube, RectangleF b1)
         {
             float x = rnd.NextSingle(b1.Left, b1.Right);
@@ -83,6 +85,9 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                 , new Vector2(rnd.NextSingle(0.1f, 0.2f)));
         }
         float cubeSpawnFrequency = 2f;
+        float moveDuration = 2f;
+        float timer2;
+        RectangleF lastRect;
         public override void Draw(GameTime gameTime)
         {
 
@@ -92,8 +97,10 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
             float drawoffset = 10f;
 
             var thickness = 6f;
+            var direction = -1;
+            float oldZoom = 0;
 
-            a.Act(gameTime.GetElapsedSeconds());
+            timer2 += gameTime.GetElapsedSeconds();
 
             foreach (var entity in ActiveEntities)
             {
@@ -107,16 +114,17 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                 if (!cam.IsShaking)
                     b1.Position = b.Position;
                 else
+                {
                     b1.Position = lastpos;
+                }
+                   
 
                 var offset = b1.Width / number;
 
-                if (!bruh)
+                var X = timer2 / moveDuration * offset * direction;
+                if(timer2 > moveDuration)
                 {
-                    a.AddAction(new RepeatAction(a,
-                Actions.MoveFrom(a, 0, 0, -offset, 0, 2, Interpolation.linear)
-                , Actions.MoveFrom(a, 0, 0, 0, 0, 0, Interpolation.linear)));
-                    bruh = true;
+                    timer2 = 0;
                 }
 
                 timer += gameTime.GetElapsedSeconds();
@@ -137,7 +145,7 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                     }
                     else
                     {
-                        var cube = new RandomCube();
+                        var cube = new RandomCube(cam);
                         activeCubes.Add(cube);
                         ResetCube(cube, b1);
                         cube.sprite.Position.Y = b1.Bottom;
@@ -177,16 +185,34 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                     Vector2 BL = bl;
                     Vector2 TR = tr;
 
-                    BL.X += i * offset + a.x;
-                    TR.X += i * offset + a.x;
+                    BL.X += i * offset + X;
+                    TR.X += i * offset + X;
 
-                    sb.DrawLine(BL, TR, blueDark, ppm * thickness, 0.99f);
+                    sb.DrawLine(BL, TR, blueDark, ppm * thickness / cam.Zoom, 0.99f);
                 }
 
                 //sb.DrawLine(bl, tr, Color.Red, 1, 1);
 
                 lastpos = b1.Position;
+                lastRect = b1;
+                oldZoom = cam.Zoom;
             }
+
+            // draw the floor
+            pixel.Color = Color.White;
+
+            pixel.Color = new Color(155 / 255f, 171 / 255f, 178 / 255f);
+            pixel.Origin = new Vector2(0.5f, 0.5f);
+            var h = lastRect.Bottom - (lastRect.Bottom - lastRect.Top) * 0.25f * 0.5f;
+            pixel.Position = new Vector2(0, h);
+            pixel.Scale = new Vector2(lastRect.Width * 1.1f, 40);
+            pixel.Draw(sb, 0.97f);
+
+            pixel.Color = Color.Black;
+
+            pixel.Position = new Vector2(0, h - 1);
+            pixel.Draw(sb, 0.971f);
+
         }
 
         public override void Initialize(IComponentMapperService mapperService)

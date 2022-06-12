@@ -24,8 +24,6 @@ namespace SacraSlice
 
         public static ImGUIRenderer GuiRenderer; //This is the ImGuiRenderer
 
-        public static int fps;
-
         public PlayScreen play;
         public SplashScreen title;
 
@@ -71,7 +69,7 @@ namespace SacraSlice
                 graphics.ApplyChanges();
             }
 
-            IsFixedTimeStep = false;
+            //IsFixedTimeStep = false;
 
         }
 

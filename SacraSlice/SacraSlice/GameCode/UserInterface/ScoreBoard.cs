@@ -45,7 +45,7 @@ namespace SacraSlice.GameCode.UserInterface
 
             shakeTimer += dt;
 
-            var scale = new Vector2(0.15f);
+            var scale = 0.15f;
 
             if (life < 3)
                 SpriteAligner.DrawSprite(XRed, 0.5f + pOff + CalculateShake(), 0.2f + CalculateShake(), scale);

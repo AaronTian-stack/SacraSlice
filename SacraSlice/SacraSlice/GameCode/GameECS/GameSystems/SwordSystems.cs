@@ -23,9 +23,11 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
         private ComponentMapper<Position> pMapper;
         private ComponentMapper<HitBox> hMapper;
         private ComponentMapper<Timer> tMapper;
+        private ComponentMapper<Sprite> spriteMapper;
         SpriteBatch sb;
         float ppm;
-        public SwordDraw(SpriteBatch sb, float ppm) : base(Aspect.All(typeof(Sword), typeof(Position), typeof(HitBox), typeof(Timer)))
+        public SwordDraw(SpriteBatch sb, float ppm) : base(Aspect.All(typeof(Sword), typeof(Position), typeof(HitBox), typeof(Sprite)
+            , typeof(Timer)))
         {
             this.sb = sb;
             this.ppm = ppm;
@@ -39,6 +41,7 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
             pMapper = mapperService.GetMapper<Position>();
             hMapper = mapperService.GetMapper<HitBox>();
             tMapper = mapperService.GetMapper<Timer>();
+            spriteMapper = mapperService.GetMapper<Sprite>();
         }
         public override void Draw(GameTime gameTime)
         {
@@ -49,10 +52,11 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                 var pos = pMapper.Get(entity);
                 var hb = hMapper.Get(entity);
                 var timer = tMapper.Get(entity);
+                var sprite = spriteMapper.Get(entity);
 
                 sword.a.Act(gameTime.GetElapsedSeconds());
-                sword.s.Position.X = pos.renderPosition.X - hb.rect.Width / 2 - (sword.s.BoundingBox.Width * 0.3f * sword.s.Scale.X * ppm);
-                sword.s.Position.Y = pos.renderPosition.Y + sword.a.y;
+                sword.s.Position.X = sprite.Position.X - hb.rect.Width / 2 - (sword.s.BoundingBox.Width * 0.5f * sword.s.Scale.X * ppm);
+                sword.s.Position.Y = sprite.Position.Y + sword.a.y;
 
                 sword.hand.Position = sword.s.Position;
 

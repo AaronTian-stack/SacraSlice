@@ -49,7 +49,7 @@ namespace SacraSlice.GameCode.UserInterface
                 sb.DrawLine(vectors[i], vectors[i+1], Color.Black, ppm * (head + outline), 0.01f);
                 if (vectors[i] != vectors[i + 1])
                 {
-                    sb.DrawCircle(new CircleF(vectors[i], ppm / 2 * (head + outline)), 12, Color.Black, ppm / 2 * (head + outline), 0.01f);
+                    sb.DrawCircle(new CircleF(vectors[i], ppm / 2 * (head + outline)), 12, Color.Black, ppm / 2 * (head + outline), 0.00001f);
                 }
                     
             }

@@ -51,7 +51,7 @@ namespace SacraSlice.GameCode.Screens
         public static Wrapper<int> life = new Wrapper<int>(3);
         public static Wrapper<int> enemiesOnScreen = new Wrapper<int>(0);
 
-        public static int MaxEnemiesOnScreen = 3;
+        public static int MaxEnemiesOnScreen = 3; // 3
 
         public static int threshold = 1; // 4
 
@@ -95,8 +95,11 @@ namespace SacraSlice.GameCode.Screens
                 .AddSystem(new ImGuiEntityDraw())
                 .AddSystem(new SpriteRenderer(GameContainer._spriteBatch, ppm))
                 .AddSystem(new HitBoxRenderer(GameContainer._spriteBatch, ppm))
+                .AddSystem(new ShadowSystem(GameContainer._spriteBatch, ppm))
+                
 
                 // Rope
+
 
                 .AddSystem(new RopePositioner())
                 .AddSystem(new RopeClamperSystem(ppm))
@@ -109,8 +112,8 @@ namespace SacraSlice.GameCode.Screens
 
                 .AddSystem(new SwordSquash())
                 .AddSystem(new SwordDraw(GameContainer._spriteBatch, ppm))
-                .AddSystem(new DropperSystem(score, entityFactory))
                 .AddSystem(new SpawnerSystem(entityFactory, ppm, score))
+
 
                 .Build();
 
@@ -119,17 +122,21 @@ namespace SacraSlice.GameCode.Screens
 
             entityFactory.Initialize(world, GraphicsDevice, dtStatic);
 
+            int w = 640;
+            int h = 360;
+
             var viewportAdapter = new BoxingViewportAdapter(game.Window, GraphicsDevice, (int)(512 * ppm), (int)(288 * ppm));
+            //var viewportAdapter = new ScalingViewportAdapter(GraphicsDevice, (int)(512 * ppm), (int)(288 * ppm));
 
             camera = new GameCamera(viewportAdapter);
-
-            renderTarget = new RenderTarget2D(GraphicsDevice, 512, 288);
+            camera.Zoom = 0.8f;
+            renderTarget = new RenderTarget2D(GraphicsDevice, w, h);
 
             //entityFactory.CreateDropper(ppm, score);
 
             var e = world.CreateEntity();
             Position p = new Position();
-            p.SetAllPosition(new Vector2(0, -25));
+            p.SetAllPosition(new Vector2(0, -30));
 
             e.Attach("CAMERA TARGET");
             e.Attach(p);
@@ -145,8 +152,10 @@ namespace SacraSlice.GameCode.Screens
 
         Cursor cursor = new Cursor(0.01f, 10);
         public static MouseStateExtended mouse;
+        public static float frameRate;
         public override void Draw(GameTime gameTime)
         {
+            frameRate = 1 / gameTime.GetElapsedSeconds();
             mouse = MouseExtended.GetState();
             if (inputStack.Count > 0)
                 inputStack.Peek().Poll();
@@ -200,7 +209,7 @@ namespace SacraSlice.GameCode.Screens
             dt.Value = 1f / ticks;
             //TODO: get a rendertarget
 
-            GraphicsDevice.SetRenderTarget(renderTarget);
+            //GraphicsDevice.SetRenderTarget(renderTarget);
             GraphicsDevice.Clear(new Color(72 / 255f, 74 / 255f, 119 / 255f));
             GameContainer._spriteBatch.Begin(SpriteSortMode.BackToFront, samplerState: SamplerState.PointClamp
                 , transformMatrix: camera.ViewMatrix
@@ -221,7 +230,7 @@ namespace SacraSlice.GameCode.Screens
 
             GameContainer._spriteBatch.End();
 
-            GraphicsDevice.SetRenderTarget(null);
+            //GraphicsDevice.SetRenderTarget(null);
 
             GameContainer._spriteBatch.Begin(samplerState: SamplerState.PointClamp, blendState: BlendState.NonPremultiplied);
             GameContainer._spriteBatch.Draw(renderTarget, GraphicsDevice.PresentationParameters.Bounds, Color.White);
@@ -232,6 +241,7 @@ namespace SacraSlice.GameCode.Screens
             scoreBoard.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds());
             narrator.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds());
             TextDrawer.BatchDraw(camera.orthoCamera);
+            SpriteAligner.BatchDraw(camera.orthoCamera);
 
             GameContainer._spriteBatch.End();
 

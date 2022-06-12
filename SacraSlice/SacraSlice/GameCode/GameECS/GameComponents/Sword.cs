@@ -4,6 +4,7 @@ using MonoGame.Extended;
 using SacraSlice.Dependencies.Engine;
 using SacraSlice.Dependencies.Engine.Scene;
 using SacraSlice.Dependencies.Engine.Scene.ActionClasses;
+using SacraSlice.GameCode.Screens;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -79,7 +80,7 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
 
             if (!swing)
             {
-                s.Rotation = Interpolation.linear.apply(s.Rotation, rotation, 0.11f);
+                s.Rotation = Interpolation.linear.apply(s.Rotation, rotation, 0.11f * 120f / PlayScreen.frameRate);
                 hand.Rotation = s.Rotation;
             }
             else
@@ -88,8 +89,8 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
                 hand.Rotation = s.Rotation;
             }
            
-            s.Draw(sb, 0.002f);
-            hand.Draw(sb, 0.001f);
+            s.Draw(sb, 0.004f);
+            hand.Draw(sb, 0.003f);
             s.Scale /= ppm;
             hand.Scale /= ppm;
         }

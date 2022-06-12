@@ -48,9 +48,6 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
         public override void Draw(GameTime gameTime)
         {
             bool created = false;
-            bool stop = false;
-
-
             //DebugLog.Print("SCREEN", PlayScreen.enemiesOnScreen);
             if(PlayScreen.enemiesOnScreen < PlayScreen.MaxEnemiesOnScreen)
                 timer += gameTime.GetElapsedSeconds();
@@ -76,15 +73,15 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
 
                     var s = stringMapper.Get(entity);
 
-                    if(s.Equals("Dropping Item"))
-                    {
+                    //if(s.Equals("Dropping Item"))
+                    //{
 
                         var p = posMapper.Get(entity);
                         var sm = smMapper.Get(entity);
-                        //DebugLog.Print("Spawner", "FOUND ONE! "+entity);
+                        DebugLog.Print("Spawner", "FOUND ONE! "+entity);
 
-                        
-
+                        t.GetSwitch("dead").Value = false;
+                        t.GetSwitch("Shrink").Value = false;
                         ef.ResetPosition(p, 0);
                             
                         ef.ResetVelocity(p);
@@ -93,6 +90,7 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
 
                         if (swordMapper.Get(entity) == null && score > PlayScreen.threshold)
                         {
+                            t.GetSwitch("sword").Value = true;
                             GetEntity(entity).Attach(new Sword(PlayScreen.random.Next(1000)));
                         }
 
@@ -103,7 +101,7 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                         PlayScreen.enemiesOnScreen.Value++;
                         break;
 
-                    }
+                    //}
                 }
                 if(!created && PlayScreen.enemiesOnScreen < PlayScreen.MaxEnemiesOnScreen)
                     ef.CreateDropper(ppm, score);

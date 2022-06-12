@@ -47,10 +47,10 @@ namespace SacraSlice.GameCode.GameStates
             ef.Free((int)pos.start);
             if (timer.GetSwitch("Killed"))
             {
-
                 a.AddAction(ra);
                 timer.GetSwitch("Killed").Value = false;
             }
+            timer.GetSwitch("Shrink").Value = true;
         }
 
         public override void OnLeave()
@@ -69,7 +69,8 @@ namespace SacraSlice.GameCode.GameStates
         {
             a.Act(dt);
             sprite.Color = a.color;
-            timer.GetSwitch("dead").Value = true;
+            if(sprite.Scale.LengthSquared() == 0)
+                timer.GetSwitch("dead").Value = true;
         }
     }
 }

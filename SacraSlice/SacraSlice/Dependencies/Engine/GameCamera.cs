@@ -41,8 +41,8 @@ namespace SacraSlice.Dependencies.Engine
         /// </summary>
         public OrthographicCamera orthoCamera;
 
-        public BoxingViewportAdapter _viewportAdapter;
-        public GameCamera(BoxingViewportAdapter viewportAdapter)
+        public ViewportAdapter _viewportAdapter;
+        public GameCamera(ViewportAdapter viewportAdapter)
         {
             this._viewportAdapter = viewportAdapter;
             orthoCamera = new OrthographicCamera(viewportAdapter);

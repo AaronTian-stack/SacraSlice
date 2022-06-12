@@ -65,13 +65,13 @@ namespace SacraSlice.GameCode.Screens
             start.A = 0;
             a.AddAction(Actions.Delay(a, 1f));
             a.AddAction(new ParallelAction(a,
-                Actions.MoveFrom(a, 0.5f, 0.55f, 0.5f, 0.5f, 2, Interpolation.swingOut)
+                Actions.MoveFrom(a, 0.5f, 0.55f, 0.5f, 0.48f, 2, Interpolation.swingOut)
                 ,Actions.ColorAction(a, start, Color.White, 2, Interpolation.smooth)));
             a.AddAction(Actions.Delay(a, 3f));
 
-            a1.AddAction(Actions.Delay(a1, 0.5f));
+            a1.AddAction(Actions.Delay(a1, 0.5f)); // a game by
             a1.AddAction(new ParallelAction(a1,
-                Actions.MoveFrom(a1, 0.5f, 0.5f, 0.5f, 0.42f, 2, Interpolation.swingOut)
+                Actions.MoveFrom(a1, 0.5f, 0.5f, 0.5f, 0.40f, 2, Interpolation.swingOut)
                 , Actions.ColorAction(a1, start, Color.White, 2, Interpolation.smooth)));
 
 
