@@ -69,7 +69,7 @@ namespace SacraSlice
                 graphics.ApplyChanges();
             }
 
-            //IsFixedTimeStep = false;
+            IsFixedTimeStep = false;
 
         }
 

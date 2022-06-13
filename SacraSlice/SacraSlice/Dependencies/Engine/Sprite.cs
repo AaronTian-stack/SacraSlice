@@ -15,7 +15,7 @@ namespace SacraSlice.Dependencies.Engine
             {
                 textureregion = value;
 
-                Origin = new Vector2(textureregion.sourceRectangle.Width / 2, textureregion.sourceRectangle.Height / 2); // rotation is around center by default
+                Origin = new Vector2(textureregion.sourceRectangle.Width / 2f, textureregion.sourceRectangle.Height / 2f); // rotation is around center by default
 
                 boundingBox = new RectangleF(Position.X, Position.Y, textureregion.width * scale.X, textureregion.height * scale.Y);
             }
@@ -52,6 +52,7 @@ namespace SacraSlice.Dependencies.Engine
         public Sprite(TextureRegion region)
         {
             Textureregion = region;
+            Origin = new Vector2(textureregion.sourceRectangle.Width / 2f, textureregion.sourceRectangle.Height / 2f);
         }
 
         public Vector2 Scale

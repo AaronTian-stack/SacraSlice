@@ -69,7 +69,6 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                 {
                     sword.Swing();
                     timer.GetSwitch("Attack").Value = false;
-                    PlayScreen.camera.AddShake(0.2f, 0.1f, 2);
                 }
                    
 

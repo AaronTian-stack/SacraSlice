@@ -9,18 +9,18 @@ namespace SacraSlice.GameCode.UserInterface
     public class Cursor
     {
         Vector2[] vectors = new Vector2[10];
-        float u;
-        float h;
+        public float updateFrequency;
+        public float headWidth;
         public Cursor(float updateFrequency, float headWidth)
         {
-            u = updateFrequency;
-            h = headWidth;
+            this.updateFrequency = updateFrequency;
+            this.headWidth = headWidth;
         }
         float timer;
         public void Update(Vector2 pos, float elapsed, bool updateHead)
         {
             timer += elapsed;
-            if(timer > u)
+            if(timer > updateFrequency)
             {
                 timer = 0;
                 for (int i = vectors.Length - 1; i > 0; i--)
@@ -38,14 +38,13 @@ namespace SacraSlice.GameCode.UserInterface
                 vectors[i] = v;
             }
         }
-
         public void Draw(SpriteBatch sb, float ppm, float outline)
         {
             //var head = h;
             for(int i = 0; i < vectors.Length - 1; i++)
             {
 
-                var head = h * (1 - (i / (vectors.Length - 1f)));
+                var head = headWidth * (1 - (i / (vectors.Length - 1f)));
                 sb.DrawLine(vectors[i], vectors[i+1], Color.Black, ppm * (head + outline), 0.01f);
                 if (vectors[i] != vectors[i + 1])
                 {
@@ -57,7 +56,7 @@ namespace SacraSlice.GameCode.UserInterface
             for (int i = 0; i < vectors.Length - 1; i++)
             {
 
-                var head = h * (1 - (i / (vectors.Length - 1f)));
+                var head = headWidth * (1 - (i / (vectors.Length - 1f)));
                 sb.DrawLine(vectors[i], vectors[i + 1], Color.WhiteSmoke, head * ppm);
                 if (vectors[i] != vectors[i + 1])
                 {

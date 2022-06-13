@@ -14,6 +14,7 @@ using SacraSlice.Dependencies.Engine.ECS.Systems;
 using SacraSlice.Dependencies.Engine.InterfaceLayout;
 using SacraSlice.Dependencies.Engine.Scene;
 using SacraSlice.GameCode.GameECS;
+using SacraSlice.GameCode.GameECS.GameComponents;
 using SacraSlice.GameCode.GameECS.GameSystems;
 using SacraSlice.GameCode.Managers;
 using SacraSlice.GameCode.UserInterface;
@@ -57,11 +58,15 @@ namespace SacraSlice.GameCode.Screens
 
         public static float lifeTime = 2;
 
-        Narrator narrator;
+        public static ShieldEnergy energy;
+
+        public static Narrator narrator;
+        public static ScreenFlash flash;
         public PlayScreen(GameContainer game) : base(game)
         {
             entityFactory = new EntityFactory();
             narrator = new Narrator(game);
+            flash = new ScreenFlash(GraphicsDevice);
 
             var slope = new Timer();
             slope.GetTimer("slope").Value = -0.7f;
@@ -132,6 +137,8 @@ namespace SacraSlice.GameCode.Screens
             camera.Zoom = 0.8f;
             renderTarget = new RenderTarget2D(GraphicsDevice, w, h);
 
+            
+
             //entityFactory.CreateDropper(ppm, score);
 
             var e = world.CreateEntity();
@@ -147,7 +154,10 @@ namespace SacraSlice.GameCode.Screens
 
             entityFactory.CreateCamera(camera, viewportAdapter, p);
 
-            scoreBoard = new ScoreBoard(score, life);
+            energy = new ShieldEnergy(camera);
+
+            scoreBoard = new ScoreBoard();
+
         }
 
         Cursor cursor = new Cursor(0.01f, 10);
@@ -159,6 +169,8 @@ namespace SacraSlice.GameCode.Screens
             mouse = MouseExtended.GetState();
             if (inputStack.Count > 0)
                 inputStack.Peek().Poll();
+
+            
 
             GameContainer.GuiRenderer.BeginLayout(gameTime);
 
@@ -218,13 +230,18 @@ namespace SacraSlice.GameCode.Screens
 
             world.Draw(gameTime);
 
+
+            energy.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds(), ppm);
+
             if (mouse.WasButtonJustDown(MouseButton.Left))
                 cursor.Set(mouseCoordinate);
 
             cursor.Update(mouseCoordinate, gameTime.GetElapsedSeconds(),
                     mouse.IsButtonDown(MouseButton.Left));
 
+            cursor.headWidth /= camera.Zoom;
             cursor.Draw(GameContainer._spriteBatch, ppm, 2f);
+            cursor.headWidth *= camera.Zoom;
 
             ImGui.End();
 
@@ -242,6 +259,7 @@ namespace SacraSlice.GameCode.Screens
             narrator.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds());
             TextDrawer.BatchDraw(camera.orthoCamera);
             SpriteAligner.BatchDraw(camera.orthoCamera);
+            flash.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds());
 
             GameContainer._spriteBatch.End();
 
@@ -276,7 +294,8 @@ namespace SacraSlice.GameCode.Screens
                 float scale = 0.2f;
 
                 narrator.AddMessage("Main Font", "Hello World!",
-                    duration: 1.5f, delay: 2, size: scale, Interpolation.smooth, Interpolation.smooth, 0.5f, 1+scale/2, 0.5f, 1-scale/2);
+                    duration: .4f, delay: .5f, size: scale, Interpolation.swingOut, Interpolation.smooth, 0.5f, 1+scale/2, 0.5f, 1-scale/2);
+            // 1.5 2
             }
 
             accum += gameTime.GetElapsedSeconds();
@@ -292,6 +311,7 @@ namespace SacraSlice.GameCode.Screens
         }
 
         static Actor actor = new Actor(ticks, 0);
+        public static int justAdded;
 
         public static void ChangeTickRate(int newTickRate, float time, Interpolation interpolation)
         // Adds an action to change the tick rate.

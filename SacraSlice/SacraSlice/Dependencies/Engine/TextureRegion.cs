@@ -10,29 +10,30 @@ namespace SacraSlice.Dependencies.Engine
         public int index;
 
         public Rectangle sourceRectangle;
-        public float width { get => sourceRectangle.Width; }
-        public float height { get => sourceRectangle.Height; }
+        public int width { get => sourceRectangle.Width; }
+        public int height { get => sourceRectangle.Height; }
 
+        public Vector2 Scale;
         public TextureRegion(TextureRegion reg) // pass in Atlas.findRegion
         {
             this = reg;
+            Scale = new Vector2(1);
         }
 
         public TextureRegion(Texture2D tex, Rectangle rect)
         {
             texture = tex;
-
             sourceRectangle = rect;
-
             index = 0;
-
+            Scale = new Vector2(1);
         }
 
 
 
-        public void draw(SpriteBatch sb, Vector2 position, Color color)
+        public void Draw(SpriteBatch sb, Vector2 Position, Color color, float layerDepth)
         {
-            sb.Draw(texture, position, sourceRectangle, color);
+            sb.Draw(texture, Position, sourceRectangle, color, 0
+                , new Vector2(sourceRectangle.Width / 2, sourceRectangle.Height / 2), Scale, SpriteEffects.None, layerDepth);
         }
 
 

@@ -28,7 +28,7 @@ namespace SacraSlice.GameCode.GameStates
             this.sprite = sprite;
             ra = new RepeatAction(a,
                 new ColorAction(a, Color.White, Color.Red, 0.1f, Interpolation.smooth)
-                , new ColorAction(a, Color.White, Color.Red, 0.1f, Interpolation.smooth));
+                , new ColorAction(a, Color.Red, Color.White, 0.1f, Interpolation.smooth));
             this.ef = ef;
         }
         RepeatAction ra;
@@ -40,7 +40,10 @@ namespace SacraSlice.GameCode.GameStates
             
             a.actions.Clear();
             if (timer.GetTimer("leeway") > 0)
+            {
                 p.Value++;
+                PlayScreen.justAdded = 1;
+            }
             else
                 l.Value--;
 

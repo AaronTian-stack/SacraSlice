@@ -103,7 +103,7 @@ namespace SacraSlice.GameCode.GameStates
                 {
                     // swing sword
                     var dur = 0.25f;
-                    var sc = 0.9f;
+                    var sc = 1.5f;
                     a1.AddAction(Actions.MoveFrom(a1, 0, 0, sc, sc, dur, Interpolation.swingOut));
                     a1.AddAction(Actions.Delay(a1, 0.5f));
                     a1.AddAction(Actions.MoveFrom(a1, sc, sc, 0, 0, dur, Interpolation.swingIn));
@@ -112,7 +112,7 @@ namespace SacraSlice.GameCode.GameStates
                     
 
                     timer.GetSwitch("Attack").Value = true;
-                    PlayScreen.life.Value--;
+                    //PlayScreen.life.Value--;
                     begin = false;
                     reset = false;
                 }
@@ -151,7 +151,7 @@ namespace SacraSlice.GameCode.GameStates
 
             var ds = timer.GetTimer("Life").Value.ToString("0.0");
             float scale = 0.2f;
-            var si = TextDrawer.MeasureFont("Main Font", ds);
+            //var si = TextDrawer.MeasureFont("Main Font", ds);
 
             if (!timer.GetSwitch("Protect"))
             {
@@ -197,7 +197,6 @@ namespace SacraSlice.GameCode.GameStates
         Sprite sprite = new Sprite(GameContainer.atlas.FindRegion("xRed"));
         Sprite arrow = new Sprite(GameContainer.atlas.FindRegion("arrow"));
         Sprite shield = new Sprite(GameContainer.atlas.FindRegion("shield"));
-
         public override void Draw(SpriteBatch sb, float dt)
         {
             CutLogic();
@@ -226,11 +225,7 @@ namespace SacraSlice.GameCode.GameStates
             arrow.Origin = new Vector2(0, arrow.Textureregion.height / 2);
             arrow.Rotation = timer.GetTimer("Angle");
 
-            var scale = new Vector2(1, 1f);
-
-            float width = 0.5f;
-
-            arrow.Scale = scale;
+            arrow.Scale = new Vector2(1, 1f); ;
 
             if(begin)
                 arrow.Color = new Color(0, 1, 0, 0.8f);
