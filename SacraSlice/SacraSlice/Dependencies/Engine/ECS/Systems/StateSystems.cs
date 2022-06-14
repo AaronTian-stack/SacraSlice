@@ -64,10 +64,13 @@ namespace SacraSlice.Dependencies.Engine.ECS.Systems
     {
         SpriteBatch sb;
         private ComponentMapper<StateManager> managerMapper;
-
-        public StateDrawUpdate(SpriteBatch sb) : base(Aspect.All(typeof(StateManager)))
+        Wrapper<float> dt;
+        float dtStatic;
+        public StateDrawUpdate(SpriteBatch sb, Wrapper<float> dt, float dtStatic) : base(Aspect.All(typeof(StateManager)))
         {
             this.sb = sb;
+            this.dt = dt;
+            this.dtStatic = dtStatic;
         }
 
         public override void Initialize(IComponentMapperService mapperService)
@@ -80,7 +83,7 @@ namespace SacraSlice.Dependencies.Engine.ECS.Systems
             {
 
                 var sm = managerMapper.Get(entity);
-                sm.currentState.Draw(sb, gameTime.GetElapsedSeconds());
+                sm.currentState.Draw(sb, gameTime.GetElapsedSeconds() * (dtStatic / dt));
             }
         }
 

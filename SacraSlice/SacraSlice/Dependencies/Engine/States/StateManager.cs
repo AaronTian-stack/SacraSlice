@@ -13,7 +13,6 @@ namespace SacraSlice.Dependencies.Engine.States
 
         public State resetState, defaultState;
 
-        //List<State> states;
         public StateManager() { }
         public StateManager(List<State> states)
         {

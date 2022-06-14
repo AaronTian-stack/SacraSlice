@@ -27,8 +27,8 @@ namespace SacraSlice.Dependencies.Engine.Scene.ActionClasses
 
             timer += elapsedTime;
 
-            a.x = interpolation.apply(startX, x, MathF.Min(1, timer / duration));
-            a.y = interpolation.apply(startY, y, MathF.Min(1, timer / duration));
+            a.x = interpolation.Apply(startX, x, MathF.Min(1, timer / duration));
+            a.y = interpolation.Apply(startY, y, MathF.Min(1, timer / duration));
 
             if (timer >= duration)
             {

@@ -26,12 +26,17 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
         EntityFactory ef;
         float ppm;
         Wrapper<int> score;
-        public SpawnerSystem(EntityFactory ef, float ppm, Wrapper<int> score) : base(Aspect.All(typeof(string), typeof(Position),
+
+        Wrapper<float> dt;
+        float dtStatic;
+        public SpawnerSystem(EntityFactory ef, float ppm, Wrapper<int> score, Wrapper<float> dt, float dtStatic) : base(Aspect.All(typeof(string), typeof(Position),
             typeof(StateManager), typeof(Timer), typeof(AnimationStateManager)))
         {
             this.ef = ef;
             this.ppm = ppm;
             this.score = score;
+            this.dt = dt;
+            this.dtStatic = dtStatic;
         }
 
         public override void Initialize(IComponentMapperService mapperService)
@@ -44,17 +49,17 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
             swordMapper = mapperService.GetMapper<Sword>();
         }
         float timer = 0;
-        float gap = 2;
         public override void Draw(GameTime gameTime)
         {
             bool created = false;
-            //DebugLog.Print("SCREEN", PlayScreen.enemiesOnScreen);
-            if(PlayScreen.enemiesOnScreen < PlayScreen.MaxEnemiesOnScreen)
-                timer += gameTime.GetElapsedSeconds();
 
-            // PlayScreen.ks.WasKeyJustDown(Keys.L)
+            if (PlayScreen.enemiesOnScreen < PlayScreen.MaxEnemiesOnScreen && PlayScreen.SpawnControl)
+                timer += gameTime.GetElapsedSeconds() * (dtStatic / dt);
+            else
+                timer = 0;
 
-            if (timer > gap) // timer > gap
+
+            if (timer > PlayScreen.SpawnGapVariable && PlayScreen.SpawnControl) // timer > gap
             {
                 timer = 0;
                 //DebugLog.Print("Spawner", "trying to spawn");
@@ -78,7 +83,7 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
 
                         var p = posMapper.Get(entity);
                         var sm = smMapper.Get(entity);
-                        DebugLog.Print("Spawner", "FOUND ONE! "+entity);
+                        //DebugLog.Print("Spawner", "FOUND ONE! "+entity);
 
                         t.GetSwitch("dead").Value = false;
                         t.GetSwitch("Shrink").Value = false;
@@ -86,13 +91,15 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                             
                         ef.ResetVelocity(p);
 
-                        ef.RandomAnimation(aMapper.Get(entity), score);
+                        ef.RandomAnimation(aMapper.Get(entity));
 
-                        if (swordMapper.Get(entity) == null && score > PlayScreen.threshold)
+                        if (swordMapper.Get(entity) == null && PlayScreen.hardEnemiesSpawn)
                         {
                             t.GetSwitch("sword").Value = true;
-                            GetEntity(entity).Attach(new Sword(PlayScreen.random.Next(1000)));
+                            GetEntity(entity).Attach(new Sword(PlayScreen.random.Next(1000), t));
                         }
+                        else if (swordMapper.Get(entity) != null)
+                            swordMapper.Get(entity).Reset();
 
 
                         p.ground = false;

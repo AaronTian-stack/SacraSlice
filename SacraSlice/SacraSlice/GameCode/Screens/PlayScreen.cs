@@ -13,6 +13,7 @@ using SacraSlice.Dependencies.Engine.ECS.Component;
 using SacraSlice.Dependencies.Engine.ECS.Systems;
 using SacraSlice.Dependencies.Engine.InterfaceLayout;
 using SacraSlice.Dependencies.Engine.Scene;
+using SacraSlice.Dependencies.Engine.Scene.ActionClasses;
 using SacraSlice.GameCode.GameECS;
 using SacraSlice.GameCode.GameECS.GameComponents;
 using SacraSlice.GameCode.GameECS.GameSystems;
@@ -34,7 +35,7 @@ namespace SacraSlice.GameCode.Screens
 
         Stack<InputManager> inputStack = new Stack<InputManager>();
 
-        public DebugLog debug = new DebugLog();
+        DebugLog debug = new DebugLog();
 
         public static float gravity = 0.12f;
 
@@ -52,11 +53,45 @@ namespace SacraSlice.GameCode.Screens
         public static Wrapper<int> life = new Wrapper<int>(3);
         public static Wrapper<int> enemiesOnScreen = new Wrapper<int>(0);
 
+        public static int ScoreToStartHardMode = 5;
+
+        public static int ScoreToSpawnDemon = 50;
+
+        public static int ScoreWhenHardModeStarted;
+
+        public static int justAdded = new Wrapper<int>(0);
+
+
         public static int MaxEnemiesOnScreen = 3; // 3
 
-        public static int threshold = 1; // 4
+        public static float lifeTimeBasic = 4;
+        public static float lifeTimeEnemyBegin = 10;
 
-        public static float lifeTime = 2;
+        static float level = 20;
+        public static float LifeTimeEnemyVariable
+        {
+            get
+            {
+                if(hardEnemiesSpawn)
+                    return Math.Max(2, lifeTimeEnemyBegin - ((score - ScoreWhenHardModeStarted) / level));
+                return lifeTimeEnemyBegin;
+            }
+        }
+
+        public static float spawnGapStart = 2;
+        public static float SpawnGapVariable
+        {
+            get
+            {
+                if(hardEnemiesSpawn)
+                    return Math.Max(0.25f, spawnGapStart - ((score - ScoreWhenHardModeStarted) / level));
+                return spawnGapStart;
+            }
+        }
+
+        public static bool SpawnControl = true;
+
+        public static bool hardEnemiesSpawn = true;
 
         public static ShieldEnergy energy;
 
@@ -64,13 +99,16 @@ namespace SacraSlice.GameCode.Screens
         public static ScreenFlash flash;
         public PlayScreen(GameContainer game) : base(game)
         {
+
+            debugWindow = new DebugWindow(debug, ticks, dt);
+
             entityFactory = new EntityFactory();
             narrator = new Narrator(game);
             flash = new ScreenFlash(GraphicsDevice);
 
             var slope = new Timer();
             slope.GetTimer("slope").Value = -0.7f;
-
+            InitalizeEvents();
             world = new WorldBuilder()
 
                 // Update Systems
@@ -90,7 +128,7 @@ namespace SacraSlice.GameCode.Screens
                 // Render update
 
                 .AddSystem(new TimerUpdater(dt, dtStatic))
-                .AddSystem(new StateDrawUpdate(GameContainer._spriteBatch))
+                .AddSystem(new StateDrawUpdate(GameContainer._spriteBatch, dt, dtStatic))
 
                 // Drawing Systems
 
@@ -116,8 +154,8 @@ namespace SacraSlice.GameCode.Screens
                 // Game Systems
 
                 .AddSystem(new SwordSquash())
-                .AddSystem(new SwordDraw(GameContainer._spriteBatch, ppm))
-                .AddSystem(new SpawnerSystem(entityFactory, ppm, score))
+                .AddSystem(new SwordDraw(GameContainer._spriteBatch, ppm, dt, dtStatic))
+                .AddSystem(new SpawnerSystem(entityFactory, ppm, score, dt, dtStatic))
 
 
                 .Build();
@@ -137,9 +175,12 @@ namespace SacraSlice.GameCode.Screens
             camera.Zoom = 0.8f;
             renderTarget = new RenderTarget2D(GraphicsDevice, w, h);
 
-            
+
 
             //entityFactory.CreateDropper(ppm, score);
+
+            entityFactory.CreateDemon();
+
 
             var e = world.CreateEntity();
             Position p = new Position();
@@ -163,6 +204,9 @@ namespace SacraSlice.GameCode.Screens
         Cursor cursor = new Cursor(0.01f, 10);
         public static MouseStateExtended mouse;
         public static float frameRate;
+        DebugWindow debugWindow;
+
+        public static bool ShowEnergy;
         public override void Draw(GameTime gameTime)
         {
             frameRate = 1 / gameTime.GetElapsedSeconds();
@@ -174,55 +218,12 @@ namespace SacraSlice.GameCode.Screens
 
             GameContainer.GuiRenderer.BeginLayout(gameTime);
 
-            ImGui.Begin("Debug Window", ImGuiWindowFlags.MenuBar);
+            debugWindow.Draw(gameTime);
 
-            if (ImGui.BeginMenuBar())
-            {
-                if (ImGui.BeginMenu("File"))
-                {
-                    if (ImGui.MenuItem("Open")) ; // TODO: fill these in
-                    if (ImGui.MenuItem("Save")) ;
-                    if (ImGui.MenuItem("Quit")) ;
-                    ImGui.EndMenu();
-                }
-                if (ImGui.BeginMenu("Windows"))
-                {
-                    if (ImGui.MenuItem("Debug Log", null, debug.showWindow))
-                    {
-                        debug.showWindow = !debug.showWindow;
-
-                    }
-                    ImGui.EndMenu();
-                }
-                ImGui.EndMenuBar();
-            }
-
-            ImGui.Text("FPS: " + MathF.Round(ImGui.GetIO().Framerate));
-
-            if (ImGui.Button("Reset Tickrate"))
-            {
-                ChangeTickRate(30, 0f, Interpolation.linear);
-            }
-
-            if (ImGui.Button("Slow Down Time"))
-            {
-                ChangeTickRate(5, 1f, Interpolation.fastSlow);
-            }
-
-            if (ImGui.Button("Speed Up Time To Normal"))
-            {
-                ChangeTickRate(30, 1f, Interpolation.slowFast);
-            }
-
-            actor.Act(gameTime.GetElapsedSeconds());
-            ticks = (int)actor.x;
-
-            ImGui.DragInt("Ticks per second", ref ticks, 1, 1, 30, null, ImGuiSliderFlags.AlwaysClamp);
-            dt.Value = 1f / ticks;
             //TODO: get a rendertarget
 
             //GraphicsDevice.SetRenderTarget(renderTarget);
-            GraphicsDevice.Clear(new Color(72 / 255f, 74 / 255f, 119 / 255f));
+            GraphicsDevice.Clear(new Color(72, 74, 119));
             GameContainer._spriteBatch.Begin(SpriteSortMode.BackToFront, samplerState: SamplerState.PointClamp
                 , transformMatrix: camera.ViewMatrix
                 , blendState: BlendState.NonPremultiplied
@@ -230,8 +231,8 @@ namespace SacraSlice.GameCode.Screens
 
             world.Draw(gameTime);
 
-
-            energy.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds(), ppm);
+            if(ShowEnergy || hardEnemiesSpawn)
+                energy.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds() * (dtStatic / dt), ppm);
 
             if (mouse.WasButtonJustDown(MouseButton.Left))
                 cursor.Set(mouseCoordinate);
@@ -251,14 +252,19 @@ namespace SacraSlice.GameCode.Screens
 
             GameContainer._spriteBatch.Begin(samplerState: SamplerState.PointClamp, blendState: BlendState.NonPremultiplied);
             GameContainer._spriteBatch.Draw(renderTarget, GraphicsDevice.PresentationParameters.Bounds, Color.White);
+
+            SpriteAligner.BatchDraw(camera.orthoCamera);
+
             GameContainer._spriteBatch.End();
 
             GameContainer._spriteBatch.Begin(samplerState: SamplerState.LinearWrap, blendState: BlendState.NonPremultiplied);
 
             scoreBoard.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds());
             narrator.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds());
+
             TextDrawer.BatchDraw(camera.orthoCamera);
-            SpriteAligner.BatchDraw(camera.orthoCamera);
+            
+
             flash.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds());
 
             GameContainer._spriteBatch.End();
@@ -276,12 +282,40 @@ namespace SacraSlice.GameCode.Screens
         float accum;
         readonly float dtStatic = 1f / ticks; // For game logic
         Wrapper<float> dt = new Wrapper<float>(1f / ticks); // change so rate at which game updates is different. Dramatic Slow Motion effect!
-        static int ticks = 30;
+        static Wrapper<int> ticks = new Wrapper<int>(30);
         public float alpha;
         public static KeyboardStateExtended ks;
 
         public static Random random = new Random();
 
+        EventHandler eh, stopSpawning;
+        EventAction ev, stopSpawningA;
+        bool once;
+        public void StartHardMode(object sender, EventArgs e)
+        {
+            SpawnControl = false;
+            ScoreWhenHardModeStarted = score;
+            hardEnemiesSpawn = true;
+            SpawnControl = true;
+        }
+
+        public void StartSpawning(object sender, EventArgs e)
+        {
+            SpawnControl = true;
+        }
+        public void StopSpawning(object sender, EventArgs e)
+        {
+            SpawnControl = false;
+            ShowEnergy = true;
+        }
+
+        public void InitalizeEvents()
+        {
+            eh += StartHardMode;
+            stopSpawning += StopSpawning;
+            ev = new EventAction(narrator.actor, eh);
+            stopSpawningA = new EventAction(narrator.actor, stopSpawning);
+        }
         public override void Update(GameTime gameTime)
         {
 
@@ -289,13 +323,56 @@ namespace SacraSlice.GameCode.Screens
             ks = KeyboardExtended.GetState();
             mouseCoordinate = camera.orthoCamera.ScreenToWorld(ms.X, ms.Y);
 
-            if (ks.WasKeyJustDown(Keys.K))
+            if (!once && score >= ScoreToStartHardMode)
             {
-                float scale = 0.2f;
+                once = true;
+                float scale = 0.18f;
+                float y = 0.88f;
+                DebugLog.Print(this, "should only add once");
+                narrator.AddAction(stopSpawningA);
+                narrator.AddAction(Actions.Delay(narrator.actor, 1f));
+                if(life < 3)
+                {
+                    narrator.AddMessage("Main Font", "Are you OK? You look a little hurt...",
+                   duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth,
+                   0.5f, 1 + scale / 2, 0.5f, y);
+                    narrator.AddMessage("Main Font", "Let's continue anyways.",
+                        duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.8f, Interpolation.swingOut, Interpolation.smooth,
+                        0.5f, 1 + scale / 2, 0.5f, y);
+                }
+                else
+                {
+                    narrator.AddMessage("Main Font", "Is this too easy?",
+                   duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth,
+                   0.5f, 1 + scale / 2, 0.5f, y);
+                }
+                narrator.AddMessage("Main Font", "Hmm... How can I make this more interesting?",
+                        duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.8f, Interpolation.swingOut, Interpolation.smooth,
+                        0.5f, 1 + scale / 2, 0.5f, y);
+                narrator.AddMessage("Main Font", "I know!",
+                    duration: 0.4f, readDelay: 1f, endDelay: 0.2f, size: scale, Interpolation.swingOut, Interpolation.smooth,
+                    0.5f, 1 + scale / 2, 0.5f, y);
+                narrator.AddMessage("Main Font", "I've given you a fancy new toy! :)",
+                    duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth,
+                    0.5f, 1 + scale / 2, 0.5f, y);
+                narrator.AddMessage("Main Font", "Press [Right Click] to activate your shield. Try it!",
+                    duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.75f, Interpolation.swingOut, Interpolation.smooth,
+                    0.5f, 1 + scale / 2, 0.5f, y);
+                narrator.AddMessage("Main Font", "Be careful not to use all the energy in one go!",
+                    duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.75f, Interpolation.swingOut, Interpolation.smooth,
+                    0.5f, 1 + scale / 2, 0.5f, y);
+                narrator.AddMessage("Main Font", "Time it right to defend yourself.",
+                    duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth,
+                    0.5f, 1 + scale / 2, 0.5f, y);
+                narrator.AddMessage("Main Font", "How about you show off your gadget to some NEW friends?",
+                    duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.6f, Interpolation.swingOut, Interpolation.smooth,
+                    0.5f, 1 + scale / 2, 0.5f, y);
+                narrator.AddMessage("Main Font", "I'm sending them your way now! Good luck!",
+                    duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.8f, Interpolation.swingOut, Interpolation.smooth,
+                    0.5f, 1 + scale / 2, 0.5f, y);
 
-                narrator.AddMessage("Main Font", "Hello World!",
-                    duration: .4f, delay: .5f, size: scale, Interpolation.swingOut, Interpolation.smooth, 0.5f, 1+scale/2, 0.5f, 1-scale/2);
-            // 1.5 2
+                //I'm sending some NEW friends your way. Good luck!
+                narrator.AddAction(ev);
             }
 
             accum += gameTime.GetElapsedSeconds();
@@ -310,14 +387,18 @@ namespace SacraSlice.GameCode.Screens
 
         }
 
-        static Actor actor = new Actor(ticks, 0);
-        public static int justAdded;
-
-        public static void ChangeTickRate(int newTickRate, float time, Interpolation interpolation)
-        // Adds an action to change the tick rate.
+        public void TestNarrator()
         {
-            actor.x = ticks;
-            actor.AddAction(Actions.MoveTo(actor, newTickRate, 0, time, interpolation));
+            if (ks.WasKeyJustDown(Keys.K))
+            {
+                float scale = 0.2f;
+
+                narrator.AddMessage("Main Font", "Hello World!",
+                    duration: .4f, readDelay: .5f, endDelay: 0, size: scale, Interpolation.swingOut, Interpolation.smooth, 0.5f, 1 + scale / 2, 0.5f, 1 - scale / 2);
+                // 1.5 2
+            }
         }
+
+       
     }
 }

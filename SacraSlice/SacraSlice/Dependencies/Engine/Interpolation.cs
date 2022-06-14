@@ -1,20 +1,30 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace SacraSlice.Dependencies.Engine
 {
     public abstract class Interpolation
     {
-        abstract public float apply(float a);
+        abstract public float Apply(float a);
 
         float roundingError = 0.000001f;
 
-        public float apply(float start, float end, float a)
+        public float Apply(float start, float end, float a)
         {
-            return start + (end - start) * apply(a);
+            return start + (end - start) * Apply(a);
         }
+        public Color Apply(Color start, Color end, float a)
+        {
+            int r = (int)(start.R + (end.R - start.R) * Apply(a));
+            int g = (int)(start.G + (end.G - start.G) * Apply(a));
+            int b = (int)(start.B + (end.B - start.B) * Apply(a));
+            int aa = (int)(start.A + (end.A - start.A) * Apply(a));
+            return new Color(r, g, b, aa);
+        }
+
         internal class Linear : Interpolation
         {
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 return a;
             }
@@ -22,7 +32,7 @@ namespace SacraSlice.Dependencies.Engine
         static public readonly Interpolation linear = new Interpolation.Linear();
         internal class Smooth : Interpolation
         {
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 return a * a * (3 - 2 * a);
             }
@@ -30,7 +40,7 @@ namespace SacraSlice.Dependencies.Engine
         static public readonly Interpolation smooth = new Interpolation.Smooth();
         internal class Smooth2 : Interpolation
         {
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 a = a * a * (3 - 2 * a);
                 return a * a * (3 - 2 * a);
@@ -39,7 +49,7 @@ namespace SacraSlice.Dependencies.Engine
         static public readonly Interpolation smooth2 = new Interpolation.Smooth2();
         internal class Smoother : Interpolation
         {
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 return a * a * a * (a * (a * 6 - 15) + 10);
             }
@@ -55,7 +65,7 @@ namespace SacraSlice.Dependencies.Engine
 
         internal class Pow2InInverse : Interpolation
         {
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 if (a < roundingError) return 0;
                 return MathF.Sqrt(a);
@@ -66,7 +76,7 @@ namespace SacraSlice.Dependencies.Engine
 
         internal class Pow2OutInverse : Interpolation
         {
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 if (a < roundingError) return 0;
                 if (a > 1) return 1;
@@ -82,7 +92,7 @@ namespace SacraSlice.Dependencies.Engine
 
         internal class Pow3InInverse : Interpolation
         {
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 return MathF.Cbrt(a);
             }
@@ -91,7 +101,7 @@ namespace SacraSlice.Dependencies.Engine
 
         internal class Pow3OutInverse : Interpolation
         {
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 return 1 - MathF.Cbrt(-(a - 1));
             }
@@ -109,7 +119,7 @@ namespace SacraSlice.Dependencies.Engine
 
         internal class Sine : Interpolation
         {
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 return (1 - MathF.Cos(a * MathF.PI)) / 2;
             }
@@ -118,7 +128,7 @@ namespace SacraSlice.Dependencies.Engine
         static public readonly Interpolation sine = new Interpolation.Sine();
         internal class SineIn : Interpolation
         {
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 return 1 - MathF.Cos(a * MathF.PI / 2);
             }
@@ -127,7 +137,7 @@ namespace SacraSlice.Dependencies.Engine
         static public readonly Interpolation sineIn = new Interpolation.SineIn();
         internal class SineOut : Interpolation
         {
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 return MathF.Sin(a * MathF.PI / 2);
             }
@@ -145,7 +155,7 @@ namespace SacraSlice.Dependencies.Engine
 
         internal class Circle : Interpolation
         {
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 if (a <= 0.5f)
                 {
@@ -161,7 +171,7 @@ namespace SacraSlice.Dependencies.Engine
         static public readonly Interpolation circle = new Interpolation.Circle();
         internal class CircleIn : Interpolation
         {
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 return 1 - MathF.Sqrt(1 - a * a);
             }
@@ -171,7 +181,7 @@ namespace SacraSlice.Dependencies.Engine
 
         internal class CircleOut : Interpolation
         {
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 a--;
                 return MathF.Sqrt(1 - a * a);
@@ -203,7 +213,7 @@ namespace SacraSlice.Dependencies.Engine
                 scale = 1 / (1 - min);
             }
 
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 if (a <= 0.5f) return (MathF.Pow(value, power * (a * 2 - 1)) - min) * scale / 2;
                 return (2 - (MathF.Pow(value, -power * (a * 2 - 1)) - min) * scale) / 2;
@@ -213,7 +223,7 @@ namespace SacraSlice.Dependencies.Engine
         public class ExpIn : Exp
         {
             public ExpIn(float value, float power) : base(value, power) { }
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 return (MathF.Pow(value, power * (a - 1)) - min) * scale;
             }
@@ -222,7 +232,7 @@ namespace SacraSlice.Dependencies.Engine
         public class ExpOut : Exp
         {
             public ExpOut(float value, float power) : base(value, power) { }
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 return 1 - (MathF.Pow(value, -power * a) - min) * scale;
             }
@@ -240,7 +250,7 @@ namespace SacraSlice.Dependencies.Engine
                 this.bounces = bounces * MathF.PI * (bounces % 2 == 0 ? 1 : -1);
             }
 
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 if (a <= 0.5f)
                 {
@@ -256,7 +266,7 @@ namespace SacraSlice.Dependencies.Engine
         public class ElasticIn : Elastic
         {
             public ElasticIn(float value, float power, int bounces, float scale) : base(value, power, bounces, scale) { }
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 if (a >= 0.99) return 1;
                 return MathF.Pow(value, power * (a - 1)) * MathF.Sin(a * bounces) * scale;
@@ -266,7 +276,7 @@ namespace SacraSlice.Dependencies.Engine
         public class ElasticOut : Elastic
         {
             public ElasticOut(float value, float power, int bounces, float scale) : base(value, power, bounces, scale) { }
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 if (a == 0) return 0;
                 a = 1 - a;
@@ -284,10 +294,10 @@ namespace SacraSlice.Dependencies.Engine
             {
                 float test = a + widths[0] / 2;
                 if (test < widths[0]) return test / (widths[0] / 2) - 1;
-                return base.apply(a);
+                return base.Apply(a);
             }
 
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 if (a <= 0.5f) return (1 - output(1 - a * 2)) / 2;
                 return output(a * 2 - 1) / 2 + 0.5f;
@@ -350,7 +360,7 @@ namespace SacraSlice.Dependencies.Engine
                 widths[0] *= 2;
             }
 
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 if (a == 1) return 1;
                 a += widths[0] / 2;
@@ -376,9 +386,9 @@ namespace SacraSlice.Dependencies.Engine
 
             public BounceIn(float[] widths, float[] heights) : base(widths, heights) { }
             public BounceIn(int bounces) : base(bounces) { }
-            public override float apply(float a)
+            public override float Apply(float a)
             {
-                return 1 - base.apply(1 - a);
+                return 1 - base.Apply(1 - a);
             }
         }
 
@@ -392,7 +402,7 @@ namespace SacraSlice.Dependencies.Engine
                 this.scale = scale * 2;
             }
 
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 if (a <= 0.5f)
                 {
@@ -415,7 +425,7 @@ namespace SacraSlice.Dependencies.Engine
                 this.scale = scale;
             }
 
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 a--;
                 return a * a * ((scale + 1) * a + scale) + 1;
@@ -432,7 +442,7 @@ namespace SacraSlice.Dependencies.Engine
                 this.scale = scale;
             }
 
-            public override float apply(float a)
+            public override float Apply(float a)
             {
                 return a * a * ((scale + 1) * a - scale);
             }
@@ -447,7 +457,7 @@ namespace SacraSlice.Dependencies.Engine
             this.power = power;
         }
 
-        public override float apply(float a)
+        public override float Apply(float a)
         {
             if (a <= 0.5f) return MathF.Pow(a * 2, power) / 2;
             return MathF.Pow((a - 1) * 2, power) / (power % 2 == 0 ? -2 : 2) + 1;
@@ -457,7 +467,7 @@ namespace SacraSlice.Dependencies.Engine
     public class PowIn : Pow
     {
         public PowIn(int power) : base(power) { }
-        public override float apply(float a)
+        public override float Apply(float a)
         {
             return MathF.Pow(a, power);
         }
@@ -466,7 +476,7 @@ namespace SacraSlice.Dependencies.Engine
     public class PowOut : Pow
     {
         public PowOut(int power) : base(power) { }
-        public override float apply(float a)
+        public override float Apply(float a)
         {
             return MathF.Pow(a - 1, power) * (power % 2 == 0 ? -1 : 1) + 1;
         }

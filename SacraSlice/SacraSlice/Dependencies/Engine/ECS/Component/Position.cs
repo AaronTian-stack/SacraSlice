@@ -6,6 +6,11 @@ namespace SacraSlice.Dependencies.Engine.ECS.Component
     public class Position : ImGuiElement
     {
 
+        public Position()
+        {
+            //this.collideClamp = collideClamp;
+        }
+
         public Vector2 velocity = new Vector2();
         public Vector2 carryVelocity = new Vector2();
 
@@ -16,7 +21,7 @@ namespace SacraSlice.Dependencies.Engine.ECS.Component
         public float start; // save a 1D starting velocity
         public float saved; // save a 1D velocity
 
-        public bool orientation, ground, gravity; // true for left false for right
+        public bool orientation, ground, gravity;// collideClamp; // true for left false for right
 
         System.Numerics.Vector2 vec2 = new System.Numerics.Vector2();
 

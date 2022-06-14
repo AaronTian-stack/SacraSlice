@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
+using MonoGame.Extended.Collections;
 using SacraSlice.Dependencies.Engine;
+using SacraSlice.Dependencies.Engine.ECS.Component;
 using SacraSlice.Dependencies.Engine.Scene;
 using SacraSlice.Dependencies.Engine.Scene.ActionClasses;
 using SacraSlice.GameCode.Screens;
@@ -17,13 +19,15 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
 
         public Sprite s, hand;
         public Actor a = new Actor();
-        public Sword(int seed)
+        Timer t;
+        public Sword(int seed, Timer t)
         {
+            this.t = t;
             s = new Sprite(GameContainer.atlas.FindRegion("sword"));
             hand = new Sprite(GameContainer.atlas.FindRegion("hand"));
             random = new FastRandom(seed);
             waitingTime = random.NextSingle(0, duration);
-
+            t.GetSwitch("have sword").Value = true;
 
             float duration2 = 0.5f;
             float n = 1f;
@@ -65,12 +69,16 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
         EventAction ev;
         public void CheckDefending(object sender, EventArgs e)
         {
+            t.GetSwitch("Attacking").Value = false;
+            if (t.GetSwitch("Shrink"))
+                return;
+
             if (!PlayScreen.energy.defending)
             {
                 PlayScreen.life.Value--;
                 Color w = new Color(1, 1, 1, 0.5f);
                 PlayScreen.flash.priority.AddAction(Actions.ColorAction(PlayScreen.flash.priority
-                    , new Color(139 / 255f, 0 / 255f, 0 / 255f, .3f), w, 0.1f, Interpolation.smooth));
+                    , new Color(139, 0, 0, .3f), w, 0.1f, Interpolation.smooth));
                 PlayScreen.flash.priority.AddAction(Actions.ColorAction(PlayScreen.flash.priority
                     , w, new Color(0, 0, 0, 0), 0.1f, Interpolation.smooth));
             }
@@ -80,15 +88,19 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
                 // flash the screen, blue then white very quickly
                 //Color.darkblue
                 bool dont = false;
-                if (PlayScreen.energy.realClick < 0.1f)
+
+                //DebugLog.Print("Energy", PlayScreen.energy.realClick);
+
+                if (PlayScreen.energy.realClick < 0.15f)
                 {
                     // perfect parry
+                    PlayScreen.narrator.rainbow = true;
                     float scale = 0.2f;
                     int add = 2;
                     PlayScreen.score.Value += add;
                     PlayScreen.justAdded = add;
                     PlayScreen.narrator.AddMessage("Main Font", "Perfect!",
-                    duration: 0.5f, delay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth, 0.5f, 1 + scale / 2, 0.5f, 1 - scale / 2);
+                    duration: 0.5f, readDelay: 0.5f, endDelay: 0, size: scale, Interpolation.swingOut, Interpolation.smooth, 0.5f, 1 + scale / 2, 0.5f, 1 - scale / 2);
                     dont = true;
                 }
                 //DebugLog.Print("bruh", PlayScreen.energy.realClick);
@@ -97,7 +109,7 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
                 {
                     float scale = 0.2f;
                     PlayScreen.narrator.AddMessage("Main Font", "Close Call!",
-                    duration: 0.5f, delay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth, 0.5f, 1 + scale / 2, 0.5f, 1 - scale / 2);
+                    duration: 0.5f, readDelay: 0.5f, endDelay: 0, size: scale, Interpolation.swingOut, Interpolation.smooth, 0.5f, 1 + scale / 2, 0.5f, 1 - scale / 2);
                 }
                 /*else if (!dont)
                 {
@@ -108,7 +120,7 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
 
                 Color w = new Color(1, 1, 1, 0.5f);
                 PlayScreen.flash.priority.AddAction(Actions.ColorAction(PlayScreen.flash.priority
-                    , new Color(0 / 255f, 0 / 255f, 139 / 255f, .5f), w, 0.1f, Interpolation.smooth));
+                    , new Color(0, 0, 139, .5f), w, 0.1f, Interpolation.smooth));
                 PlayScreen.flash.priority.AddAction(Actions.ColorAction(PlayScreen.flash.priority
                     , w, new Color(0,0,0,0), 0.1f, Interpolation.smooth));
 
@@ -116,19 +128,31 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
         }
 
         bool swing;
-        public void Swing()
+
+        public void Reset()
+        {
+            a1.actions.Clear();
+        }
+        public void Swing(float attackTime)
         {
             swing = true;
             float turn = -200;
             float a = 0.4f;
-            a1.AddAction(Actions.MoveFrom(a1, s.Rotation, 0, s.Rotation - turn * a, 0, 0.6f, Interpolation.smooth));
-            a1.AddAction(Actions.MoveFrom(a1, s.Rotation - turn * a, 0, s.Rotation + turn, 0, 0.15f, Interpolation.smooth));
+            DebugLog.Print("Sword", "Swung");
+            a1.AddAction(Actions.MoveFrom(a1, s.Rotation, 0, s.Rotation - turn * a, 0, attackTime, Interpolation.smooth));
+            a1.AddAction(Actions.MoveFrom(a1, s.Rotation - turn * a, 0, s.Rotation + turn, 0, 0.2f, Interpolation.smooth));
             a1.AddAction(ev);
             a1.AddAction(Actions.MoveFrom(a1, s.Rotation + turn, 0, s.Rotation, 0, 0.3f, Interpolation.swingOut));
         }
         Actor a1 = new Actor();
+
+        Bag<Vector2> rotations = new Bag<Vector2>();
+        float rotationTimer;
+
+        //float saveRotation;
         public void Draw(SpriteBatch sb, float dt, float ppm)
         {
+
             s.Scale *= ppm;
             hand.Scale *= ppm;
 
@@ -139,16 +163,36 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
 
             if (!swing)
             {
-                s.Rotation = Interpolation.linear.apply(s.Rotation, rotation, 0.11f * 120f / PlayScreen.frameRate);
-                hand.Rotation = s.Rotation;
+                s.Rotation = Interpolation.linear.Apply(s.Rotation, rotation, 0.11f * dt * 120f);
+                rotations.Clear();
             }
             else
             {
+                
+                rotationTimer += dt;
+                if (rotationTimer > 0.05f)
+                {
+                    rotationTimer = 0;
+                    while (rotations.Count > 1)
+                        rotations.RemoveAt(0);
+                    rotations.Add(new Vector2(s.Rotation, 1));
+                }
+
+                for (int i = 0; i < rotations.Count; i++)
+                {
+                    var r = rotations[i];
+                    s.Rotation = r.X;
+                    s.Color.A = (byte)((i * 1f / rotations.Count) * 255f);
+                    s.Draw(sb, 0.004f + i * 0.000001f);
+                    r.Y -= 255f * dt * 120f;
+                }
                 s.Rotation = a1.x;
-                hand.Rotation = s.Rotation;
             }
-           
+
+          
+            s.Color.A = 255;
             s.Draw(sb, 0.004f);
+            hand.Rotation = s.Rotation;
             hand.Draw(sb, 0.003f);
             s.Scale /= ppm;
             hand.Scale /= ppm;

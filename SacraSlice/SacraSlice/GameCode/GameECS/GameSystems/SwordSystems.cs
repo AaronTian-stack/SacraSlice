@@ -26,12 +26,16 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
         private ComponentMapper<Sprite> spriteMapper;
         SpriteBatch sb;
         float ppm;
-        public SwordDraw(SpriteBatch sb, float ppm) : base(Aspect.All(typeof(Sword), typeof(Position), typeof(HitBox), typeof(Sprite)
+
+        Wrapper<float> dt;
+        float dtStatic;
+        public SwordDraw(SpriteBatch sb, float ppm, Wrapper<float> dt, float dtStatic) : base(Aspect.All(typeof(Sword), typeof(Position), typeof(HitBox), typeof(Sprite)
             , typeof(Timer)))
         {
             this.sb = sb;
             this.ppm = ppm;
-
+            this.dt = dt;
+            this.dtStatic = dtStatic;
             
         }
 
@@ -48,27 +52,32 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
             foreach (var entity in ActiveEntities)
             {
 
+                var dt = gameTime.GetElapsedSeconds() * (dtStatic / this.dt);
+
                 var sword = sMapper.Get(entity);
                 var pos = pMapper.Get(entity);
                 var hb = hMapper.Get(entity);
                 var timer = tMapper.Get(entity);
                 var sprite = spriteMapper.Get(entity);
 
-                sword.a.Act(gameTime.GetElapsedSeconds());
+                sword.a.Act(dt);
                 sword.s.Position.X = sprite.Position.X - hb.rect.Width / 2 - (sword.s.BoundingBox.Width * 0.5f * sword.s.Scale.X * ppm);
                 sword.s.Position.Y = sprite.Position.Y + sword.a.y;
 
                 sword.hand.Position = sword.s.Position;
 
-                sword.ChangeAngle(gameTime.GetElapsedSeconds());
+                sword.ChangeAngle(dt);
 
                 // the sword rotation starts upright (0 = 90)
                 // sword counter clockwise is negative
 
-                if (timer.GetSwitch("Attack"))
+                if (timer.GetSwitch("Attack") && !timer.GetSwitch("Shrink") 
+                    //&& timer.GetTimer("Life") > timer.GetTimer("Attack Time") * 2
+                    )
                 {
-                    sword.Swing();
+                    sword.Swing(timer.GetTimer("Attack Time"));
                     timer.GetSwitch("Attack").Value = false;
+                    timer.GetSwitch("Attacking").Value = true;
                 }
                    
 
@@ -81,7 +90,8 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
 
                 float tolerance = 25;
 
-                if (timer.GetSwitch("Sword Active") && angle > 90 - tolerance && angle < 90 + tolerance)
+                if (timer.GetSwitch("Sword Active") && angle > 90 - tolerance && angle < 90 + tolerance
+                    && !timer.GetSwitch("Attacking"))
                 {
                     sword.s.Color = Color.Gold;
                     timer.GetSwitch("Protect").Value = true;
@@ -92,7 +102,7 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                     timer.GetSwitch("Protect").Value = false;
                 }
 
-                sword.Draw(sb, gameTime.GetElapsedSeconds(), ppm);
+                sword.Draw(sb, dt, ppm);
                 
 
             }
@@ -131,8 +141,8 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                 float y = 1;
                 if (sqm.lookup.TryGetValue(sm.currentState, out sv))
                 {
-                    x = sv.interpolationX.apply(sv.startValues.X, sv.endValues.X, MathF.Min(1, sv.timeX.Item1.Value * sv.timeX.Item2));
-                    y = sv.interpolationY.apply(sv.startValues.Y, sv.endValues.Y, MathF.Min(1, sv.timeY.Item1.Value * sv.timeY.Item2));
+                    x = sv.interpolationX.Apply(sv.startValues.X, sv.endValues.X, MathF.Min(1, sv.timeX.Item1.Value * sv.timeX.Item2));
+                    y = sv.interpolationY.Apply(sv.startValues.Y, sv.endValues.Y, MathF.Min(1, sv.timeY.Item1.Value * sv.timeY.Item2));
                 }
 
                 sword.s.Scale = new Vector2(x, y);

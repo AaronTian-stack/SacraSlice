@@ -13,14 +13,14 @@ arrow
   index: -1
 cube
   rotate: false
-  xy: 1379, 393
+  xy: 327, 29
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 1
 cube
   rotate: false
-  xy: 429, 89
+  xy: 1481, 393
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
@@ -76,7 +76,7 @@ randomcube
   index: -1
 shield
   rotate: false
-  xy: 225, 29
+  xy: 1379, 393
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
@@ -90,14 +90,14 @@ shieldbar
   index: -1
 sphere
   rotate: false
-  xy: 1277, 393
+  xy: 225, 29
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 1
 sphere
   rotate: false
-  xy: 327, 29
+  xy: 429, 89
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
@@ -125,30 +125,37 @@ sphereLegs
   index: 2
 sphereLegs
   rotate: false
-  xy: 1037, 191
+  xy: 1037, 343
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: 1
-spook1
+spook
   rotate: false
   xy: 1, 131
   size: 212, 362
   orig: 212, 362
   offset: 0, 0
-  index: -1
-spook2
+  index: 2
+spook
   rotate: false
   xy: 215, 131
   size: 212, 362
   orig: 212, 362
   offset: 0, 0
-  index: -1
+  index: 1
 sword
   rotate: false
   xy: 1233, 297
   size: 42, 196
   orig: 42, 196
+  offset: 0, 0
+  index: -1
+warning
+  rotate: false
+  xy: 1277, 393
+  size: 100, 100
+  orig: 100, 100
   offset: 0, 0
   index: -1
 whitepixel
@@ -160,7 +167,7 @@ whitepixel
   index: -1
 xBlank
   rotate: false
-  xy: 1037, 343
+  xy: 1037, 191
   size: 150, 150
   orig: 150, 150
   offset: 0, 0

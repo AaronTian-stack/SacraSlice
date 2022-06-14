@@ -64,8 +64,8 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
         Bag<RandomCube> bag = new Bag<RandomCube>();
         private ComponentMapper<GameCamera> camMapper;
 
-        Color blueLight = new Color(72 / 255f, 74 / 255f, 119 / 255f);
-        public static Color blueDark = new Color(50 / 255f, 51 / 255f, 83 / 255f);
+        Color blueLight = new Color(72, 74, 119);
+        public static Color blueDark = new Color(50, 51, 83);
         Vector2 lastpos;
 
         FastRandom rnd = new FastRandom(69);
@@ -201,9 +201,14 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
             // draw the floor
             pixel.Color = Color.White;
 
-            pixel.Color = new Color(155 / 255f, 171 / 255f, 178 / 255f);
+            pixel.Color = new Color(155, 171, 178);
             pixel.Origin = new Vector2(0.5f, 0.5f);
-            var h = lastRect.Bottom - (lastRect.Bottom - lastRect.Top) * 0.25f * 0.5f;
+
+
+            //var h = lastRect.Bottom - (lastRect.Bottom - lastRect.Top) * 0.25f * 0.5f;
+
+            var h = 3.75f;
+
             pixel.Position = new Vector2(0, h);
             pixel.Scale = new Vector2(lastRect.Width * 1.1f, 40);
             pixel.Draw(sb, 0.97f);

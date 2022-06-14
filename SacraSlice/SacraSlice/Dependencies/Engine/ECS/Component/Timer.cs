@@ -16,7 +16,7 @@ namespace SacraSlice.Dependencies.Engine.ECS.Component
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public Wrapper<float> GetTimer(String name)
+        public Wrapper<float> GetTimer(string name)
         {
 
             if (lookup.TryGetValue(name, out r))
@@ -27,7 +27,7 @@ namespace SacraSlice.Dependencies.Engine.ECS.Component
             return GetTimer(name);
 
         }
-        public Wrapper<bool> GetSwitch(String name)
+        public Wrapper<bool> GetSwitch(string name)
         {
             if (lookupSwitch.TryGetValue(name, out b))
                 return b;

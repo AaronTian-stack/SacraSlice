@@ -65,6 +65,12 @@ namespace SacraSlice.Dependencies.Engine.InterfaceLayout
                 var pos = camera.WorldToScreen(batch.pos);
                 var view = gd.Viewport;
                 batch.s.Scale = batch.scale;
+
+                //var targetX = batch.s.Scale.X * view.Width;
+                var targetY = batch.s.Scale.Y * view.Height;
+
+                batch.s.Scale = new Vector2(targetY);   
+
                 batch.s.Position = pos;
                 batch.s.Draw(sb);
 

@@ -10,7 +10,8 @@ using SacraSlice.Dependencies.Engine.Animation;
 using SacraSlice.Dependencies.Engine.ECS.Component;
 using SacraSlice.Dependencies.Engine.States;
 using SacraSlice.GameCode.GameECS.GameComponents;
-using SacraSlice.GameCode.GameStates;
+using SacraSlice.GameCode.GameStates.Demon;
+using SacraSlice.GameCode.GameStates.Enemy;
 using SacraSlice.GameCode.Screens;
 using System;
 using System.Collections.Generic;
@@ -102,15 +103,14 @@ namespace SacraSlice.GameCode.GameECS
             p.velocity.Y = rand.NextSingle(0, 10);
         }
 
-        public void RandomAnimation(AnimationStateManager asm, int score)
+        public void RandomAnimation(AnimationStateManager asm)
         {
             List<TextureRegion> frames = null;
             var bruh = rand.Next(0, 2);
             string sphere, cube;
             bool b = false;
-            if(score > PlayScreen.threshold)
+            if(PlayScreen.hardEnemiesSpawn)
             {
-                PlayScreen.lifeTime = 10;
                 sphere = "sphereLegs";
                 cube = "cubeLegs";
                 b = true;
@@ -152,7 +152,6 @@ namespace SacraSlice.GameCode.GameECS
             bruh++;
             Position p = new Position();
             p.gravity = true;
-
 
             ResetPosition(p, 0);
             ResetVelocity(p);
@@ -197,7 +196,7 @@ namespace SacraSlice.GameCode.GameECS
                     asm.AddAnimation(s, new Animation<TextureRegion>("Cube", 0.5f, null, PlayMode.LOOP));
                     break;
             }
-            RandomAnimation(asm, score);
+            RandomAnimation(asm);
 
             hb.AddState(f, new RectangleF(0, 0, boxSize, height));
             hb.AddState(c, new RectangleF(0, 0, boxSize, height));
@@ -227,12 +226,47 @@ namespace SacraSlice.GameCode.GameECS
 
             entity.Attach(sqm);
 
-            if(score > PlayScreen.threshold)
+            if(PlayScreen.hardEnemiesSpawn)
             {
                 t.GetSwitch("sword").Value = true;
-                Sword sword = new Sword(rand.Next(1000));
+                Sword sword = new Sword(rand.Next(1000), t);
                 entity.Attach(sword);
             }
+
+            return entity;
+        }
+
+        public Entity CreateDemon()
+        {
+            var entity = world.CreateEntity();
+
+            Position p = new Position();
+
+            p.gravity = false;
+
+            p.SetAllPosition(new Vector2(0, 200));
+
+            entity.Attach(p);
+            entity.Attach("Demon");
+
+            Timer t = new Timer();
+            entity.Attach(t);
+            t.GetSwitch("no shadow").Value = true;
+            t.GetSwitch("IsDemon").Value = true;
+
+            StateManager sm = new StateManager();
+            DemonState state = new DemonState(sm, dt, p, t);
+            sm.currentState = state;
+
+            entity.Attach(sm);
+
+            AnimationStateManager asm = new AnimationStateManager();
+
+            asm.AddAnimation(state, new Animation<TextureRegion>("spook", 0.1f, GameContainer.atlas.FindRegions("spook"), PlayMode.LOOP));
+
+            entity.Attach(asm);
+
+            entity.Attach(new Sprite());
 
             return entity;
         }

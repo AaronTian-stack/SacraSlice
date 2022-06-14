@@ -23,7 +23,7 @@ namespace SacraSlice.Dependencies.Engine.Scene.ActionClasses
         {
             timer += elapsedTime;
 
-            a.color.A = (byte)interpolation.apply(startFade, fade, MathF.Min(1, timer / duration));
+            a.color.A = (byte)interpolation.Apply(startFade, fade, MathF.Min(1, timer / duration));
 
             if (timer >= duration)
             {

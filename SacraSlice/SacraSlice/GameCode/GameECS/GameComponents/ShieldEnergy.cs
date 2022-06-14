@@ -14,7 +14,7 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
     public class ShieldEnergy
     {
         public float energyTimer;
-        public float energyMax = .6f;
+        public float energyMax = .8f;
         GameCamera gd;
         public bool defending;
         RepeatAction ra;
@@ -29,9 +29,9 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
         NinePatch energy = new NinePatch(GameContainer.atlas.FindRegion("shieldbar"), 2, 2, 2, 2);
         Sprite pixel = new Sprite(GameContainer.atlas.FindRegion("whitepixel"));
 
-        Color green = new Color(30 / 255f, 188 / 255f, 115 / 255f);
-        Color orange = new Color(251 / 255f, 107 / 255f, 29 / 255f);
-        Color red = new Color(179 / 255f, 56 / 255f, 49 / 255f);
+        Color green = new Color(30, 188, 115);
+        Color orange = new Color(251, 107, 29);
+        Color red = new Color(179, 56, 49);
 
 
         public float clickTimer;
@@ -39,9 +39,9 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
         float clickTime = 0.1f;
 
         float notclickTimer;
-        float rechargeWait = 0.5f;
+        float rechargeWait = 0.3f;
         float recharge;
-        float rechargeWaitLong = 1.5f;
+        float rechargeWaitLong = 1f;
         Actor a = new Actor();
         public bool HasActions { get => a.actions.Count != 0; }
 
@@ -51,11 +51,11 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
             energy.position = new Vector2(v.Center.X, v.Top + 22f);
 
             energy.Scale = new Vector2(80f, .5f);
-
+            //DebugLog.Print(this, realClick);
             a.Act(dt);
             if (PlayScreen.mouse.IsButtonDown(MouseButton.Right))
             {
-                clickTimer += dt; realClick = clickTimer;
+                clickTimer += dt; realClick += dt;
                 
                 notclickTimer = 0;
                 if (energyTimer > 0)
@@ -96,8 +96,8 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
             }
 
             clickTimer = Math.Clamp(clickTimer, 0, clickTime);
-            realClick = Math.Clamp(realClick, 0, clickTime);
-            var opa = Interpolation.smooth.apply(0, 255, clickTimer / clickTime);
+            realClick = Math.Clamp(realClick, 0, 999);
+            var opa = Interpolation.smooth.Apply(0, 255, clickTimer / clickTime);
             if (a.actions.Count != 0)
                 energy.color = a.color;
             else
@@ -123,9 +123,9 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
             }
 
             float s = 0.3f;
-            pixel.Color.R = (byte)Interpolation.smooth.apply(pixel.Color.R, color.R, s * dt / (1/120f));
-            pixel.Color.G = (byte)Interpolation.smooth.apply(pixel.Color.G, color.G, s * dt / (1 / 120f));
-            pixel.Color.B = (byte)Interpolation.smooth.apply(pixel.Color.B, color.B, s * dt / (1 / 120f));
+            pixel.Color.R = (byte)Interpolation.smooth.Apply(pixel.Color.R, color.R, s * dt / (1/120f));
+            pixel.Color.G = (byte)Interpolation.smooth.Apply(pixel.Color.G, color.G, s * dt / (1 / 120f));
+            pixel.Color.B = (byte)Interpolation.smooth.Apply(pixel.Color.B, color.B, s * dt / (1 / 120f));
 
 
 

@@ -32,8 +32,8 @@ namespace SacraSlice.Dependencies.Engine.ECS.Systems
 
                 if (sqm.lookup.TryGetValue(sm.currentState, out sv))
                 {
-                    x = sv.interpolationX.apply(sv.startValues.X, sv.endValues.X, MathF.Min(1, sv.timeX.Item1.Value * sv.timeX.Item2));
-                    y = sv.interpolationY.apply(sv.startValues.Y, sv.endValues.Y, MathF.Min(1, sv.timeY.Item1.Value * sv.timeY.Item2));
+                    x = sv.interpolationX.Apply(sv.startValues.X, sv.endValues.X, MathF.Min(1, sv.timeX.Item1.Value * sv.timeX.Item2));
+                    y = sv.interpolationY.Apply(sv.startValues.Y, sv.endValues.Y, MathF.Min(1, sv.timeY.Item1.Value * sv.timeY.Item2));
                 }
 
 

@@ -21,7 +21,7 @@ namespace SacraSlice.Dependencies.Engine.Scene.ActionClasses
         {
             timer += elapsedTime;
 
-            float percent = interpolation.apply(0, 1, MathF.Min(1, timer / elapsedTime));
+            float percent = interpolation.Apply(0, 1, MathF.Min(1, timer / elapsedTime));
 
             a.x += x * percent;
             a.y += y * percent;

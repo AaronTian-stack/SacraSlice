@@ -46,8 +46,8 @@ namespace SacraSlice.Dependencies.Engine.ECS.Systems
                 if (camera.targets.TryPeek(out p) && camera.interpolationPosition.TryPeek(out i)
                     && camera.speedPosition.TryPeek(out speed))
                 {
-                    float x = i.apply(camera.Position.X, p.renderPosition.X, speed);
-                    float y = i.apply(camera.Position.Y, p.renderPosition.Y, speed);
+                    float x = i.Apply(camera.Position.X, p.renderPosition.X, speed);
+                    float y = i.Apply(camera.Position.Y, p.renderPosition.Y, speed);
 
                     camera.Position = new Vector2(x, y);
                 }
@@ -55,13 +55,13 @@ namespace SacraSlice.Dependencies.Engine.ECS.Systems
                 if (camera.targetRotations.TryPeek(out rotation) && camera.interpolationRotation.TryPeek(out i)
                     && camera.speedRotation.TryPeek(out speed))
                 {
-                    camera.Rotation = i.apply(camera.Rotation, rotation, speed);
+                    camera.Rotation = i.Apply(camera.Rotation, rotation, speed);
                 }
 
 
                 if (camera.targetZooms.TryPeek(out zoom) && camera.interpolationZoom.TryPeek(out i))
                 {
-                    camera.Zoom = i.apply(camera.Zoom, zoom, camera.speedZoom.Peek());
+                    camera.Zoom = i.Apply(camera.Zoom, zoom, camera.speedZoom.Peek());
                 }
 
             }

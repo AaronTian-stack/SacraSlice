@@ -13,7 +13,8 @@ namespace SacraSlice.Dependencies.Engine.Scene.ActionClasses
         }
         public override bool Act(float elapsedTime)
         {
-            eventH?.Invoke(this, EventArgs.Empty);
+            if (elapsedTime != 0)
+                eventH?.Invoke(this, EventArgs.Empty);
             return true;
         }
     }

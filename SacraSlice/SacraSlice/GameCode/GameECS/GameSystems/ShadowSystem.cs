@@ -42,16 +42,16 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                 var ba = -10;
                 Color c = new Color((46 + ba) / 255f, (34 + ba) / 255f, (47 + ba) / 255f);
 
-                if (time.GetSwitch("dead")) continue;
+                if (time.GetSwitch("dead") || time.GetSwitch("no shadow")) continue;
 
                 if (time.GetSwitch("Shrink"))
                 {
-                    sc *= Interpolation.smooth.apply(1, 0, Math.Clamp(time.GetTimer("State Time") / 0.2f, 0, 1));
+                    sc *= Interpolation.smooth.Apply(1, 0, Math.Clamp(time.GetTimer("State Time") / 0.2f, 0, 1));
                     DrawEllipses(sc, pos, y, c, ppm * 4);
                 }
                 else 
                 {
-                    sc *= Interpolation.smooth.apply(0, 1, Math.Clamp((100 + pos.renderPosition.Y) / 100f, 0, 1));
+                    sc *= Interpolation.smooth.Apply(0, 1, Math.Clamp((100 + pos.renderPosition.Y) / 100f, 0, 1));
                     DrawEllipses(sc, pos, y, c, ppm * 4);
                 }
             }

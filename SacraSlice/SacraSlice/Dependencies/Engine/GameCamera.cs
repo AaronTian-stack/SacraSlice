@@ -109,6 +109,8 @@ namespace SacraSlice.Dependencies.Engine
 
                 float zoom = orthoCamera.Zoom;
                 ImGui.DragFloat("Zoom", ref zoom, 0.01f, orthoCamera.MinimumZoom, orthoCamera.MaximumZoom, null, ImGuiSliderFlags.AlwaysClamp);
+                if (zoom <= 0)
+                    zoom = 0.01f;
                 orthoCamera.Zoom = zoom;
 
                 float rot = Rotation;
