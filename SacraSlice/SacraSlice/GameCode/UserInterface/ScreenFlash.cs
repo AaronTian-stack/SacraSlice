@@ -14,6 +14,8 @@ namespace SacraSlice.GameCode.UserInterface
         public ScreenFlash(GraphicsDevice gd)
         {
             this.gd = gd;
+            normal.actions.Add(Actions.ColorAction(normal, 
+                new Color(), new Color(), 0, Interpolation.linear));
         }
 
         public Actor normal = new Actor();
@@ -23,19 +25,23 @@ namespace SacraSlice.GameCode.UserInterface
         {
             var view = gd.Viewport;
             s.Position = new Vector2(view.Width / 2, view.Height / 2);
-            s.Scale = new Vector2(view.Width, view.Height);
+            s.Scale = new Vector2(view.Width + 2, view.Height);
 
-            normal.Act(dt);
-            priority.Act(dt);
-
-            s.Color = new Color(0, 0, 0, 0);
+            s.Color = new Color();
 
             if (priority.actions.Count != 0)
-                s. Color = priority.color;
+            {
+                s.Color = priority.color;
+                priority.Act(dt);
+            }
             else if (normal.actions.Count != 0)
+            {
                 s.Color = normal.color;
-
-            s.Draw(sb);
+                normal.Act(dt);
+            }
+            
+            if(priority.actions.Count != 0 || normal.actions.Count != 0)
+                s.Draw(sb);
         }
 
     }

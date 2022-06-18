@@ -53,7 +53,7 @@ namespace SacraSlice.GameCode.Screens
         public override void Update(GameTime gameTime)
         {
             if (a.actions.Count == 0 && a1.actions.Count == 0)
-                game.LoadScreen(game.play, 3f);
+                game.LoadScreen(game.title, 3f);
         }
 
         public override void LoadContent()

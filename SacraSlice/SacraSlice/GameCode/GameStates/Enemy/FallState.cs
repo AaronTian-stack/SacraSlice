@@ -1,4 +1,5 @@
-﻿using MonoGame.Extended;
+﻿using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using SacraSlice.Dependencies.Engine;
 using SacraSlice.Dependencies.Engine.ECS.Component;
 using SacraSlice.Dependencies.Engine.States;
@@ -19,6 +20,21 @@ namespace SacraSlice.GameCode.GameStates.Enemy
         {
             if (pos.ground)
                 sm.SetStateUpdate("Cut", timer);
+        }
+
+        public override void Draw(SpriteBatch sb, float dt)
+        {
+            
+        }
+
+        public override void OnEnter()
+        {
+            
+        }
+
+        public override void OnLeave()
+        {
+            
         }
     }
 }

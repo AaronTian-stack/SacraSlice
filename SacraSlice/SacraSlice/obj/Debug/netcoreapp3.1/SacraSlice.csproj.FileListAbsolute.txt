@@ -62,3 +62,30 @@ C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Fonts\Ko
 C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Fonts\Komika_0.xnb
 C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Fonts\JollyGoodSans.xnb
 C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Fonts\JollyGoodSans_0.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\Death.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\Jumpscare.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\Lose.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\Recharge.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\Shield.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\HeavyImpact.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\PunchHard.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\SwordHit.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\SwordStrike.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\Wrong.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\FloorImpact.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\PlayerHurt.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\LoseHealth.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\Perfect.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\Warning.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\Waves.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\RoboNoise.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\Talk.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\Whistle.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Music\Powerup! - Jeremy Blake.ogg
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Music\Powerup! - Jeremy Blake.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Music\Powerup.ogg
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Music\Powerup.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Music\Asleep.ogg
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Music\Asleep.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Music\JustFine.ogg
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Music\JustFine.xnb

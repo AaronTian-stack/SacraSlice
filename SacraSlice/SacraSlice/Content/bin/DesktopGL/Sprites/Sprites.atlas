@@ -1,110 +1,180 @@
 
 Sprites.png
-size: 1024, 512
+size: 2048, 512
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+arrow
+  rotate: false
+  xy: 1277, 359
+  size: 124, 32
+  orig: 124, 32
+  offset: 0, 0
+  index: -1
 cube
   rotate: false
-  xy: 225, 21
+  xy: 327, 29
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 1
 cube
   rotate: false
-  xy: 429, 81
+  xy: 1481, 393
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 0
 cubeLegs
   rotate: false
-  xy: 581, 335
+  xy: 429, 343
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: 2
+cubeLegs
+  rotate: false
+  xy: 733, 343
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: 1
 cubeLegs
   rotate: false
-  xy: 581, 183
+  xy: 885, 343
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: 3
+cubeLegs
+  rotate: false
+  xy: 885, 191
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: 0
 hand
   rotate: false
-  xy: 885, 289
+  xy: 1189, 297
   size: 42, 196
   orig: 42, 196
   offset: 0, 0
   index: -1
 pause
   rotate: false
-  xy: 1, 1
+  xy: 1, 9
   size: 120, 120
   orig: 120, 120
   offset: 0, 0
   index: -1
+randomcube
+  rotate: false
+  xy: 123, 29
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+shield
+  rotate: false
+  xy: 1379, 393
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+shieldbar
+  rotate: false
+  xy: 1, 1
+  size: 6, 6
+  orig: 6, 6
+  offset: 0, 0
+  index: -1
 sphere
   rotate: false
-  xy: 123, 21
+  xy: 225, 29
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 1
 sphere
   rotate: false
-  xy: 327, 21
+  xy: 429, 89
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 0
 sphereLegs
   rotate: false
-  xy: 429, 183
+  xy: 429, 191
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: 3
+sphereLegs
+  rotate: false
+  xy: 581, 191
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: 0
 sphereLegs
   rotate: false
-  xy: 733, 183
+  xy: 733, 191
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: 2
+sphereLegs
+  rotate: false
+  xy: 1037, 343
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: 1
-spook1
+spook
   rotate: false
-  xy: 1, 123
+  xy: 1, 131
   size: 212, 362
   orig: 212, 362
   offset: 0, 0
-  index: -1
-spook2
+  index: 2
+spook
   rotate: false
-  xy: 215, 123
+  xy: 215, 131
   size: 212, 362
   orig: 212, 362
   offset: 0, 0
-  index: -1
+  index: 1
 sword
   rotate: false
-  xy: 929, 289
+  xy: 1233, 297
   size: 42, 196
   orig: 42, 196
   offset: 0, 0
   index: -1
+warning
+  rotate: false
+  xy: 1277, 393
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+whitepixel
+  rotate: false
+  xy: 1189, 294
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
 xBlank
   rotate: false
-  xy: 733, 335
+  xy: 1037, 191
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 xRed
   rotate: false
-  xy: 429, 335
+  xy: 581, 343
   size: 150, 150
   orig: 150, 150
   offset: 0, 0

@@ -10,6 +10,7 @@ using SacraSlice.Dependencies.Engine.InterfaceLayout;
 using SacraSlice.Dependencies.Engine.Scene;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace SacraSlice.GameCode.GameECS.GameSystems
@@ -28,13 +29,13 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
         public void Draw(SpriteBatch sb, float dt)
         {
             a.Act(dt);
-            
+
             sprite.Position.X = a.x / cam.Zoom;
             sprite.Position.Y = a.y / cam.Zoom;
             sprite.Rotation += rotation;
             sprite.Color = BackGroundSystem.blueDark;
             sprite.Scale /= cam.Zoom;
-            sprite.Draw(sb, 1);
+            sprite.Draw(sb, 0.9999f);
             sprite.Scale *= cam.Zoom;
         }
 
@@ -52,11 +53,13 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
         SpriteBatch sb;
         Timer slope;
         float ppm;
-        public BackGroundSystem(SpriteBatch sb, Timer slope, float ppm) : base(Aspect.All(typeof(GameCamera)))
+        bool floor;
+        public BackGroundSystem(SpriteBatch sb, Timer slope, float ppm, bool floor) : base(Aspect.All(typeof(GameCamera)))
         {
             this.sb = sb;
             this.slope = slope;
             this.ppm = ppm;
+            this.floor = floor;
         }
         // Random Rectangles floating up
 
@@ -94,11 +97,11 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
             // TODO: render the floor sprite
             float slope = this.slope.GetTimer("slope");
             int number = (int)(10 * (1 / Math.Abs(slope)));
-            float drawoffset = 10f;
+            float drawoffset = 14f;
 
             var thickness = 6f;
             var direction = -1;
-            float oldZoom = 0;
+            //float oldZoom = 0;
 
             timer2 += gameTime.GetElapsedSeconds();
 
@@ -107,19 +110,19 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                 var cam = camMapper.Get(entity);
                 var b = cam.orthoCamera.BoundingRectangle;
 
-                var b1 = cam.orthoCamera.BoundingRectangle;
-                b1.Position = new Vector2();
+                //var b1 = cam.orthoCamera.BoundingRectangle;
+                //b1.Position = new Vector2();
 
                 // if camera is not shaking
-                if (!cam.IsShaking)
-                    b1.Position = b.Position;
-                else
+                if (cam.IsShaking)
+                    //b1.Position = b.Position;
+                //else
                 {
-                    b1.Position = lastpos;
+                    b.Position = lastpos;
                 }
                    
 
-                var offset = b1.Width / number;
+                var offset = b.Width / number;
 
                 var X = timer2 / moveDuration * offset * direction;
                 if(timer2 > moveDuration)
@@ -139,16 +142,16 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                         activeCubes.Add(cube);
                         bag.RemoveAt(0);
 
-                        ResetCube(cube, b1);
+                        ResetCube(cube, b);
 
-                        cube.sprite.Position.Y = b1.Bottom;
+                        cube.sprite.Position.Y = b.Bottom;
                     }
                     else
                     {
                         var cube = new RandomCube(cam);
                         activeCubes.Add(cube);
-                        ResetCube(cube, b1);
-                        cube.sprite.Position.Y = b1.Bottom;
+                        ResetCube(cube, b);
+                        cube.sprite.Position.Y = b.Bottom;
                     }
 
                 }
@@ -165,14 +168,16 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                     j++;
                 }
 
-                //sb.DrawLine(b1.BottomLeft, b1.TopRight, Color.Red, 1, 1);
+                var bCopy = b;
+                bCopy.Inflate(10, 10);
 
+                sb.FillRectangle(bCopy, blueLight, 0.999999f);
 
-                var xRight = b1.Width * 2;
+                var xRight = b.Width * 2;
 
-                var yRight = xRight * slope + b1.Bottom;
+                var yRight = xRight * slope + b.Bottom;
 
-                var bl = b1.BottomLeft;
+                var bl = b.BottomLeft;
                 bl.X -= drawoffset;
                 bl.Y += drawoffset;
 
@@ -193,30 +198,33 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
 
                 //sb.DrawLine(bl, tr, Color.Red, 1, 1);
 
-                lastpos = b1.Position;
-                lastRect = b1;
-                oldZoom = cam.Zoom;
+                lastpos = b.Position;
+                lastRect = b;
+                //oldZoom = cam.Zoom;
             }
 
-            // draw the floor
-            pixel.Color = Color.White;
+            if (floor)
+            {
+                // draw the floor
+                pixel.Color = Color.White;
 
-            pixel.Color = new Color(155, 171, 178);
-            pixel.Origin = new Vector2(0.5f, 0.5f);
+                pixel.Color = new Color(155, 171, 178);
+                pixel.Origin = new Vector2(0.5f, 0.5f);
 
 
-            //var h = lastRect.Bottom - (lastRect.Bottom - lastRect.Top) * 0.25f * 0.5f;
+                //var h = lastRect.Bottom - (lastRect.Bottom - lastRect.Top) * 0.25f * 0.5f;
 
-            var h = 3.75f;
+                var h = 3.75f;
 
-            pixel.Position = new Vector2(0, h);
-            pixel.Scale = new Vector2(lastRect.Width * 1.1f, 40);
-            pixel.Draw(sb, 0.97f);
+                pixel.Position = new Vector2(0, h);
+                pixel.Scale = new Vector2(lastRect.Width * 1.1f, 40);
+                pixel.Draw(sb, 0.97f);
 
-            pixel.Color = Color.Black;
+                pixel.Color = Color.Black;
 
-            pixel.Position = new Vector2(0, h - 1);
-            pixel.Draw(sb, 0.971f);
+                pixel.Position = new Vector2(0, h - 1);
+                pixel.Draw(sb, 0.971f);
+            }
 
         }
 

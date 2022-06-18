@@ -80,6 +80,7 @@ namespace SacraSlice.GameCode.UserInterface
 
             if (old != PlayScreen.life)
             {
+                GameContainer.sounds["LoseHealth"].Play();
                 shakeTimer = 0;
                 PlayScreen.camera.AddShake(0.2f, 0.1f, 2);
             }

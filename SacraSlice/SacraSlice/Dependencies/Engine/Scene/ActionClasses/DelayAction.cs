@@ -17,16 +17,16 @@ namespace SacraSlice.Dependencies.Engine.Scene.ActionClasses
 
         public override bool Act(float elapsedTime)
         {
-
+           
             timer += elapsedTime;
-
             if (timer >= duration)
             {
                 if (pool != null && !poolOverride)
                     pool.Free(this);
                 return true;
             }
-            else return false;
+            return false;
+
         }
 
     }

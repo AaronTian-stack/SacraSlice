@@ -21,6 +21,7 @@ namespace SacraSlice.Dependencies.Engine.Scene.ActionClasses
 
         public override bool Act(float elapsedTime)
         {
+            
 
             if (a.x == x && a.y == y)
                 return true;
@@ -29,15 +30,13 @@ namespace SacraSlice.Dependencies.Engine.Scene.ActionClasses
 
             a.x = interpolation.Apply(startX, x, MathF.Min(1, timer / duration));
             a.y = interpolation.Apply(startY, y, MathF.Min(1, timer / duration));
-
             if (timer >= duration)
             {
                 if (pool != null && !poolOverride)
                     pool.Free(this);
                 return true;
             }
-            else return false;
-
+            return false;
         }
 
     }

@@ -69,7 +69,7 @@ namespace SacraSlice.Dependencies.Engine
         }
         public static void Print(object classO, object message)
         {
-            Print(classO.ToString(), MessageType.info, message);
+            Print(classO.GetType().ToString(), MessageType.info, message);
         }
         public static void Print(string classname, object message)
         {

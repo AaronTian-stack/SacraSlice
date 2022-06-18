@@ -12,11 +12,12 @@ namespace SacraSlice.Dependencies.Engine.InterfaceLayout
     {
 
         public static GraphicsDevice gd;
+        //public static Rectangle view;
         public static SpriteBatch sb;
         public static void DrawSprite(Sprite s, float x, float y, Vector2 scale, float depth = 0)
         {
             var view = gd.Viewport;
-
+            
             x *= view.Width;
             y *= view.Height;
 
@@ -62,16 +63,9 @@ namespace SacraSlice.Dependencies.Engine.InterfaceLayout
             foreach (var batch in batch)
             {
 
-                var pos = camera.WorldToScreen(batch.pos);
-                var view = gd.Viewport;
                 batch.s.Scale = batch.scale;
 
-                //var targetX = batch.s.Scale.X * view.Width;
-                var targetY = batch.s.Scale.Y * view.Height;
-
-                batch.s.Scale = new Vector2(targetY);   
-
-                batch.s.Position = pos;
+                batch.s.Position = batch.pos;
                 batch.s.Draw(sb);
 
             }

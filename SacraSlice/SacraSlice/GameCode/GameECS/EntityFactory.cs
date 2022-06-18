@@ -244,7 +244,7 @@ namespace SacraSlice.GameCode.GameECS
 
             p.gravity = false;
 
-            p.SetAllPosition(new Vector2(0, 200));
+            p.SetAllPosition(new Vector2(0, 200), 0.000003f);
 
             entity.Attach(p);
             entity.Attach("Demon");
@@ -262,7 +262,7 @@ namespace SacraSlice.GameCode.GameECS
 
             AnimationStateManager asm = new AnimationStateManager();
 
-            asm.AddAnimation(state, new Animation<TextureRegion>("spook", 0.1f, GameContainer.atlas.FindRegions("spook"), PlayMode.LOOP));
+            asm.AddAnimation(state, new Animation<TextureRegion>("spook", 0.2f, GameContainer.atlas.FindRegions("spook"), PlayMode.LOOP));
 
             entity.Attach(asm);
 

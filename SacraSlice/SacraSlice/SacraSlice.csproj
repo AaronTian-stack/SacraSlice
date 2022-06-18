@@ -30,6 +30,7 @@
     <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Content\Sounds\" />
     <Folder Include="Dependencies\Engine\Collision\" />
     <Folder Include="Dependencies\Extended\" />
     <Folder Include="GameCode\Managers\" />

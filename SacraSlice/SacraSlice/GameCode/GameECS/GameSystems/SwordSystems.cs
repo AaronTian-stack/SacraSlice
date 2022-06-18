@@ -51,7 +51,7 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
         {
             foreach (var entity in ActiveEntities)
             {
-
+                
                 var dt = gameTime.GetElapsedSeconds() * (dtStatic / this.dt);
 
                 var sword = sMapper.Get(entity);
@@ -60,7 +60,19 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                 var timer = tMapper.Get(entity);
                 var sprite = spriteMapper.Get(entity);
 
+                if (timer.GetSwitch("RESET"))
+                {
+                    sword.Reset();
+                    timer.GetSwitch("RESET").Value = false;
+                }
+                    
+
+                if (timer.GetSwitch("dead"))
+                    continue;
+
+                
                 sword.a.Act(dt);
+
                 sword.s.Position.X = sprite.Position.X - hb.rect.Width / 2 - (sword.s.BoundingBox.Width * 0.5f * sword.s.Scale.X * ppm);
                 sword.s.Position.Y = sprite.Position.Y + sword.a.y;
 
@@ -69,26 +81,28 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                 sword.ChangeAngle(dt);
 
                 // the sword rotation starts upright (0 = 90)
-                // sword counter clockwise is negative
+                // sword counter clockwise is positive
 
-                if (timer.GetSwitch("Attack") && !timer.GetSwitch("Shrink") 
-                    //&& timer.GetTimer("Life") > timer.GetTimer("Attack Time") * 2
-                    )
+                if (timer.GetSwitch("Attack") && !timer.GetSwitch("Shrink") )
                 {
+                    //DebugLog.Print(this, "SWUNG");
                     sword.Swing(timer.GetTimer("Attack Time"));
                     timer.GetSwitch("Attack").Value = false;
                     timer.GetSwitch("Attacking").Value = true;
                 }
-                   
+                
 
-                var swordR = sword.s.Rotation - 90;
+                var swordR = -(sword.s.Rotation - 90);
 
-                var angle = MathF.Min(360 - MathF.Abs(swordR - timer.GetTimer("Angle")),
-                    MathF.Abs(swordR - timer.GetTimer("Angle")));
+                //var angle = MathF.Min(360 - MathF.Abs(swordR - timer.GetTimer("Angle")),
+                //    MathF.Abs(swordR - timer.GetTimer("Angle")));
+
+                var angle = Math.Abs(swordR - timer.GetTimer("Angle"));
 
                 //DebugLog.Print("SWORD SYSTEM", angle);
+                //DebugLog.Print("SWORD Angle", swordR);
 
-                float tolerance = 25;
+                float tolerance = 35;
 
                 if (timer.GetSwitch("Sword Active") && angle > 90 - tolerance && angle < 90 + tolerance
                     && !timer.GetSwitch("Attacking"))

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Input;
@@ -28,9 +29,11 @@ namespace SacraSlice.GameCode.GameStates.Enemy
             this.hb = hb;
             this.ppm = ppm;
             XRed.Rotation = 45;
+            so = GameContainer.sounds["Wrong"].CreateInstance();
+            so.Pitch = 1;
         }
         bool begin;
-
+        SoundEffectInstance so;
         float radius = 5;
         public override void Act()
         {
@@ -41,11 +44,12 @@ namespace SacraSlice.GameCode.GameStates.Enemy
         RectangleF bounds;
         public override void OnEnter()
         {
+            GameContainer.sounds["FloorImpact"].Play();
             // generate the hitboxes
             begin = false;
             float off = 50;
 
-            CircleF c = new CircleF(pos.renderPosition, hb.rect.Width / 2 * 1.5f);
+            CircleF c = new CircleF(pos.currPosition, hb.rect.Width / 2 * 1.5f);
 
             Vector2 p = c.BoundaryPointAt(MathHelper.ToRadians(random.NextSingle(90 + off, 270 - off)));
             leftHitbox = new CircleF(p, radius);
@@ -63,13 +67,26 @@ namespace SacraSlice.GameCode.GameStates.Enemy
             timer.GetTimer("Angle").Value = MathHelper.ToDegrees(MathF.Atan2(rightHitbox.Center.Y - leftHitbox.Center.Y,
                 rightHitbox.Center.X - leftHitbox.Center.X));
 
+            timer.GetTimer("DrawAngle").Value = timer.GetTimer("Angle");
+
+            if (timer.GetTimer("Angle") > 0)
+            {
+                timer.GetTimer("Angle").Value = 180 - timer.GetTimer("Angle").Value;
+            }
+            else
+                timer.GetTimer("Angle").Value *= -1;
+
+
+
+
+
             if (direction == 1) // swap if from right to left
             {
-
                 var hold = leftHitbox;
                 leftHitbox = rightHitbox;
                 rightHitbox = hold;
-                timer.GetTimer("Angle").Value += 180;
+                timer.GetTimer("DrawAngle").Value += 180;
+                //timer.GetTimer("Angle").Value += 180;
             }
 
             rightHitbox.Radius *= 2;
@@ -86,28 +103,38 @@ namespace SacraSlice.GameCode.GameStates.Enemy
             timer.GetTimer("leeway").Value = 0.5f;
 
             timer.GetSwitch("Sword Active").Value = true;
+            timer.GetSwitch("Attack").Value = false;
+            timer.GetSwitch("Attacking").Value = false;
 
             colorFlashActor.ClearActions();
             xActor.ClearActions();
             exclamationActor.ClearActions();
 
-            randomAttackTimer = 0;
-            randomAttack = random.NextSingle(attackInterval.X, attackInterval.Y);
+            timer.GetSwitch("RESET").Value = true;
+
+            timer.GetTimer("random attack timer").Value = 0;
+            timer.GetTimer("random attack").Value
+                = random.NextSingle(attackInterval.X, attackInterval.Y);
         }
         /// <summary>
         /// Swing the sword
         /// </summary>
         /// <param name="x"> If true then X sprite will show </param>
+        
         public void Swing(bool x, float time)
         {
             if (timer.GetSwitch("Attacking"))
                 return;
             timer.GetSwitch("Attacking").Value = true;
+            DebugLog.Print("ATTACK", "EXECUTED");
             var dur = 0.25f;
-            var sc = 0.001f;
+            var sc = 0.1f;
             if (x)
             {
+                GameContainer.sounds["Wrong"].Play();
+                xActor.ClearActions();
                 //DebugLog.Print("CutState", "CounterAttacked");
+                xActor.x = 0; xActor.y = 0;
                 xActor.AddAction(Actions.MoveFrom(xActor, 0, 0, sc, sc, dur, Interpolation.swingOut));
                 xActor.AddAction(Actions.Delay(xActor, 0.5f));
                 xActor.AddAction(Actions.MoveFrom(xActor, sc, sc, 0, 0, dur, Interpolation.swingIn));
@@ -116,8 +143,12 @@ namespace SacraSlice.GameCode.GameStates.Enemy
             }
             else
             {
+                
+                so.Play();
+                exclamationActor.ClearActions();
                 // do another telegraph
-                var sc2 = 0.003f;
+                var sc2 = 0.2f;
+                exclamationActor.x = 0; exclamationActor.y = 0;
                 exclamationActor.AddAction(Actions.MoveFrom(exclamationActor, 0, 0, sc2, sc2, dur, Interpolation.swingOut));
                 exclamationActor.AddAction(Actions.Delay(exclamationActor, 0.5f));
                 exclamationActor.AddAction(Actions.MoveFrom(exclamationActor, sc2, sc2, 0, 0, dur, Interpolation.swingIn));
@@ -148,6 +179,10 @@ namespace SacraSlice.GameCode.GameStates.Enemy
             {
                 if (begin)
                 {
+                    GameContainer.sounds["SwordHit"].Play();
+                    // also X sound
+
+
                     // swing sword
                     Swing(true, 0.6f);
                     //PlayScreen.life.Value--;
@@ -185,9 +220,9 @@ namespace SacraSlice.GameCode.GameStates.Enemy
         Actor colorFlashActor = new Actor();
         Actor xActor = new Actor();
         Actor exclamationActor = new Actor();
-        float randomAttack;
-        float randomAttackTimer;
-        Vector2 attackInterval = new Vector2(3f, 6f);
+        //float randomAttack;
+        //float randomAttackTimer;
+        Vector2 attackInterval = new Vector2(3f, 5f);
         public void Explode(SpriteBatch sb, float dt)
         {
 
@@ -195,20 +230,21 @@ namespace SacraSlice.GameCode.GameStates.Enemy
 
 
             var ds = timer.GetTimer("Life").Value.ToString("0.0");
-            float scale = 0.2f;
+            float scale = 0.05f;
             //var si = TextDrawer.MeasureFont("Main Font", ds);
 
             if (!timer.GetSwitch("Protect"))
             {
                 timer.GetTimer("Life").Value -= dt;
                 colorFlashActor.color = Color.White;
-                if(timer.GetSwitch("has sword"))
-                    randomAttackTimer += dt;
-                if (randomAttackTimer > randomAttack)
+                if(timer.GetSwitch("sword"))
+                    timer.GetTimer("random attack timer").Value += dt;
+                if (timer.GetTimer("random attack timer") > timer.GetTimer("random attack"))
                 {
-                    randomAttackTimer = 0;
+                    timer.GetTimer("random attack timer").Value = 0;
                     Swing(false, 1f);
-                    randomAttack = random.NextSingle(attackInterval.X, attackInterval.Y);
+                    timer.GetTimer("random attack").Value = 
+                        random.NextSingle(attackInterval.X, attackInterval.Y);
                 }
             }
 
@@ -228,11 +264,11 @@ namespace SacraSlice.GameCode.GameStates.Enemy
             if (timer.GetSwitch("sword"))
                 TextDrawer.BatchQueue("Main Font", ds,
                     new Vector2(pos.renderPosition.X, pos.renderPosition.Y - hb.rect.Height),
-                    colorFlashActor.color, Color.Black, scale, 2, 2, 2, 4);
+                    colorFlashActor.color, Color.Black, scale, PlayScreen.ppm, 1, 1, 1, 2);
             else
                 TextDrawer.BatchQueue("Main Font", ds,
                     new Vector2(pos.renderPosition.X, pos.renderPosition.Y - hb.rect.Height * 0.6f),
-                    colorFlashActor.color, Color.Black, scale, 2, 2, 2, 4);
+                    colorFlashActor.color, Color.Black, scale, PlayScreen.ppm, 1, 1, 1, 2);
 
 
             if (timer.GetTimer("Life") <= 0)
@@ -277,19 +313,14 @@ namespace SacraSlice.GameCode.GameStates.Enemy
             else
                 sb.DrawLine(leftHitbox.Center, rightHitbox.Center, Color.Yellow, ppm * radius);*/
 
-            if (!timer.GetSwitch("Shrink"))
-            {
-                SpriteAligner.BatchQueue(XRed, new Vector2(xActor.scaleX, xActor.scaleY), new Vector2(xActor.x, xActor.y), 0);
-                SpriteAligner.BatchQueue(warning, new Vector2(exclamationActor.scaleX, exclamationActor.scaleY), new Vector2(exclamationActor.x, exclamationActor.y), 0);
-            }
-
-            //TextDrawer.BatchQueue("Main Font", "!", new Vector2(exclamationActor.scaleX, exclamationActor.scaleY), Color.Red, Color.GhostWhite, exclamationActor.y, 1, 1, 1, 1);
-
+           
+            SpriteAligner.BatchQueue(XRed, new Vector2(xActor.scaleX, xActor.scaleY), new Vector2(xActor.x, xActor.y), 0);
+            SpriteAligner.BatchQueue(warning, new Vector2(exclamationActor.scaleX, exclamationActor.scaleY), new Vector2(exclamationActor.x, exclamationActor.y), 0);
+            
             arrow.Origin = new Vector2(0, arrow.Textureregion.height / 2);
-            arrow.Rotation = timer.GetTimer("Angle");
+            arrow.Rotation = timer.GetTimer("DrawAngle");
 
             arrow.Scale = new Vector2(1, 1f); ;
-
 
 
             if (begin)
@@ -297,7 +328,6 @@ namespace SacraSlice.GameCode.GameStates.Enemy
                 // make arrow color interpolate to green based off how close you are to finish
                 //arrow.Color = new Color(0, 1, 0, 0.8f);
                 arrow.Color = Interpolation.sineOut.Apply(Color.Yellow, Color.Green,
-
 
                     1 - Math.Clamp(
 
@@ -334,6 +364,16 @@ namespace SacraSlice.GameCode.GameStates.Enemy
             }
 
 
+        }
+
+        public override void OnLeave()
+        {
+            colorFlashActor.ClearActions();
+            xActor.ClearActions();
+            exclamationActor.ClearActions();
+            var s = GameContainer.sounds["Death"].CreateInstance();
+            s.Pitch = random.NextSingle(-1f, 1f);
+            s.Play();
         }
     }
 }

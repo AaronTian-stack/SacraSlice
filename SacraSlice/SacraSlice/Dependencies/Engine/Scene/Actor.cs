@@ -39,8 +39,8 @@ namespace SacraSlice.Dependencies.Engine.Scene
         {
             foreach(Action a in actions)
             {
-                a.timer = 999;
-                a.Act(0);
+                //a.timer = 999;
+                a.Act(999);
             }
             actions.Clear();
         }

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.BitmapFonts;
 using MonoGame.Extended.Collections;
+using SacraSlice.GameCode.Screens;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,9 +12,10 @@ namespace SacraSlice.Dependencies.Engine.InterfaceLayout
 {
     public static class TextDrawer
     {
-        static Dictionary<string, BitmapFont> lookup = new Dictionary<string, BitmapFont>();
+        public static Dictionary<string, BitmapFont> lookup = new Dictionary<string, BitmapFont>();
         public static GraphicsDevice gd;
         public static SpriteBatch sb;
+
         public static void AddFont(string name, BitmapFont font)
         {
             lookup.Add(name, font);
@@ -37,7 +39,7 @@ namespace SacraSlice.Dependencies.Engine.InterfaceLayout
         }
 
         public static void DrawTextStatic(string font, string text, Vector2 pos, float scale, Color color,
-            Color outlineColor, float outlineWidth = 0, float depth = 0)
+            Color outlineColor, float outlineWidth, float depth = 0)
         {
             DrawTextStatic(font, text, pos, scale, color, outlineColor, outlineWidth, outlineWidth, outlineWidth, outlineWidth, depth);
         }
@@ -78,6 +80,7 @@ namespace SacraSlice.Dependencies.Engine.InterfaceLayout
         {
             var sf = lookup[font];
             float off = 0.00001f;
+
             if (outlineDown != 0)
                 sb.DrawString(sf, text, new Vector2(pos.X, pos.Y + outlineDown), outlineColor, 0, new Vector2(), scale, SpriteEffects.None, depth + off);
             if (outlineUp != 0)
@@ -99,12 +102,27 @@ namespace SacraSlice.Dependencies.Engine.InterfaceLayout
             sb.DrawString(sf, text, pos, color, 0, new Vector2(), scale, SpriteEffects.None, depth);
         }
 
-        static Bag<(string, string, Vector2, Color, Color, float, float, float, float, float, float)> batch
-            = new Bag<(string, string, Vector2, Color, Color, float, float, float, float, float, float)>();
+        static Bag<(string, string, Vector2, Color, Color, float, float, float, float, float, float, float)> batch
+            = new Bag<(string, string, Vector2, Color, Color, float, float, float, float, float, float, float)>();
+        
+        /// <summary>
+        /// Queue a batched text draw call
+        /// </summary>
+        /// <param name="font"> String of font used for dictionary lookup </param>
+        /// <param name="text"> Your text to draw </param>
+        /// <param name="pos"> The world position. Spritebatch matrix should be applied when the entire batch draws</param>
+        /// <param name="color"> The color of the text </param>
+        /// <param name="outlineColor"> The color of the text outline </param>
+        /// <param name="scale"> Text scale (world units) </param>
+        /// <param name="outlineLeft"> Left outline amount </param>
+        /// <param name="outlineRight"> Right outline amount </param>
+        /// <param name="outlineUp"> Up outline amount </param>
+        /// <param name="outlineDown"> Down outline amount </param>
+        /// <param name="depth"> Drawing depth for sorting </param>
         public static void BatchQueue(string font, string text, Vector2 pos, Color color, Color outlineColor, float scale,
-            float outlineLeft = 0, float outlineRight = 0, float outlineUp = 0, float outlineDown = 0, float depth = 0)
+            float ppm, float outlineLeft = 0, float outlineRight = 0, float outlineUp = 0, float outlineDown = 0, float depth = 0)
         {
-            batch.Add((font, text, pos, color, outlineColor, scale, outlineLeft, outlineRight, outlineUp, outlineDown, depth));
+            batch.Add((font, text, pos, color, outlineColor, scale, outlineLeft, outlineRight, outlineUp, outlineDown, depth, ppm));
         }
 
         public static void BatchDraw(OrthographicCamera camera)
@@ -112,15 +130,21 @@ namespace SacraSlice.Dependencies.Engine.InterfaceLayout
 
             foreach (var batch in batch)
             {
-                var pos = camera.WorldToScreen(batch.Item3);
-                var view = gd.Viewport;
 
-                pos.X /= view.Width;
-                pos.Y /= view.Height;
+                var ppm = batch.Item12;
+                var pos = batch.Item3;
 
-                DrawTextStatic(batch.Item1, batch.Item2, pos, batch.Item6 * camera.Zoom, batch.Item4, batch.Item5, batch.Item7, batch.Item8
-                    , batch.Item9, batch.Item10, batch.Item11);
+                var mf = MeasureFont(batch.Item1, batch.Item2);
+
+                pos.X -= mf.Width * batch.Item6 / 2;
+                pos.Y -= mf.Height * batch.Item6 / 2;
+
+                DrawString(batch.Item1, batch.Item2, pos, batch.Item4, batch.Item5,
+                    batch.Item6, batch.Item7 * ppm, batch.Item8 * ppm, batch.Item9 * ppm, 
+                    batch.Item10 * ppm, batch.Item11);
+
             }
+
             batch.Clear();
         }
     }

@@ -21,17 +21,18 @@ namespace SacraSlice.Dependencies.Engine.Scene.ActionClasses
 
         public override bool Act(float elapsedTime)
         {
+            
             timer += elapsedTime;
 
             a.color.A = (byte)interpolation.Apply(startFade, fade, MathF.Min(1, timer / duration));
-
             if (timer >= duration)
             {
                 if (pool != null && !poolOverride)
                     pool.Free(this);
                 return true;
             }
-            else return false;
+            return false;
+
         }
     }
 }

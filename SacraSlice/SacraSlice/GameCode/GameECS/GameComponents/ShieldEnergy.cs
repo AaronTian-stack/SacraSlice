@@ -44,7 +44,7 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
         float rechargeWaitLong = 1f;
         Actor a = new Actor();
         public bool HasActions { get => a.actions.Count != 0; }
-
+        bool play;
         public void Draw(SpriteBatch sb, float dt, float ppm)
         {
             var v = gd.orthoCamera.BoundingRectangle;
@@ -70,7 +70,8 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
                     recharge = rechargeWaitLong;
                     if(a.actions.Count == 0)
                         a.AddAction(ra);
-                }         
+                }
+                play = false;
             }
             else
             {
@@ -81,15 +82,22 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
                 {
                     a.ClearActions();
                     if (energyTimer < energyMax)
+                    {
                         energyTimer += dt;
+                        if (!play)
+                        {
+                            GameContainer.sounds["Recharge"].Play();
+                            play = true;
+                        }
+                    }
+                    
                 }
                 else
                     clickTimer += dt;
 
                 if (notclickTimer > recharge + 0.5f)
                 {
-                    clickTimer -= dt;
-                    
+                    clickTimer -= dt; 
                 }
                     
                 defending = false;
