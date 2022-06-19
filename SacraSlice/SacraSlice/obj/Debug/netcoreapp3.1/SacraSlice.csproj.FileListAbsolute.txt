@@ -89,3 +89,11 @@ C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Music\As
 C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Music\Asleep.xnb
 C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Music\JustFine.ogg
 C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Music\JustFine.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\Select.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Music\NotTheEnd.ogg
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Music\NotTheEnd.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Fonts\FFFFoward.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Fonts\FFFFoward_0.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\TrackVHS.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Music\TrackVHS.ogg
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Music\TrackVHS.xnb

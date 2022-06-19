@@ -6,6 +6,8 @@
   <SourceFiles>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/CandyBeans.fnt</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/CandyBeans_0.png</File>
+    <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/FFFFoward.fnt</File>
+    <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/FFFFoward_0.png</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/Helsinki.fnt</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/Helsinki_0.png</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/JollyGoodSans.fnt</File>
@@ -14,8 +16,8 @@
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/Komika_0.png</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/LanaPixel.fnt</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Fonts/LanaPixel_0.png</File>
-    <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Music/Asleep.mp3</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Music/JustFine.mp3</File>
+    <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Music/NotTheEnd.mp3</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Music/Powerup.mp3</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/Death.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/FloorImpact.wav</File>
@@ -28,10 +30,12 @@
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/PunchHard.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/Recharge.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/RoboNoise.wav</File>
+    <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/Select.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/Shield.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/SwordHit.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/SwordStrike.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/Talk.wav</File>
+    <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/TrackVHS.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/Warning.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/Waves.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/Whistle.wav</File>
@@ -39,6 +43,10 @@
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sprites/Sprites.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

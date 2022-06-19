@@ -106,19 +106,23 @@ namespace SacraSlice.GameCode.GameECS
         public void RandomAnimation(AnimationStateManager asm)
         {
             List<TextureRegion> frames = null;
-            var bruh = rand.Next(0, 2);
-            string sphere, cube;
+            var bruh = rand.Next(0, 4);
+            string sphere, cube, banana, cardboard;
             bool b = false;
             if(PlayScreen.hardEnemiesSpawn)
             {
                 sphere = "sphereLegs";
                 cube = "cubeLegs";
+                banana = "bananaLegs";
+                cardboard = "cardboardLegs";
                 b = true;
             }
             else
             {
                 sphere = "sphere";
                 cube = "cube";
+                banana = "banana";
+                cardboard = "cardboard";
             }
           
 
@@ -129,6 +133,12 @@ namespace SacraSlice.GameCode.GameECS
                     break;
                 case 1:
                     frames = GameContainer.atlas.FindRegions(cube);
+                    break;
+                case 2:
+                    frames = GameContainer.atlas.FindRegions(banana);
+                    break;
+                case 3:
+                    frames = GameContainer.atlas.FindRegions(cardboard);
                     break;
             }
 
@@ -194,6 +204,16 @@ namespace SacraSlice.GameCode.GameECS
                     asm.AddAnimation(f, new Animation<TextureRegion>("Cube", 0.5f, null, PlayMode.LOOP));
                     asm.AddAnimation(c, new Animation<TextureRegion>("Cube", 0.5f, null, PlayMode.LOOP));
                     asm.AddAnimation(s, new Animation<TextureRegion>("Cube", 0.5f, null, PlayMode.LOOP));
+                    break;
+                case 2:
+                    asm.AddAnimation(f, new Animation<TextureRegion>("Banana", 0.5f, null, PlayMode.LOOP));
+                    asm.AddAnimation(c, new Animation<TextureRegion>("Banana", 0.5f, null, PlayMode.LOOP));
+                    asm.AddAnimation(s, new Animation<TextureRegion>("Banana", 0.5f, null, PlayMode.LOOP));
+                    break;
+                case 3:
+                    asm.AddAnimation(f, new Animation<TextureRegion>("Cardboard", 0.5f, null, PlayMode.LOOP));
+                    asm.AddAnimation(c, new Animation<TextureRegion>("Cardboard", 0.5f, null, PlayMode.LOOP));
+                    asm.AddAnimation(s, new Animation<TextureRegion>("Cardboard", 0.5f, null, PlayMode.LOOP));
                     break;
             }
             RandomAnimation(asm);

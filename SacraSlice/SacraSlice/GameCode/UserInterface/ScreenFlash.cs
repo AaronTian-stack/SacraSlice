@@ -23,9 +23,11 @@ namespace SacraSlice.GameCode.UserInterface
         Sprite s = new Sprite(GameContainer.atlas.FindRegion("whitepixel"));
         public void Draw(SpriteBatch sb, float dt)
         {
-            var view = gd.Viewport;
-            s.Position = new Vector2(view.Width / 2, view.Height / 2);
-            s.Scale = new Vector2(view.Width + 2, view.Height);
+            var viewW = gd.Adapter.CurrentDisplayMode.Width;
+            var viewH = gd.Adapter.CurrentDisplayMode.Height;
+
+            s.Position = new Vector2(viewW / 2, viewH / 2);
+            s.Scale = new Vector2(viewW + 2, viewH);
 
             s.Color = new Color();
 

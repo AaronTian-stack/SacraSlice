@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Input;
 using SacraSlice.Dependencies.Engine;
@@ -18,12 +19,20 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
         GameCamera gd;
         public bool defending;
         RepeatAction ra;
+
+        SoundEffectInstance beep;
         public ShieldEnergy(GameCamera cam)
         {
             this.gd = cam;
             energyTimer = energyMax;
+
+            beep = GameContainer.sounds["Wrong"].CreateInstance();
+            beep.Pitch = -1;
+
+
             ra = new RepeatAction(a,
                new ColorAction(a, Color.White, Color.Red, 0.5f, Interpolation.smooth)
+
                , new ColorAction(a, Color.Red, Color.White, 0.5f, Interpolation.smooth));
         }
         NinePatch energy = new NinePatch(GameContainer.atlas.FindRegion("shieldbar"), 2, 2, 2, 2);

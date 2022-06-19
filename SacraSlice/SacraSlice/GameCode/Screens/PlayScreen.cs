@@ -10,6 +10,7 @@ using MonoGame.Extended.Input;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.ViewportAdapters;
 using SacraSlice.Dependencies.Engine;
+using SacraSlice.Dependencies.Engine.Animation;
 using SacraSlice.Dependencies.Engine.ECS.Component;
 using SacraSlice.Dependencies.Engine.ECS.Systems;
 using SacraSlice.Dependencies.Engine.InterfaceLayout;
@@ -90,7 +91,7 @@ namespace SacraSlice.GameCode.Screens
             }
         }
 
-        public static bool SpawnControl = true;
+        public static bool SpawnControl = false;
 
         public static bool hardEnemiesSpawn = false;
 
@@ -98,6 +99,9 @@ namespace SacraSlice.GameCode.Screens
 
         public static Narrator narrator;
         public static ScreenFlash flash;
+
+        public ScreenFlash deadFade;
+
         GameContainer game;
         public PlayScreen(GameContainer game) : base(game)
         {
@@ -172,10 +176,11 @@ namespace SacraSlice.GameCode.Screens
 
             var viewportAdapter = new BoxingViewportAdapter(game.Window, GraphicsDevice, (int)(512 * ppm), (int)(288 * ppm));
 
-            camera = new GameCamera(viewportAdapter);
-            camera.Zoom = 0.8f;
+            camera = new GameCamera(viewportAdapter)
+            {
+                Zoom = 0.8f
+            };
             renderTarget = new RenderTarget2D(GraphicsDevice, w, h);
-
 
             entityFactory.CreateDemon();
 
@@ -197,6 +202,13 @@ namespace SacraSlice.GameCode.Screens
 
             scoreBoard = new ScoreBoard();
 
+            
+            
+        }
+
+        public override void LoadContent()
+        {
+            StartDialog();
         }
 
         Cursor cursor = new Cursor(0.01f, 10);
@@ -204,6 +216,12 @@ namespace SacraSlice.GameCode.Screens
         public static DebugWindow debugWindow;
         public static Rectangle ndr;
         public static bool ShowEnergy;
+        float tutorialTimer;
+
+        Animation<TextureRegion> mouseCursorAnim = new Animation<TextureRegion>
+            ("mouse", 0.5f, GameContainer.atlas.FindRegions("cursor"), PlayMode.LOOP);
+        Sprite mouseSprite = new Sprite();
+
         public override void Draw(GameTime gameTime)
         {
             var dr = GraphicsDevice.PresentationParameters.Bounds;
@@ -277,6 +295,30 @@ namespace SacraSlice.GameCode.Screens
             cursor.Draw(GameContainer._spriteBatch, ppm, 2f);
             cursor.headWidth *= camera.Zoom;
 
+
+
+            if (tutorialBool)
+            {
+                tutorialTimer += gameTime.GetElapsedSeconds();
+                if(tutorialTimer < 6)
+                {
+                    mouseSprite.Origin = new Vector2(9, 1);
+                    mouseActor.Act(gameTime.GetElapsedSeconds());
+                    mouseSprite.Scale = new Vector2(ppm);
+                    mouseSprite.Textureregion = mouseCursorAnim.GetKeyFrame(tutorialTimer);
+                    mouseSprite.Position.X = mouseActor.x;
+                    mouseSprite.Position.Y = mouseActor.y;
+                    mouseSprite.Color = mouseActor.color;
+                    mouseSprite.Draw(GameContainer._spriteBatch);
+                }
+                else
+                {
+                    tutorialTimer = 0;
+                    tutorialBool = false;
+                }
+            }
+
+
             ImGui.End();
 
             GameContainer._spriteBatch.End();
@@ -308,9 +350,6 @@ namespace SacraSlice.GameCode.Screens
             scoreBoard.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds());
             narrator.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds());
 
-            
-            
-
             flash.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds());
 
             GameContainer._spriteBatch.End();
@@ -323,6 +362,8 @@ namespace SacraSlice.GameCode.Screens
 
             GameContainer.GuiRenderer.EndLayout();
 
+            
+
         }
 
         float accum;
@@ -334,8 +375,8 @@ namespace SacraSlice.GameCode.Screens
 
         public static Random random = new Random();
 
-        EventHandler eh, stopSpawning;
-        EventAction ev, stopSpawningA;
+        EventHandler eh, stopSpawning, startSpawning, tutorial;
+        EventAction ev, stopSpawningA, startSpawningA, tutorialAction;
         bool once;
         public void StartHardMode(object sender, EventArgs e)
         {
@@ -343,6 +384,8 @@ namespace SacraSlice.GameCode.Screens
             ScoreWhenHardModeStarted = score;
             hardEnemiesSpawn = true;
             SpawnControl = true;
+            GameContainer.sounds["TrackVHS"].Play();
+            MediaPlayer.Volume = 1;
             MediaPlayer.Play(GameContainer.songs["Powerup"]);
             MediaPlayer.IsRepeating = true;
         }
@@ -350,11 +393,18 @@ namespace SacraSlice.GameCode.Screens
         public void StartSpawning(object sender, EventArgs e)
         {
             SpawnControl = true;
+           
         }
         public void StopSpawning(object sender, EventArgs e)
         {
             SpawnControl = false;
             ShowEnergy = true;
+        }
+        bool tutorialBool;
+        Actor mouseActor = new Actor();
+        public void DrawTutorial(object sender, EventArgs e)
+        {
+            tutorialBool = true;
         }
 
         public void InitalizeEvents()
@@ -363,6 +413,31 @@ namespace SacraSlice.GameCode.Screens
             stopSpawning += StopSpawning;
             ev = new EventAction(narrator.actor, eh);
             stopSpawningA = new EventAction(narrator.actor, stopSpawning);
+
+            startSpawning += StartSpawning;
+            startSpawningA = new EventAction(narrator.actor, startSpawning);
+
+            tutorial += DrawTutorial;
+            tutorialAction = new EventAction(narrator.actor, tutorial);
+            float x = 15;
+            float y = -30;
+            float delay = 1;
+            float speed = 1f;
+            RepeatAction repeat = new RepeatAction(
+                mouseActor,
+                Actions.MoveFrom(mouseActor, -x, y + 10, x, y - 10, speed, Interpolation.smooth)
+                , Actions.Delay(mouseActor, delay)
+                , Actions.MoveFrom(mouseActor, -x, y + 10, -x, y + 10, 0f, Interpolation.smooth));
+
+            RepeatAction colorR = new RepeatAction(
+               mouseActor,
+               Actions.ColorAction(mouseActor, new Color(0,0,0,0), Color.White, speed, Interpolation.smooth)
+               , Actions.Delay(mouseActor, delay)
+               , Actions.ColorAction(mouseActor, Color.White, new Color(0, 0, 0, 0), speed, Interpolation.smooth));
+
+            mouseActor.AddAction(new ParallelAction(mouseActor, repeat, colorR));
+            
+
         }
         public override void Update(GameTime gameTime)
         {
@@ -383,7 +458,7 @@ namespace SacraSlice.GameCode.Screens
                 once = true;
                 float scale = 0.18f;
                 float y = 0.88f;
-                DebugLog.Print(this, "should only add once");
+                //DebugLog.Print(this, "should only add once");
                 narrator.AddAction(stopSpawningA);
                 narrator.AddAction(Actions.Delay(narrator.actor, 1f));
                 if(life < 3)
@@ -442,16 +517,32 @@ namespace SacraSlice.GameCode.Screens
 
         }
 
-        public void TestNarrator()
+        public void StartDialog()
         {
-            if (ks.WasKeyJustDown(Keys.K))
-            {
-                float scale = 0.2f;
-
-                narrator.AddMessage("Main Font", "Hello World!",
-                    duration: .4f, readDelay: .5f, endDelay: 0, size: scale, Interpolation.swingOut, Interpolation.smooth, 0.5f, 1 + scale / 2, 0.5f, 1 - scale / 2);
-                // 1.5 2
-            }
+            MediaPlayer.Play(GameContainer.songs["NotTheEnd"]);
+            MediaPlayer.Volume = 0.25f;
+            MediaPlayer.IsRepeating = true;
+            float scale = 0.18f;
+            float y = 0.88f;
+            narrator.AddAction(Actions.Delay(narrator.actor, 2f));
+            narrator.AddMessage("Main Font", "Wow, we're almost done packing everything from the void!",
+                duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.65f, Interpolation.swingOut, Interpolation.smooth,
+                0.5f, 1 + scale / 2, 0.5f, y);
+            narrator.AddMessage("Main Font", "We just have some random junk to get rid of.",
+                duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.8f, Interpolation.swingOut, Interpolation.smooth,
+                0.5f, 1 + scale / 2, 0.5f, y);
+            narrator.AddMessage("Main Font", "Could you destroy some objects I send you?",
+                duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.8f, Interpolation.swingOut, Interpolation.smooth,
+                0.5f, 1 + scale / 2, 0.5f, y);
+            narrator.AddAction(tutorialAction);
+            narrator.AddMessage("Main Font", "Click and drag your mouse to slice them.",
+                duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.8f, Interpolation.swingOut, Interpolation.smooth,
+                0.5f, 1 + scale / 2, 0.5f, y);
+            narrator.AddMessage("Main Font", "Here they come!",
+                duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth,
+                0.5f, 1 + scale / 2, 0.5f, y);
+            narrator.AddAction(startSpawningA);
+            mouseSprite.Color.A = 0;
         }
 
        

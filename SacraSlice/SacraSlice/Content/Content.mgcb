@@ -31,6 +31,23 @@
 /processorParam:TextureFormat=Color
 /build:Fonts/CandyBeans_0.png
 
+#begin Fonts/FFFFoward.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:Fonts/FFFFoward.fnt
+
+#begin Fonts/FFFFoward_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Fonts/FFFFoward_0.png
+
 #begin Fonts/Helsinki.fnt
 /importer:BitmapFontImporter
 /processor:BitmapFontProcessor
@@ -99,17 +116,17 @@
 /processorParam:TextureFormat=Color
 /build:Fonts/LanaPixel_0.png
 
-#begin Music/Asleep.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:Music/Asleep.mp3
-
 #begin Music/JustFine.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:Music/JustFine.mp3
+
+#begin Music/NotTheEnd.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/NotTheEnd.mp3
 
 #begin Music/Powerup.mp3
 /importer:Mp3Importer
@@ -123,29 +140,11 @@
 /processorParam:Quality=Best
 /build:Sounds/Death.wav
 
-#begin Sounds/Death.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/Death.wav
-
 #begin Sounds/FloorImpact.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/FloorImpact.wav
-
-#begin Sounds/FloorImpact.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/FloorImpact.wav
-
-#begin Sounds/HeavyImpact.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/HeavyImpact.wav
 
 #begin Sounds/HeavyImpact.wav
 /importer:WavImporter
@@ -159,29 +158,11 @@
 /processorParam:Quality=Best
 /build:Sounds/Jumpscare.wav
 
-#begin Sounds/Jumpscare.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/Jumpscare.wav
-
 #begin Sounds/Lose.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/Lose.wav
-
-#begin Sounds/Lose.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/Lose.wav
-
-#begin Sounds/LoseHealth.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/LoseHealth.wav
 
 #begin Sounds/LoseHealth.wav
 /importer:WavImporter
@@ -195,29 +176,11 @@
 /processorParam:Quality=Best
 /build:Sounds/Perfect.wav
 
-#begin Sounds/Perfect.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/Perfect.wav
-
 #begin Sounds/PlayerHurt.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/PlayerHurt.wav
-
-#begin Sounds/PlayerHurt.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/PlayerHurt.wav
-
-#begin Sounds/PunchHard.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/PunchHard.wav
 
 #begin Sounds/PunchHard.wav
 /importer:WavImporter
@@ -231,29 +194,17 @@
 /processorParam:Quality=Best
 /build:Sounds/Recharge.wav
 
-#begin Sounds/Recharge.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/Recharge.wav
-
 #begin Sounds/RoboNoise.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/RoboNoise.wav
 
-#begin Sounds/RoboNoise.wav
+#begin Sounds/Select.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Sounds/RoboNoise.wav
-
-#begin Sounds/Shield.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/Shield.wav
+/build:Sounds/Select.wav
 
 #begin Sounds/Shield.wav
 /importer:WavImporter
@@ -267,18 +218,6 @@
 /processorParam:Quality=Best
 /build:Sounds/SwordHit.wav
 
-#begin Sounds/SwordHit.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/SwordHit.wav
-
-#begin Sounds/SwordStrike.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/SwordStrike.wav
-
 #begin Sounds/SwordStrike.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -291,17 +230,11 @@
 /processorParam:Quality=Best
 /build:Sounds/Talk.wav
 
-#begin Sounds/Talk.wav
+#begin Sounds/TrackVHS.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Sounds/Talk.wav
-
-#begin Sounds/Warning.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/Warning.wav
+/build:Sounds/TrackVHS.wav
 
 #begin Sounds/Warning.wav
 /importer:WavImporter
@@ -315,29 +248,11 @@
 /processorParam:Quality=Best
 /build:Sounds/Waves.wav
 
-#begin Sounds/Waves.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/Waves.wav
-
 #begin Sounds/Whistle.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/Whistle.wav
-
-#begin Sounds/Whistle.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/Whistle.wav
-
-#begin Sounds/Wrong.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/Wrong.wav
 
 #begin Sounds/Wrong.wav
 /importer:WavImporter

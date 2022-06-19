@@ -53,6 +53,20 @@ cubeLegs
   orig: 150, 150
   offset: 0, 0
   index: 0
+cursor
+  rotate: false
+  xy: 1189, 245
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: 1
+cursor
+  rotate: false
+  xy: 429, 37
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: 0
 hand
   rotate: false
   xy: 1189, 297
@@ -160,7 +174,7 @@ warning
   index: -1
 whitepixel
   rotate: false
-  xy: 1189, 294
+  xy: 123, 26
   size: 1, 1
   orig: 1, 1
   offset: 0, 0

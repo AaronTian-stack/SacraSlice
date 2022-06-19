@@ -56,11 +56,11 @@ namespace SacraSlice
 
             base.Initialize();
 
-            //play = new PlayScreen(this);
+            play = new PlayScreen(this);
             splash = new SplashScreen(this);
             title = new TitleScreen(this);
 
-            LoadScreen(title, 1f);
+            LoadScreen(play, 1f);
 
             GuiRenderer = new ImGUIRenderer(this).Initialize().RebuildFontAtlas();
 
@@ -87,6 +87,7 @@ namespace SacraSlice
             atlas = new TextureAtlas(atlasTexture, "Sprites/Sprites.atlas");
 
             TextDrawer.AddFont("Main Font", Content.Load<BitmapFont>("Fonts/JollyGoodSans"));
+            TextDrawer.AddFont("Title Font", Content.Load<BitmapFont>("Fonts/FFFFoward"));
             TextDrawer.sb = _spriteBatch;
             TextDrawer.gd = GraphicsDevice;
             SpriteAligner.sb = _spriteBatch;

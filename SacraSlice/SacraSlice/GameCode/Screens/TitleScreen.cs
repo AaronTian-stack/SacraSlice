@@ -8,6 +8,7 @@ using MonoGame.Extended.Input;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.ViewportAdapters;
 using SacraSlice.Dependencies.Engine;
+using SacraSlice.Dependencies.Engine.Animation;
 using SacraSlice.Dependencies.Engine.ECS.Component;
 using SacraSlice.Dependencies.Engine.ECS.Systems;
 using SacraSlice.Dependencies.Engine.InterfaceLayout;
@@ -53,10 +54,9 @@ namespace SacraSlice.GameCode.Screens
                 Zoom = 1
             };
 
-            Position p = new Position();
-            p.SetAllPosition(new Vector2(0, -30));
 
-            entityFactory.CreateCamera(camera, viewportAdapter, p);
+            entityFactory.CreateCamera(camera, viewportAdapter);
+            
 
             float am = 0.02f;
             a.AddAction(new RepeatAction(a, 
@@ -66,27 +66,42 @@ namespace SacraSlice.GameCode.Screens
 
         Actor a = new Actor();
         bool b;
-        float timer;
-        /// add buttons
+        float timer, AnimationTimer;
+        Sprite s = new Sprite();
         public override void Draw(GameTime gameTime)
         {
+            var sb = GameContainer._spriteBatch;
+
             a.Act(gameTime.GetElapsedSeconds());
             GraphicsDevice.Clear(Color.Black);
 
-            GameContainer._spriteBatch.Begin(SpriteSortMode.BackToFront, samplerState: SamplerState.PointClamp
+            sb.Begin(SpriteSortMode.BackToFront, samplerState: SamplerState.PointClamp
                 , transformMatrix: camera.ViewMatrix
                 , blendState: BlendState.NonPremultiplied
                 );
             world.Draw(gameTime);
-            GameContainer._spriteBatch.End();
+
+            AnimationTimer += gameTime.GetElapsedSeconds();
+            float y = 35;
+            s.Scale = new Vector2(ppm);
+            s.Textureregion = ball.GetKeyFrame(AnimationTimer);
+            s.Position = new Vector2(0, y);
+            s.Draw(sb);
+
+            s.Textureregion = box.GetKeyFrame(AnimationTimer);
+            s.Position = new Vector2(25, y);
+            s.Draw(sb);
 
 
-            GameContainer._spriteBatch.Begin(SpriteSortMode.BackToFront, 
-                samplerState: SamplerState.LinearWrap
+            sb.End();
+
+
+            sb.Begin(SpriteSortMode.BackToFront, 
+                samplerState: SamplerState.PointWrap
                 , blendState: BlendState.NonPremultiplied
                 );
-            TextDrawer.DrawTextStatic("Main Font", "SacraSlice", new Vector2(.5f, .4f + a.y), .3f, Color.White, Color.Black,
-              2, 2, 2, 5);
+            TextDrawer.DrawTextStatic("Title Font", "SacraSlice", new Vector2(.5f, .4f + a.y), .3f, Color.White, Color.Black,
+              2, 2, 2, 20);
 
             timer += gameTime.GetElapsedSeconds();
             if(timer > 1f)
@@ -96,30 +111,51 @@ namespace SacraSlice.GameCode.Screens
             }
 
             if(b)
-            TextDrawer.DrawTextStatic("Main Font", "Press Enter to Start", new Vector2(.5f, .6f), .1f, Color.White, Color.Black,
-              2, 2, 2, 5);
+                TextDrawer.DrawTextStatic("Main Font", "Press Enter to Start", new Vector2(.5f, .6f), .1f, Color.White, Color.Black,
+                  2, 2, 2, 10);
+
+            // render all enemy type heads below
+
+           
 
             GameContainer._spriteBatch.End();
            
 
         }
+        Animation<TextureRegion> ball =
+            new Animation<TextureRegion>("ball", 0.5f,
+                GameContainer.atlas.FindRegions("sphere"), PlayMode.LOOP);
+        Animation<TextureRegion> box =
+           new Animation<TextureRegion>("cube", 0.5f,
+               GameContainer.atlas.FindRegions("cube"), PlayMode.LOOP);
+
+        bool load;
 
         public override void Update(GameTime gameTime)
         {
             world.Update(gameTime);
-            if (KeyboardExtended.GetState().WasKeyJustDown(Keys.Enter))
+            var k = KeyboardExtended.GetState();
+            if (k.WasKeyJustDown(Keys.Enter))
             {
+                load = true;
                 game.LoadScreen(game.play, 2f);
                 MediaPlayer.Stop();
                 // play blip sound
+                GameContainer.sounds["Select"].Play();
+
             }
-                
+
+            if (!load && k.WasKeyJustDown(Keys.F))
+            {
+                game.FullScreen();
+            }
         }
 
         public override void LoadContent()
         {
-            game.play = new PlayScreen(game);
+            load = false;
             MediaPlayer.Play(GameContainer.songs["JustFine"]);
+            MediaPlayer.Volume = 1;
             MediaPlayer.IsRepeating = true;
         }
 
