@@ -19,6 +19,7 @@
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Music/JustFine.mp3</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Music/NotTheEnd.mp3</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Music/Powerup.mp3</File>
+    <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/Coin.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/Death.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/FloorImpact.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/HeavyImpact.wav</File>
@@ -32,6 +33,7 @@
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/RoboNoise.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/Select.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/Shield.wav</File>
+    <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/Swoosh.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/SwordHit.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/SwordStrike.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/Talk.wav</File>
@@ -43,6 +45,8 @@
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sprites/Sprites.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

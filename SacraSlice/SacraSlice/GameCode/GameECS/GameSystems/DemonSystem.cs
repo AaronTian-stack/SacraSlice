@@ -75,7 +75,7 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                 time.GetTimer("Spawn Timer").Value = timer;
                 time.GetTimer("Time when spawn").Value = spawn;
 
-                sprite.Color.A = (byte)(0.92f * 255);
+                sprite.Color.A = (byte)(0.94f * 255);
                 if (timer > spawn)
                 {
                     

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using SacraSlice.Dependencies.Engine;
+using System;
 using System.Diagnostics;
 
 namespace SacraSlice.GameCode.UserInterface
@@ -15,8 +16,11 @@ namespace SacraSlice.GameCode.UserInterface
         {
             this.updateFrequency = updateFrequency;
             this.headWidth = headWidth;
+            random = new Random();
         }
         float timer;
+        float sTimer;
+        Random random;
         public void Update(Vector2 pos, float elapsed, bool updateHead)
         {
             timer += elapsed;
@@ -27,7 +31,18 @@ namespace SacraSlice.GameCode.UserInterface
                 {
                     vectors[i] = vectors[i - 1];
                 }
-                if(updateHead) vectors[0] = pos;
+                if(updateHead) 
+                    vectors[0] = pos;
+            }
+
+            sTimer += elapsed;
+            if (sTimer > 0.1f && (vectors[0] - vectors[1]).LengthSquared() > 50f)
+            {
+                sTimer = 0;
+                var s = GameContainer.sounds["Swoosh"].CreateInstance();
+                s.Volume = 0.5f;
+                s.Pitch = random.NextSingle(-1, 1f);
+                s.Play();
             }
         }
 
@@ -40,7 +55,7 @@ namespace SacraSlice.GameCode.UserInterface
         }
         public void Draw(SpriteBatch sb, float ppm, float outline)
         {
-            //var head = h;
+            DebugLog.Print(this, (vectors[0] - vectors[1]).LengthSquared());
             for(int i = 0; i < vectors.Length - 1; i++)
             {
 

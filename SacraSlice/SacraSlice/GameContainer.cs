@@ -8,11 +8,15 @@ using MonoGame.Extended.Input;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.Screens.Transitions;
 using MonoGame.ImGui;
+using MonoGameSaveManager;
 using SacraSlice.Dependencies.Engine;
 using SacraSlice.Dependencies.Engine.InterfaceLayout;
+using SacraSlice.Dependencies.Engine.Scene;
 using SacraSlice.GameCode.Screens;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace SacraSlice
 {
@@ -26,7 +30,7 @@ namespace SacraSlice
         public static Dictionary<string, SoundEffect> sounds;
         public static Dictionary<string, Song> songs;
 
-        private readonly ScreenManager _screenManager;
+        public readonly ScreenManager _screenManager;
 
         public static ImGUIRenderer GuiRenderer; //This is the ImGuiRenderer
 
@@ -43,15 +47,15 @@ namespace SacraSlice
 
             _screenManager = new ScreenManager();
             Components.Add(_screenManager);
-
+            graphics.HardwareModeSwitch = false;
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
 
-            graphics.PreferredBackBufferWidth = 1600;
-            graphics.PreferredBackBufferHeight = 900;
+            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 1080;
             graphics.ApplyChanges();
 
             base.Initialize();
@@ -60,18 +64,27 @@ namespace SacraSlice
             splash = new SplashScreen(this);
             title = new TitleScreen(this);
 
-            LoadScreen(play, 1f);
+            LoadScreen(splash, 1f);
 
             GuiRenderer = new ImGUIRenderer(this).Initialize().RebuildFontAtlas();
 
             this.Window.AllowUserResizing = true;
+            /*this.Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
+
+            void Window_ClientSizeChanged(object sender, EventArgs e)
+            {
+                SaveManager mySave = new IsolatedStorageSaveManager("SacraSlice", "mysave.dat");
+                mySave.Data.width = this.Window.ClientBounds.Width;
+                mySave.Data.height = this.Window.ClientBounds.Height;
+                mySave.Save();
+            }*/
 
             IsFixedTimeStep = false;
 
         }
 
         public void LoadScreen(GameScreen screen, float duration)
-        { 
+        {
             _screenManager.LoadScreen(screen, new FadeTransition(GraphicsDevice, Color.Black, duration));
         }
 
@@ -105,14 +118,16 @@ namespace SacraSlice
 
             base.Update(gameTime);
 
+
+
         }
         int oldX, oldY;
         protected override void Draw(GameTime gameTime)
         {
             if(play != null) GameContainer.alpha = play.alpha;
             base.Draw(gameTime);
-
-            if (KeyboardExtended.GetState().WasKeyJustDown(Keys.F))
+           
+            if (KeyboardExtended.GetState().WasKeyJustDown(Keys.F) && !_screenManager.Visible)
             {
                 FullScreen(); 
             }

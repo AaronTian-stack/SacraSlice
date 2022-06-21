@@ -17,6 +17,7 @@ namespace SacraSlice.Dependencies.Engine.Scene.ActionClasses
             this.duration = duration; this.interpolation = interpolation;
             if (a != null)
                 startFade = a.color.A;
+            this.fade = fade;
         }
 
         public override bool Act(float elapsedTime)
@@ -24,7 +25,7 @@ namespace SacraSlice.Dependencies.Engine.Scene.ActionClasses
             
             timer += elapsedTime;
 
-            a.color.A = (byte)interpolation.Apply(startFade, fade, MathF.Min(1, timer / duration));
+            a.color.A = (byte)interpolation.Apply(startFade, fade * 255, MathF.Min(1, timer / duration));
             if (timer >= duration)
             {
                 if (pool != null && !poolOverride)

@@ -1,10 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
+using MonoGame.Extended.Input;
 using MonoGame.Extended.Screens;
 using SacraSlice.Dependencies.Engine;
 using SacraSlice.Dependencies.Engine.InterfaceLayout;
 using SacraSlice.Dependencies.Engine.Scene;
+using SacraSlice.Dependencies.Engine.Scene.ActionClasses;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,6 +20,7 @@ namespace SacraSlice.GameCode.Screens
         public SplashScreen(GameContainer game) : base(game)
         {
            this.game = game;
+           sound += PlaySound;
         }
 
         Actor a = new Actor();
@@ -26,6 +30,7 @@ namespace SacraSlice.GameCode.Screens
             a.Act(gameTime.GetElapsedSeconds());
             a1.Act(gameTime.GetElapsedSeconds());
             GraphicsDevice.Clear(Color.White);
+
 
             GameContainer._spriteBatch.Begin(samplerState: SamplerState.LinearWrap, blendState: BlendState.NonPremultiplied);
 
@@ -54,8 +59,14 @@ namespace SacraSlice.GameCode.Screens
         {
             if (a.actions.Count == 0 && a1.actions.Count == 0)
                 game.LoadScreen(game.title, 3f);
-        }
 
+            var ks = KeyboardExtended.GetState();
+            if (ks.WasKeyJustDown(Keys.F))
+            {
+                game.FullScreen();
+            }
+        }
+        EventHandler sound;
         public override void LoadContent()
         {
             a.x = -1; a.y = -1;
@@ -64,17 +75,25 @@ namespace SacraSlice.GameCode.Screens
             Color start = Color.White;
             start.A = 0;
             a.AddAction(Actions.Delay(a, 1f));
+            a.AddAction(new EventAction(a, sound));
             a.AddAction(new ParallelAction(a,
                 Actions.MoveFrom(a, 0.5f, 0.55f, 0.5f, 0.48f, 2, Interpolation.swingOut)
                 ,Actions.ColorAction(a, start, Color.White, 2, Interpolation.smooth)));
             a.AddAction(Actions.Delay(a, 3f));
 
+
             a1.AddAction(Actions.Delay(a1, 0.5f)); // a game by
+            a1.AddAction(new EventAction(a1, sound));
             a1.AddAction(new ParallelAction(a1,
                 Actions.MoveFrom(a1, 0.5f, 0.5f, 0.5f, 0.40f, 2, Interpolation.swingOut)
                 , Actions.ColorAction(a1, start, Color.White, 2, Interpolation.smooth)));
 
 
+        }
+
+        public void PlaySound(object sender, EventArgs e)
+        {
+            GameContainer.sounds["Coin"].Play();
         }
 
     }

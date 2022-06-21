@@ -12,12 +12,13 @@ namespace SacraSlice.Dependencies.Engine.Scene
         public Color color = Color.White;
 
         public List<Action> actions = new List<Action>();
-
         public Actor() { }
         public Actor(float x, float y)
         {
             this.x = x; this.y = y;
         }
+
+        public bool HasActions { get => actions.Count != 0; }
 
         public void Act(float elapsedTime)
         {

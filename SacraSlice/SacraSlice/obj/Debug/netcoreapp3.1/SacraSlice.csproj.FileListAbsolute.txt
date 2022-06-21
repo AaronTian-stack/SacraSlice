@@ -97,3 +97,5 @@ C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Fonts\FF
 C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\TrackVHS.xnb
 C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Music\TrackVHS.ogg
 C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Music\TrackVHS.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\Swoosh.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\Coin.xnb

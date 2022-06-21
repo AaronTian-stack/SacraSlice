@@ -9,6 +9,7 @@ using MonoGame.Extended.Entities;
 using MonoGame.Extended.Input;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.ViewportAdapters;
+using MonoGameSaveManager;
 using SacraSlice.Dependencies.Engine;
 using SacraSlice.Dependencies.Engine.Animation;
 using SacraSlice.Dependencies.Engine.ECS.Component;
@@ -141,7 +142,7 @@ namespace SacraSlice.GameCode.Screens
                 .AddSystem(new BackGroundSystem(GameContainer._spriteBatch, slope, ppm, true))
 
                 .AddSystem(new PositionInterpolator())
-                .AddSystem(new ImGuiEntityDraw())
+                //.AddSystem(new ImGuiEntityDraw())
                 .AddSystem(new SpriteRenderer(GameContainer._spriteBatch, ppm))
                 .AddSystem(new HitBoxRenderer(GameContainer._spriteBatch, ppm))
                 .AddSystem(new ShadowSystem(GameContainer._spriteBatch, ppm))
@@ -174,7 +175,8 @@ namespace SacraSlice.GameCode.Screens
             int w = 640;
             int h = 360;
 
-            var viewportAdapter = new BoxingViewportAdapter(game.Window, GraphicsDevice, (int)(512 * ppm), (int)(288 * ppm));
+            var viewportAdapter = new BoxingViewportAdapter(game.Window, 
+                GraphicsDevice, (int)(512 * ppm), (int)(288 * ppm));
 
             camera = new GameCamera(viewportAdapter)
             {
@@ -205,10 +207,15 @@ namespace SacraSlice.GameCode.Screens
             
             
         }
-
+        bool started;
         public override void LoadContent()
         {
+            // get the high score so dialog is right
+            SaveManager mySave = new IsolatedStorageSaveManager("SacraSlice", "mysave.dat");
+            mySave.Load();
+            started = mySave.Data.highScore > 0;
             StartDialog();
+            
         }
 
         Cursor cursor = new Cursor(0.01f, 10);
@@ -224,56 +231,23 @@ namespace SacraSlice.GameCode.Screens
 
         public override void Draw(GameTime gameTime)
         {
-            var dr = GraphicsDevice.PresentationParameters.Bounds;
-            var view = GraphicsDevice.Viewport;
-            view.Width = dr.Width;
-            view.Height = dr.Height;
-            view.X = dr.X;
-            view.Y = dr.Y;
-            GraphicsDevice.Viewport = view;
 
             GraphicsDevice.Clear(Color.Black);
+
+
             mouse = MouseExtended.GetState();
             if (inputStack.Count > 0)
                 inputStack.Peek().Poll();
 
+            //GameContainer.GuiRenderer.BeginLayout(gameTime);
 
-            // calculate how much you must scale the renderTarget vertically
+            /// WARNING! IMGUI WILL MESS UP SCREEN CLEARING!
 
-
-            // TODO: add X clamping
-            
-            //Rectangle ndr;
-            var v = camera._viewportAdapter;
-            if ( (dr.Width * 1f / dr.Height) > (v.VirtualWidth * 1f / v.VirtualHeight) ) 
-                // if you are wider than 16:9
-            {
-                // scale based off y
-                var xPixels = dr.Height * v.VirtualWidth / v.VirtualHeight;
-                ndr = new Rectangle((dr.Width - xPixels) / 2, 0, xPixels, dr.Height);
-            }
-            else
-            {
-                var yPixels = dr.Width * v.VirtualHeight / v.VirtualWidth;
-                ndr = new Rectangle(0, (dr.Height - yPixels) / 2, dr.Width, yPixels);
-            }
-
-
-            view = GraphicsDevice.Viewport;
-            view.Width = ndr.Width;
-            view.Height = ndr.Height;
-            view.X = ndr.X;
-            view.Y = ndr.Y;
-            GraphicsDevice.Viewport = view;
-
-            GameContainer.GuiRenderer.BeginLayout(gameTime);
-
-            debugWindow.Draw(gameTime);
+            //debugWindow.Draw(gameTime);
 
             //TODO: get a rendertarget
 
             // GraphicsDevice.SetRenderTarget(renderTarget);
-
             
             GameContainer._spriteBatch.Begin(SpriteSortMode.BackToFront, samplerState: SamplerState.PointClamp
                 , transformMatrix: camera.ViewMatrix
@@ -319,7 +293,7 @@ namespace SacraSlice.GameCode.Screens
             }
 
 
-            ImGui.End();
+            //ImGui.End();
 
             GameContainer._spriteBatch.End();
 
@@ -328,8 +302,6 @@ namespace SacraSlice.GameCode.Screens
             GameContainer._spriteBatch.Begin(samplerState: SamplerState.PointClamp
                 , transformMatrix: camera.ViewMatrix
                 , blendState: BlendState.NonPremultiplied);
-
-
 
             //GameContainer._spriteBatch.Draw(renderTarget, ndr, Color.White);
 
@@ -355,12 +327,9 @@ namespace SacraSlice.GameCode.Screens
             GameContainer._spriteBatch.End();
 
 
-            debug.CustomRender();
+            //debug.CustomRender();
 
-            //ImGui.ShowDemoWindow();
-
-
-            GameContainer.GuiRenderer.EndLayout();
+            //GameContainer.GuiRenderer.EndLayout();
 
             
 
@@ -472,39 +441,74 @@ namespace SacraSlice.GameCode.Screens
                 }
                 else
                 {
-                    narrator.AddMessage("Main Font", "Is this too easy?",
-                   duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth,
-                   0.5f, 1 + scale / 2, 0.5f, y);
+                    if (started)
+                    {
+                        narrator.AddMessage("Main Font", "Too easy. Let's ramp it up!",
+                            duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth,
+                            0.5f, 1 + scale / 2, 0.5f, y);
+                    }
+                    else
+                    {
+                        narrator.AddMessage("Main Font", "Is this too easy?",
+                            duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth,
+                            0.5f, 1 + scale / 2, 0.5f, y);
+                    }
+                  
                 }
-                narrator.AddMessage("Main Font", "Hmm... How can I make this more interesting?",
+
+                if (!started)
+                {
+                    narrator.AddMessage("Main Font", "Hmm... How can I make this more interesting?",
                         duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.8f, Interpolation.swingOut, Interpolation.smooth,
                         0.5f, 1 + scale / 2, 0.5f, y);
-                narrator.AddMessage("Main Font", "I know!",
-                    duration: 0.4f, readDelay: 1f, endDelay: 0.2f, size: scale, Interpolation.swingOut, Interpolation.smooth,
-                    0.5f, 1 + scale / 2, 0.5f, y);
-                narrator.AddMessage("Main Font", "I've given you a fancy new toy! :)",
-                    duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth,
-                    0.5f, 1 + scale / 2, 0.5f, y);
-                narrator.AddMessage("Main Font", "Press [Right Click] to activate your shield. Try it!",
-                    duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.75f, Interpolation.swingOut, Interpolation.smooth,
-                    0.5f, 1 + scale / 2, 0.5f, y);
-                narrator.AddMessage("Main Font", "Be careful not to use all the energy in one go!",
-                    duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.75f, Interpolation.swingOut, Interpolation.smooth,
-                    0.5f, 1 + scale / 2, 0.5f, y);
-                narrator.AddMessage("Main Font", "Time it right to defend yourself.",
-                    duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth,
-                    0.5f, 1 + scale / 2, 0.5f, y);
-                narrator.AddMessage("Main Font", "How about you show off your gadget to some NEW friends?",
-                    duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.6f, Interpolation.swingOut, Interpolation.smooth,
-                    0.5f, 1 + scale / 2, 0.5f, y);
-                narrator.AddMessage("Main Font", "I'm sending them your way now! Good luck!",
-                    duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.8f, Interpolation.swingOut, Interpolation.smooth,
-                    0.5f, 1 + scale / 2, 0.5f, y);
+                    narrator.AddMessage("Main Font", "I know!",
+                        duration: 0.4f, readDelay: 1f, endDelay: 0.2f, size: scale, Interpolation.swingOut, Interpolation.smooth,
+                        0.5f, 1 + scale / 2, 0.5f, y);
+                    narrator.AddMessage("Main Font", "I've given you a fancy new toy! :)",
+                        duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth,
+                        0.5f, 1 + scale / 2, 0.5f, y);
+                    narrator.AddMessage("Main Font", "Press [Right Click] to activate your shield. Try it!",
+                        duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.75f, Interpolation.swingOut, Interpolation.smooth,
+                        0.5f, 1 + scale / 2, 0.5f, y);
+                    narrator.AddMessage("Main Font", "Be careful not to use all the energy in one go!",
+                        duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.75f, Interpolation.swingOut, Interpolation.smooth,
+                        0.5f, 1 + scale / 2, 0.5f, y);
+                    narrator.AddMessage("Main Font", "Time it right to defend yourself.",
+                        duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth,
+                        0.5f, 1 + scale / 2, 0.5f, y);
+                    narrator.AddMessage("Main Font", "How about you show off your gadget to some NEW friends?",
+                        duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.6f, Interpolation.swingOut, Interpolation.smooth,
+                        0.5f, 1 + scale / 2, 0.5f, y);
+                    narrator.AddMessage("Main Font", "I'm sending them your way now! Good luck!",
+                        duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.8f, Interpolation.swingOut, Interpolation.smooth,
+                        0.5f, 1 + scale / 2, 0.5f, y);
+                }
 
-                //I'm sending some NEW friends your way. Good luck!
                 narrator.AddAction(ev);
             }
 
+
+            if(life <= 0 && life > -10)
+            {
+                // Game over
+                SaveManager mySave = new IsolatedStorageSaveManager("SacraSlice", "mysave.dat");
+                mySave.Load();
+                if (mySave.Data.highScore < score)
+                {
+                    mySave.Data.highScore = score;
+                    mySave.Save();
+                }
+                life.Value = -100;
+            }
+
+
+            UpdateLoop(gameTime);
+
+
+        }
+
+        public void UpdateLoop(GameTime gameTime)
+        {
             accum += gameTime.GetElapsedSeconds();
 
             while (accum >= dt)
@@ -514,7 +518,6 @@ namespace SacraSlice.GameCode.Screens
             }
 
             alpha = accum / dt;
-
         }
 
         public void StartDialog()
@@ -525,22 +528,36 @@ namespace SacraSlice.GameCode.Screens
             float scale = 0.18f;
             float y = 0.88f;
             narrator.AddAction(Actions.Delay(narrator.actor, 2f));
-            narrator.AddMessage("Main Font", "Wow, we're almost done packing everything from the void!",
+
+            if (started)
+            {
+                narrator.AddMessage("Main Font", "Wow, back for more?",
+                   duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.8f, Interpolation.swingOut, Interpolation.smooth,
+                   0.5f, 1 + scale / 2, 0.5f, y);
+                narrator.AddMessage("Main Font", "OK, here they come!",
+                   duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth,
+                   0.5f, 1 + scale / 2, 0.5f, y);
+            }
+            else
+            {
+                narrator.AddMessage("Main Font", "Wow, we're almost done packing everything from the void!",
                 duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.65f, Interpolation.swingOut, Interpolation.smooth,
                 0.5f, 1 + scale / 2, 0.5f, y);
-            narrator.AddMessage("Main Font", "We just have some random junk to get rid of.",
-                duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.8f, Interpolation.swingOut, Interpolation.smooth,
-                0.5f, 1 + scale / 2, 0.5f, y);
-            narrator.AddMessage("Main Font", "Could you destroy some objects I send you?",
-                duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.8f, Interpolation.swingOut, Interpolation.smooth,
-                0.5f, 1 + scale / 2, 0.5f, y);
-            narrator.AddAction(tutorialAction);
-            narrator.AddMessage("Main Font", "Click and drag your mouse to slice them.",
-                duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.8f, Interpolation.swingOut, Interpolation.smooth,
-                0.5f, 1 + scale / 2, 0.5f, y);
-            narrator.AddMessage("Main Font", "Here they come!",
-                duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth,
-                0.5f, 1 + scale / 2, 0.5f, y);
+                narrator.AddMessage("Main Font", "We just have some random junk to get rid of.",
+                    duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.8f, Interpolation.swingOut, Interpolation.smooth,
+                    0.5f, 1 + scale / 2, 0.5f, y);
+                narrator.AddMessage("Main Font", "Could you destroy some objects I send you?",
+                    duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.8f, Interpolation.swingOut, Interpolation.smooth,
+                    0.5f, 1 + scale / 2, 0.5f, y);
+                narrator.AddAction(tutorialAction);
+                narrator.AddMessage("Main Font", "Click and drag your mouse to slice them.",
+                    duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale * 0.8f, Interpolation.swingOut, Interpolation.smooth,
+                    0.5f, 1 + scale / 2, 0.5f, y);
+                narrator.AddMessage("Main Font", "Here they come!",
+                    duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth,
+                    0.5f, 1 + scale / 2, 0.5f, y);
+            }
+            
             narrator.AddAction(startSpawningA);
             mouseSprite.Color.A = 0;
         }

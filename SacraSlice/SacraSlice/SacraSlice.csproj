@@ -32,6 +32,7 @@
   <ItemGroup>
     <Folder Include="Content\Sounds\" />
     <Folder Include="Dependencies\Engine\Collision\" />
+    <Folder Include="Dependencies\Engine\SaveManagement\" />
     <Folder Include="Dependencies\Extended\" />
     <Folder Include="GameCode\Managers\" />
   </ItemGroup>
