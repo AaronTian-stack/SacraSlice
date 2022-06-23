@@ -103,18 +103,23 @@ namespace SacraSlice.GameCode.GameECS
             p.velocity.Y = rand.NextSingle(0, 10);
         }
 
-        public void RandomAnimation(AnimationStateManager asm)
+        public void RandomAnimation(AnimationStateManager asm, Timer t)
         {
             List<TextureRegion> frames = null;
-            var bruh = rand.Next(0, 4);
-            string sphere, cube, banana, cardboard;
+            var bruh = rand.Next(0, 5);
+            string sphere, cube, banana, cardboard, pien;
             bool b = false;
-            if(PlayScreen.hardEnemiesSpawn)
+            t.GetSwitch("pien").Value = false;
+            t.GetSwitch("cardboard").Value = false;
+            t.GetSwitch("wood").Value = false;
+            t.GetSwitch("banana").Value = false;
+            if (PlayScreen.hardEnemiesSpawn)
             {
                 sphere = "sphereLegs";
                 cube = "cubeLegs";
                 banana = "bananaLegs";
                 cardboard = "cardboardLegs";
+                pien = "pienLegs";
                 b = true;
             }
             else
@@ -123,6 +128,7 @@ namespace SacraSlice.GameCode.GameECS
                 cube = "cube";
                 banana = "banana";
                 cardboard = "cardboard";
+                pien = "pien";
             }
           
 
@@ -133,12 +139,19 @@ namespace SacraSlice.GameCode.GameECS
                     break;
                 case 1:
                     frames = GameContainer.atlas.FindRegions(cube);
+                    t.GetSwitch("wood").Value = true;
                     break;
                 case 2:
                     frames = GameContainer.atlas.FindRegions(banana);
+                    t.GetSwitch("banana").Value = true;
                     break;
                 case 3:
                     frames = GameContainer.atlas.FindRegions(cardboard);
+                    t.GetSwitch("cardboard").Value = true;
+                    break;
+                case 4:
+                    frames = GameContainer.atlas.FindRegions(pien);
+                    t.GetSwitch("pien").Value = true;
                     break;
             }
 
@@ -193,7 +206,7 @@ namespace SacraSlice.GameCode.GameECS
             //string sphere = "sphereLegs";
             //string cube = "cubeLegs";
 
-            switch (rand.Next(0, 2)) 
+            switch (rand.Next(0, 5)) 
             {
                 case 0:
                     asm.AddAnimation(f, new Animation<TextureRegion>("Sphere", 0.5f, null, PlayMode.LOOP));
@@ -215,8 +228,13 @@ namespace SacraSlice.GameCode.GameECS
                     asm.AddAnimation(c, new Animation<TextureRegion>("Cardboard", 0.5f, null, PlayMode.LOOP));
                     asm.AddAnimation(s, new Animation<TextureRegion>("Cardboard", 0.5f, null, PlayMode.LOOP));
                     break;
+                case 4:
+                    asm.AddAnimation(f, new Animation<TextureRegion>("Pien", 0.5f, null, PlayMode.LOOP));
+                    asm.AddAnimation(c, new Animation<TextureRegion>("Pien", 0.5f, null, PlayMode.LOOP));
+                    asm.AddAnimation(s, new Animation<TextureRegion>("Pien", 0.5f, null, PlayMode.LOOP));
+                    break;
             }
-            RandomAnimation(asm);
+            RandomAnimation(asm, t);
 
             hb.AddState(f, new RectangleF(0, 0, boxSize, height));
             hb.AddState(c, new RectangleF(0, 0, boxSize, height));

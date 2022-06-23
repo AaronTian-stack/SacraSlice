@@ -162,6 +162,8 @@ namespace SacraSlice.GameCode.GameStates.Enemy
         bool reset;
         public void CutLogic()
         {
+            if (PlayScreen.life <= 0)
+                return;
 
             if (leftHitbox.Contains(PlayScreen.mouseCoordinate) && reset)
             {
@@ -222,7 +224,7 @@ namespace SacraSlice.GameCode.GameStates.Enemy
         Actor exclamationActor = new Actor();
         //float randomAttack;
         //float randomAttackTimer;
-        Vector2 attackInterval = new Vector2(3f, 6f);
+        Vector2 attackInterval = new Vector2(3f, 5f);
         public void Explode(SpriteBatch sb, float dt)
         {
 
@@ -347,6 +349,9 @@ namespace SacraSlice.GameCode.GameStates.Enemy
             else
                 arrow.Color = new Color(1, 1, 1, 0.8f);
 
+            if (PlayScreen.life <= 0)
+                arrow.Color = Color.White;
+
             arrow.Scale *= ppm;
             arrow.Position = leftHitbox.Center;
             arrow.Draw(sb, 0.001f);
@@ -371,7 +376,19 @@ namespace SacraSlice.GameCode.GameStates.Enemy
             colorFlashActor.ClearActions();
             xActor.ClearActions();
             exclamationActor.ClearActions();
-            var s = GameContainer.sounds["Death"].CreateInstance();
+            SoundEffectInstance s;
+
+            if(timer.GetSwitch("pien"))
+                s = GameContainer.sounds["Emoji"].CreateInstance();
+            else if (timer.GetSwitch("cardboard"))
+                s = GameContainer.sounds["Cardboard"].CreateInstance();
+            else if (timer.GetSwitch("banana"))
+                s = GameContainer.sounds["Banana"].CreateInstance();
+            else if (timer.GetSwitch("wood"))
+                s = GameContainer.sounds["Wood"].CreateInstance();
+            else
+                s = GameContainer.sounds["Death"].CreateInstance();
+
             s.Pitch = random.NextSingle(-1f, 1f);
             s.Play();
         }

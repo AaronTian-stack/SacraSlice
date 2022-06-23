@@ -91,7 +91,7 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                             
                         ef.ResetVelocity(p);
 
-                        ef.RandomAnimation(aMapper.Get(entity));
+                        ef.RandomAnimation(aMapper.Get(entity), t);
 
                         if (swordMapper.Get(entity) == null && PlayScreen.hardEnemiesSpawn)
                         {

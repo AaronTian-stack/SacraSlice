@@ -11,11 +11,15 @@ namespace SacraSlice.GameCode.UserInterface
     public class ScreenFlash
     {
         GraphicsDevice gd;
-        public ScreenFlash(GraphicsDevice gd)
+        bool overRide;
+        public ScreenFlash(GraphicsDevice gd, bool overRide = false)
         {
             this.gd = gd;
             normal.actions.Add(Actions.ColorAction(normal, 
                 new Color(), new Color(), 0, Interpolation.linear));
+            this.overRide = overRide;
+            priority.color = new Color();
+            normal.color = new Color();
         }
 
         public Actor normal = new Actor();
@@ -41,8 +45,11 @@ namespace SacraSlice.GameCode.UserInterface
                 s.Color = normal.color;
                 normal.Act(dt);
             }
-            
-            if(priority.actions.Count != 0 || normal.actions.Count != 0)
+
+            if(overRide)
+                s.Color = priority.color;
+
+            if (overRide || priority.actions.Count != 0 || normal.actions.Count != 0)
                 s.Draw(sb);
         }
 

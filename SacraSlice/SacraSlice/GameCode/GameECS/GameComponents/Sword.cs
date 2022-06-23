@@ -17,14 +17,13 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
     {
         // has a sword sprite and some methods for picking random floating position offset and rotation angle
 
-        public Sprite s, hand;
+        public Sprite s = new Sprite(GameContainer.atlas.FindRegion("sword"));
+        public Sprite hand = new Sprite(GameContainer.atlas.FindRegion("hand"));
         public Actor a = new Actor();
         Timer t;
         public Sword(int seed, Timer t)
         {
             this.t = t;
-            s = new Sprite(GameContainer.atlas.FindRegion("sword"));
-            hand = new Sprite(GameContainer.atlas.FindRegion("hand"));
             random = new FastRandom(seed);
             waitingTime = random.NextSingle(0, duration);
             t.GetSwitch("have sword").Value = true;
@@ -220,6 +219,10 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
             s.Color.A = 255;
             s.Draw(sb, 0.004f);
             hand.Rotation = s.Rotation;
+            if (t.GetSwitch("pien"))
+                hand.Textureregion = GameContainer.atlas.FindRegion("handYellow");
+            else
+                hand.Textureregion = GameContainer.atlas.FindRegion("hand");
             hand.Draw(sb, 0.003f);
             s.Scale /= ppm;
             hand.Scale /= ppm;

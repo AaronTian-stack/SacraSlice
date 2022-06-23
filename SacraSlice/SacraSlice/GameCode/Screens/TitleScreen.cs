@@ -121,6 +121,12 @@ namespace SacraSlice.GameCode.Screens
             s.Position = new Vector2(25, y + offY);
             s.Draw(sb);
 
+            offY = amp * MathF.Sin(ampTimer - off * 4);
+
+            s.Textureregion = pien.GetKeyFrame(AnimationTimer);
+            s.Position = new Vector2(50, y + offY);
+            s.Draw(sb);
+
             sb.End();
 
 
@@ -179,6 +185,9 @@ namespace SacraSlice.GameCode.Screens
         Animation<TextureRegion> banana =
            new Animation<TextureRegion>("banana", 0.5f,
                GameContainer.atlas.FindRegions("banana"), PlayMode.LOOP);
+        Animation<TextureRegion> pien =
+           new Animation<TextureRegion>("pien", 0.5f,
+               GameContainer.atlas.FindRegions("pien"), PlayMode.LOOP);
 
         bool load, deleted;
         float deleteTimer;
@@ -187,7 +196,7 @@ namespace SacraSlice.GameCode.Screens
         {
             world.Update(gameTime);
             var k = KeyboardExtended.GetState();
-            if (k.WasKeyJustDown(Keys.Enter))
+            if (!load && AnimationTimer > 2 && k.WasKeyJustDown(Keys.Enter))
             {
                 load = true;
                 game.LoadScreen(game.play, 2f);

@@ -134,6 +134,24 @@
 /processorParam:Quality=Best
 /build:Music/Powerup.mp3
 
+#begin Music/WatchBack.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/WatchBack.mp3
+
+#begin Sounds/Banana.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Banana.wav
+
+#begin Sounds/Cardboard.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Cardboard.wav
+
 #begin Sounds/Coin.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -145,6 +163,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/Death.wav
+
+#begin Sounds/Emoji.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Emoji.wav
 
 #begin Sounds/FloorImpact.wav
 /importer:WavImporter
@@ -265,6 +289,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/Whistle.wav
+
+#begin Sounds/Wood.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Wood.wav
 
 #begin Sounds/Wrong.wav
 /importer:WavImporter

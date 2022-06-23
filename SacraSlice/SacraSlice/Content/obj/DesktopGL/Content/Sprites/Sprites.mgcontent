@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SourceFile>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sprites/Sprites.png</SourceFile>
-  <SourceTime>2022-06-18T22:58:45.3641168-04:00</SourceTime>
+  <SourceTime>2022-06-21T23:06:12.214523-04:00</SourceTime>
   <DestFile>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/bin/DesktopGL/Content/Sprites/Sprites.xnb</DestFile>
-  <DestTime>2022-06-20T13:50:00.5393426-04:00</DestTime>
+  <DestTime>2022-06-21T23:07:10.1208976-04:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T12:17:54-04:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

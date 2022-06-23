@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
@@ -24,6 +25,7 @@ using SacraSlice.GameCode.Managers;
 using SacraSlice.GameCode.UserInterface;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SacraSlice.GameCode.Screens
 {
@@ -112,7 +114,7 @@ namespace SacraSlice.GameCode.Screens
             entityFactory = new EntityFactory();
             narrator = new Narrator(game);
             flash = new ScreenFlash(GraphicsDevice);
-
+            deadFade = new ScreenFlash(GraphicsDevice, true);
             var slope = new Timer();
             slope.GetTimer("slope").Value = -0.7f;
             InitalizeEvents();
@@ -213,9 +215,20 @@ namespace SacraSlice.GameCode.Screens
             // get the high score so dialog is right
             SaveManager mySave = new IsolatedStorageSaveManager("SacraSlice", "mysave.dat");
             mySave.Load();
-            started = mySave.Data.highScore > 0;
+            started = mySave.Data.highScore >= ScoreToStartHardMode;
+           
+            deadFade.priority.actions.Clear();
+            life.Value = 3;
+            score.Value = 0;
+            SpawnControl = false;
+            hardEnemiesSpawn = false;
+            ShowEnergy = false;
+
+            tutorialTimer = 0;
+            tutorialBool = false;
+
+            SoundEffect.MasterVolume = 1;
             StartDialog();
-            
         }
 
         Cursor cursor = new Cursor(0.01f, 10);
@@ -223,7 +236,7 @@ namespace SacraSlice.GameCode.Screens
         public static DebugWindow debugWindow;
         public static Rectangle ndr;
         public static bool ShowEnergy;
-        float tutorialTimer;
+        float tutorialTimer, deadTimer;
 
         Animation<TextureRegion> mouseCursorAnim = new Animation<TextureRegion>
             ("mouse", 0.5f, GameContainer.atlas.FindRegions("cursor"), PlayMode.LOOP);
@@ -256,20 +269,21 @@ namespace SacraSlice.GameCode.Screens
 
             world.Draw(gameTime);
 
-            if(ShowEnergy || hardEnemiesSpawn)
-                energy.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds() * (dtStatic / dt), ppm);
+            if(life > 0)
+            {
+                if (ShowEnergy || hardEnemiesSpawn)
+                    energy.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds() * (dtStatic / dt), ppm);
 
-            if (mouse.WasButtonJustDown(MouseButton.Left))
-                cursor.Set(mouseCoordinate);
+                if (mouse.WasButtonJustDown(MouseButton.Left))
+                    cursor.Set(mouseCoordinate);
 
-            cursor.Update(mouseCoordinate, gameTime.GetElapsedSeconds(),
-                    mouse.IsButtonDown(MouseButton.Left));
+                cursor.Update(mouseCoordinate, gameTime.GetElapsedSeconds(),
+                        mouse.IsButtonDown(MouseButton.Left));
 
-            cursor.headWidth /= camera.Zoom;
-            cursor.Draw(GameContainer._spriteBatch, ppm, 2f);
-            cursor.headWidth *= camera.Zoom;
-
-
+                cursor.headWidth /= camera.Zoom;
+                cursor.Draw(GameContainer._spriteBatch, ppm, 2f);
+                cursor.headWidth *= camera.Zoom;
+            }
 
             if (tutorialBool)
             {
@@ -323,7 +337,50 @@ namespace SacraSlice.GameCode.Screens
             narrator.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds());
 
             flash.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds());
+            deadFade.Draw(GameContainer._spriteBatch, gameTime.GetElapsedSeconds());
 
+            if (life <= 0)
+            {
+                TextDrawer.DrawTextStatic("Main Font", "Play again?", new Vector2(0.5f, playAgain.y),
+                    0.1f, Color.White, Color.Black, 4, 4, 4, 10);
+                TextDrawer.DrawTextStatic("Main Font", "YES", new Vector2(0.4f, yesNo.y),
+                    0.1f, Color.White, Color.Black, 4, 4, 4, 10);
+
+                TextDrawer.DrawTextStatic("Main Font", "NO", new Vector2(0.6f, yesNo.y),
+                    0.1f, Color.White, Color.Black, 4, 4, 4, 10);
+            }
+
+            GameContainer._spriteBatch.End();
+
+
+
+            GameContainer._spriteBatch.Begin(samplerState: SamplerState.PointWrap
+               , blendState: BlendState.NonPremultiplied);
+            if (life <= 0)
+            {
+                gameOver.Act(gameTime.GetElapsedSeconds());
+                playAgain.Act(gameTime.GetElapsedSeconds());
+                yesNo.Act(gameTime.GetElapsedSeconds());
+                deadTimer += gameTime.GetElapsedSeconds();
+                if(deadTimer > 0.5f)
+                {
+                    deadTimer = 0;
+                    deadColor = !deadColor;
+                }
+                Color deadC;
+                if (deadColor)
+                    deadC = Color.White;
+                else
+                    deadC = Color.Red;
+                // draw game over 
+                TextDrawer.DrawTextStatic("Title Font", "GAME OVER", new Vector2(0.5f, gameOver.y),
+                    0.2f, deadC, Color.Black, 4, 4, 4, 15);
+                //Debug.Write(gameOver.y);
+                if (SoundEffect.MasterVolume > 0.2f)
+                {
+                    SoundEffect.MasterVolume -= 0.05f * gameTime.GetElapsedSeconds() * 100;
+                }
+            }
             GameContainer._spriteBatch.End();
 
 
@@ -331,10 +388,13 @@ namespace SacraSlice.GameCode.Screens
 
             //GameContainer.GuiRenderer.EndLayout();
 
-            
 
         }
+        Actor gameOver = new Actor();
+        Actor playAgain = new Actor();
+        Actor yesNo = new Actor();
 
+        bool deadColor;
         float accum;
         readonly float dtStatic = 1f / ticks; // For game logic
         Wrapper<float> dt = new Wrapper<float>(1f / ticks); // change so rate at which game updates is different. Dramatic Slow Motion effect!
@@ -499,14 +559,27 @@ namespace SacraSlice.GameCode.Screens
                     mySave.Save();
                 }
                 life.Value = -100;
-            }
 
+                deadFade.priority.AddAction(Actions.ColorAction(
+                    deadFade.priority, new Color(0, 0, 0, 0), 
+                    new Color(0, 0, 0, 0.6f), 2f, Interpolation.smooth));
+
+                GameContainer.sounds["Lose"].Play();
+                MediaPlayer.Play(GameContainer.songs["WatchBack"]);
+                gameOver.AddAction(Actions.MoveFrom(gameOver,
+                    0.5f, 0.6f, 0.5f, 0.35f, 1f, Interpolation.swingOut));
+                playAgain.AddAction(Actions.MoveFrom(playAgain,
+                   0.5f, 0.8f, 0.5f, 0.495f, 1f, Interpolation.swingOut));
+                yesNo.AddAction(Actions.MoveFrom(yesNo,
+                   0.5f, 0.9f, 0.5f, 0.6f, 1f, Interpolation.swingOut));
+            }
 
             UpdateLoop(gameTime);
 
 
         }
 
+      
         public void UpdateLoop(GameTime gameTime)
         {
             accum += gameTime.GetElapsedSeconds();
