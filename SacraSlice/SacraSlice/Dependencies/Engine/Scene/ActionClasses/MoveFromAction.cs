@@ -21,10 +21,6 @@ namespace SacraSlice.Dependencies.Engine.Scene.ActionClasses
 
         public override bool Act(float elapsedTime)
         {
-            
-
-            if (a.x == x && a.y == y)
-                return true;
 
             timer += elapsedTime;
 

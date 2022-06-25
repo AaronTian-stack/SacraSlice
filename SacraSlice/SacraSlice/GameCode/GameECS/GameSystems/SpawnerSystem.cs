@@ -12,6 +12,7 @@ using SacraSlice.Dependencies.Engine.Animation;
 using SacraSlice.GameCode.GameECS.GameComponents;
 using SacraSlice.GameCode.Screens;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace SacraSlice.GameCode.GameECS.GameSystems
 {
@@ -63,7 +64,7 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
             {
                 timer = 0;
                 //DebugLog.Print("Spawner", "trying to spawn");
-
+                
                 foreach (var entity in ActiveEntities)
                 {
 
@@ -116,7 +117,7 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
 
             }
 
-           
+
         }
 
     }

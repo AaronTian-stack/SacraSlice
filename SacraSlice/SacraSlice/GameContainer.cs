@@ -37,6 +37,7 @@ namespace SacraSlice
         public PlayScreen play;
         public SplashScreen splash;
         public TitleScreen title;
+        public BlankScreen blank;
 
         public GameContainer()
         {
@@ -52,7 +53,6 @@ namespace SacraSlice
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
 
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
@@ -63,29 +63,26 @@ namespace SacraSlice
             play = new PlayScreen(this);
             splash = new SplashScreen(this);
             title = new TitleScreen(this);
+            blank = new BlankScreen(this);
 
             LoadScreen(splash, 1f);
 
             GuiRenderer = new ImGUIRenderer(this).Initialize().RebuildFontAtlas();
 
             this.Window.AllowUserResizing = true;
-            /*this.Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
-
-            void Window_ClientSizeChanged(object sender, EventArgs e)
-            {
-                SaveManager mySave = new IsolatedStorageSaveManager("SacraSlice", "mysave.dat");
-                mySave.Data.width = this.Window.ClientBounds.Width;
-                mySave.Data.height = this.Window.ClientBounds.Height;
-                mySave.Save();
-            }*/
 
             IsFixedTimeStep = false;
+
+            SaveManager mySave = new IsolatedStorageSaveManager("SacraSlice", "mysave.dat");
+            mySave.Load();
+            if (mySave.Data.fullscreen)
+                FullScreen();
 
         }
 
         public void LoadScreen(GameScreen screen, float duration)
         {
-            _screenManager.LoadScreen(screen, new FadeTransition(GraphicsDevice, Color.Black, duration));
+            _screenManager.LoadScreen(screen, new FadeTransitionFixed(GraphicsDevice, Color.Black, duration));
         }
 
         protected override void LoadContent()
@@ -105,6 +102,7 @@ namespace SacraSlice
             TextDrawer.gd = GraphicsDevice;
             SpriteAligner.sb = _spriteBatch;
             SpriteAligner.gd = GraphicsDevice;
+            ShapeAligner.gd = GraphicsDevice;
         }
 
         public static float alpha;
@@ -112,12 +110,10 @@ namespace SacraSlice
         public static GameTime gameTime;
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+           
             GameContainer.gameTime = gameTime;
 
             base.Update(gameTime);
-
 
 
         }
@@ -135,6 +131,11 @@ namespace SacraSlice
         public void FullScreen()
         {
             graphics.IsFullScreen = !graphics.IsFullScreen;
+
+            SaveManager mySave = new IsolatedStorageSaveManager("SacraSlice", "mysave.dat");
+            mySave.Load();
+            mySave.Data.fullscreen = graphics.IsFullScreen;
+            mySave.Save();
 
             if (graphics.IsFullScreen)
             {

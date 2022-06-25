@@ -72,7 +72,7 @@ namespace SacraSlice.Dependencies.Engine
         float shakePosition = 0;
         float shakeRotation = 0;
         float shakeDuration = 0;
-        float shakeTimer = 999;
+        public float shakeTimer = 999;
         public void AddShake(float position, float rotation, float duration)
         {
             shakePosition = position;

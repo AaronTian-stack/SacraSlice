@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.Input;
 using MonoGame.Extended.Screens;
+using MonoGame.Extended.ViewportAdapters;
 using SacraSlice.Dependencies.Engine;
 using SacraSlice.Dependencies.Engine.InterfaceLayout;
 using SacraSlice.Dependencies.Engine.Scene;
@@ -21,30 +22,33 @@ namespace SacraSlice.GameCode.Screens
         {
            this.game = game;
            sound += PlaySound;
+            var viewportAdapter = new BoxingViewportAdapter(game.Window,
+                 GraphicsDevice, 1, 1);
+            camera = new OrthographicCamera(viewportAdapter);
         }
 
         Actor a = new Actor();
         Actor a1 = new Actor();
+        OrthographicCamera camera;
         public override void Draw(GameTime gameTime)
         {
             a.Act(gameTime.GetElapsedSeconds());
             a1.Act(gameTime.GetElapsedSeconds());
-            GraphicsDevice.Clear(Color.White);
+            GraphicsDevice.Clear(Color.Black);
 
+            GameContainer._spriteBatch.Begin(transformMatrix: camera.GetViewMatrix());
 
-            GameContainer._spriteBatch.Begin(samplerState: SamplerState.LinearWrap, blendState: BlendState.NonPremultiplied);
+            GameContainer._spriteBatch.FillRectangle(camera.BoundingRectangle, Color.White);
 
+            GameContainer._spriteBatch.End();
             Color c = Color.Black;
             c.A = a.color.A;
 
             Color c1 = Color.Black;
             c1.A = a1.color.A;
 
-            // PlumbumPall
-            // qikentie
-            // qikentite
-            // qikentify
-            // qhenki
+            GameContainer._spriteBatch.Begin(samplerState: SamplerState.LinearWrap, 
+                blendState: BlendState.NonPremultiplied);
 
             TextDrawer.DrawTextStatic("Main Font", "a game by", new Vector2(a1.x, a1.y), .1f, Color.White, c1,
                 2, 2, 2, 3);

@@ -42,7 +42,13 @@ namespace SacraSlice.GameCode.UserInterface
 
         Bag<Number> numbers = new Bag<Number>();
         
-        
+        public void Reset()
+        {
+            numbers.Clear();
+            old = PlayScreen.life;
+            oldScore = PlayScreen.score;
+            shakeTimer = 999f;
+        }
         public void Draw(SpriteBatch sb, float dt)
         {
 
@@ -70,8 +76,6 @@ namespace SacraSlice.GameCode.UserInterface
                    numbers.RemoveAt(i);
 
             }
-
-           
 
             X.Rotation = 45;
             XRed.Rotation = 45;

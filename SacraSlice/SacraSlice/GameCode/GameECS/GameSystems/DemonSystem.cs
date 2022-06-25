@@ -11,6 +11,7 @@ using SacraSlice.Dependencies.Engine.Scene;
 using SacraSlice.GameCode.Screens;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace SacraSlice.GameCode.GameECS.GameSystems
@@ -22,17 +23,19 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
         private ComponentMapper<Position> posMapper;
         private ComponentMapper<Timer> tMapper;
         private ComponentMapper<Sprite> sMapper;
-
-        public DemonSystem(SpriteBatch sb, float ppm) : base(Aspect.All(typeof(Position), typeof(Timer),  typeof(Sprite)))
+        Wrapper<bool> demonReset;
+        public DemonSystem(SpriteBatch sb, float ppm, Wrapper<bool> demonReset) : base(Aspect.All(typeof(Position), typeof(Timer),  typeof(Sprite)))
         {
+            this.demonReset = demonReset;
             this.sb = sb;
             this.ppm = ppm;
             spawn = random.Next(range.X, range.Y);
-            a.x = -100; a.y = 100;
+            a.x = -1000; a.y = 1000;
             so = GameContainer.sounds["Waves"].CreateInstance();
             so.IsLooped = true;
             robo = GameContainer.sounds["RoboNoise"].CreateInstance();
             robo.IsLooped = true;
+            jump = GameContainer.sounds["Jumpscare"].CreateInstance();
         }
 
         float timer;
@@ -60,7 +63,7 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
         Vector2 yRange = new Vector2(-15, 20);
 
         bool b = true;
-        SoundEffectInstance so, robo;
+        SoundEffectInstance so, robo, jump;
         public override void Draw(GameTime gameTime)
         {
             foreach (var entity in ActiveEntities)
@@ -70,7 +73,23 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                 var sprite = sMapper.Get(entity);
 
                
-                if (!time.GetSwitch("IsDemon") || PlayScreen.score < PlayScreen.ScoreToSpawnDemon) continue;
+                if (!time.GetSwitch("IsDemon") || PlayScreen.score < PlayScreen.ScoreToSpawnDemon)
+                    continue;
+
+                if (demonReset)
+                {
+                    a.ClearActions();
+                    a.x = -1000; a.y = 1000;
+                    pos.currPosition.X = a.x;
+                    pos.currPosition.Y = a.y;
+                    robo.Stop();
+                    so.Stop();
+                    jump.Stop();
+                    timer = 0;
+                    spawn = random.Next(range.X, range.Y);
+                    demonReset.Value = false;
+                }
+                   
 
                 time.GetTimer("Spawn Timer").Value = timer;
                 time.GetTimer("Time when spawn").Value = spawn;
@@ -112,13 +131,12 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                     robo.Volume = 1;
                     so.Play();
                     so.Volume = 0.6f;
-                    GameContainer.sounds["Jumpscare"].Play();
+                    jump.Play();
                 }
 
                 a.Act(gameTime.GetElapsedSeconds());
                 if (a.actions.Count == 0)
                 {
-                    
                     if(robo.Volume - 0.01f > 0)
                         robo.Volume -= 0.01f;
                     else

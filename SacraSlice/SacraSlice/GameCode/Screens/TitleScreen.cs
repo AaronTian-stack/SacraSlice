@@ -219,6 +219,9 @@ namespace SacraSlice.GameCode.Screens
             }
             else deleteTimer = 0;
 
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || k.IsKeyDown(Keys.Escape))
+                game.Exit();
+
             if (!load && k.WasKeyJustDown(Keys.F))
             {
                 game.FullScreen();
@@ -234,6 +237,7 @@ namespace SacraSlice.GameCode.Screens
             SaveManager mySave = new IsolatedStorageSaveManager("SacraSlice", "mysave.dat");
             mySave.Load();
             score = mySave.Data.highScore;
+            AnimationTimer = 0;
         }
 
     }

@@ -60,7 +60,7 @@ namespace SacraSlice.GameCode.Screens
 
         public static int ScoreToStartHardMode = 5; // 5
 
-        public static int ScoreToSpawnDemon = 50; // 50
+        public static int ScoreToSpawnDemon = 40; // 40
 
         public static int ScoreWhenHardModeStarted;
 
@@ -165,7 +165,10 @@ namespace SacraSlice.GameCode.Screens
                 .AddSystem(new SwordSquash())
                 .AddSystem(new SwordDraw(GameContainer._spriteBatch, ppm, dt, dtStatic))
                 .AddSystem(new SpawnerSystem(entityFactory, ppm, score, dt, dtStatic))
-                .AddSystem(new DemonSystem(GameContainer._spriteBatch, ppm))
+                .AddSystem(new ResetSystem(entityFactory, reset))
+                .AddSystem(new DemonSystem(GameContainer._spriteBatch, ppm, demonReset))
+                
+
 
                 .Build();
 
@@ -206,27 +209,41 @@ namespace SacraSlice.GameCode.Screens
 
             scoreBoard = new ScoreBoard();
 
-            
-            
+
+
         }
         bool started;
+        Wrapper<bool> reset = new Wrapper<bool>(false);
+        Wrapper<bool> demonReset = new Wrapper<bool>(false);
+        public static int highScore, highScoreHold;
         public override void LoadContent()
         {
+            camera.shakeTimer = 999f;
             // get the high score so dialog is right
             SaveManager mySave = new IsolatedStorageSaveManager("SacraSlice", "mysave.dat");
             mySave.Load();
             started = mySave.Data.highScore >= ScoreToStartHardMode;
-           
+            highScore = mySave.Data.highScore;
+            highScoreHold = highScore;
+
             deadFade.priority.actions.Clear();
+            deadFade.priority.color = new Color();
             life.Value = 3;
             score.Value = 0;
             SpawnControl = false;
             hardEnemiesSpawn = false;
             ShowEnergy = false;
 
+            enemiesOnScreen.Value = 0;
+
+            once = false;
             tutorialTimer = 0;
             tutorialBool = false;
-
+            reset.Value = true;
+            demonReset.Value = true;
+            // TODO: destroy all active enemy entities
+            scoreBoard.Reset();
+            narrator.actor.ClearActions();
             SoundEffect.MasterVolume = 1;
             StartDialog();
         }
@@ -247,6 +264,15 @@ namespace SacraSlice.GameCode.Screens
 
             GraphicsDevice.Clear(Color.Black);
 
+            if(score > highScore && score > ScoreToStartHardMode)
+            {
+                highScore = int.MaxValue;
+                float scale = 0.2f;
+                narrator.AddMessage("Main Font", "New High Score!",
+                     duration: 0.5f, readDelay: 0.8f, endDelay: 0, size: scale,
+                     Interpolation.swingOut, Interpolation.smooth, 0.5f, 1 + scale / 2, 0.5f, 1 - scale / 2
+                     , sound: true);
+            }
 
             mouse = MouseExtended.GetState();
             if (inputStack.Count > 0)
@@ -341,13 +367,69 @@ namespace SacraSlice.GameCode.Screens
 
             if (life <= 0)
             {
-                TextDrawer.DrawTextStatic("Main Font", "Play again?", new Vector2(0.5f, playAgain.y),
+                float butsize1 = 0.1f;
+                float butsize2 = 0.1f;
+                Color butC1 = Color.White;
+                Color butC2 = Color.White;
+                ///
+                var yesButton = ShapeAligner.GenerateRect(0.4f, yesNo.y + 0.01f,
+                    new Vector2(0.06f));
+                //GameContainer._spriteBatch.DrawRectangle(yesButton, Color.Red);
+                var noButton = ShapeAligner.GenerateRect(0.6f, yesNo.y + 0.01f,
+                   new Vector2(0.06f));
+                //GameContainer._spriteBatch.DrawRectangle(noButton, Color.Red);
+
+                float big = 0.15f;
+
+                var mpos = mouse.Position;
+
+                mpos.X -= (game.Window.ClientBounds.Width
+                    - GraphicsDevice.Viewport.Width) / 2;
+
+                mpos.Y -= (game.Window.ClientBounds.Height
+                   - GraphicsDevice.Viewport.Height) / 2;
+
+                if (yesButton.Contains(mpos))
+                {
+                    
+                    butsize1 = big;
+                    butC1 = Color.LightGreen;
+                    if (mouse.WasButtonJustDown(MouseButton.Left))
+                    {
+                        
+                        // go to the blank screen
+                        game.LoadScreen(game.blank, 0.5f);
+                    }
+                }
+                if (noButton.Contains(mpos))
+                {
+                    
+                    butsize2 = big;
+                    butC2 = Color.OrangeRed;
+                    if (mouse.WasButtonJustDown(MouseButton.Left))
+                    {
+                        //demonReset.Value = true;
+                        // go to menu
+                        game.LoadScreen(game.title, 2f);
+                    }
+                }
+
+                ///
+
+                TextDrawer.DrawTextStatic("Main Font", "Play again?", 
+                    new Vector2(0.5f, playAgain.y),
                     0.1f, Color.White, Color.Black, 4, 4, 4, 10);
+                
+                TextDrawer.DrawTextStatic("Main Font", "Highscore: "+highScoreHold, 
+                    new Vector2(0.5f, playAgain.y + 0.07f), // 0.53f
+                    0.08f, Color.White, Color.Black, 4, 4, 4, 10);
+
                 TextDrawer.DrawTextStatic("Main Font", "YES", new Vector2(0.4f, yesNo.y),
-                    0.1f, Color.White, Color.Black, 4, 4, 4, 10);
+                    butsize1, butC1, Color.Black, 4, 4, 4, 10);
 
                 TextDrawer.DrawTextStatic("Main Font", "NO", new Vector2(0.6f, yesNo.y),
-                    0.1f, Color.White, Color.Black, 4, 4, 4, 10);
+                    butsize2, butC2, Color.Black, 4, 4, 4, 10);
+               
             }
 
             GameContainer._spriteBatch.End();
@@ -375,7 +457,6 @@ namespace SacraSlice.GameCode.Screens
                 // draw game over 
                 TextDrawer.DrawTextStatic("Title Font", "GAME OVER", new Vector2(0.5f, gameOver.y),
                     0.2f, deadC, Color.Black, 4, 4, 4, 15);
-                //Debug.Write(gameOver.y);
                 if (SoundEffect.MasterVolume > 0.2f)
                 {
                     SoundEffect.MasterVolume -= 0.05f * gameTime.GetElapsedSeconds() * 100;
@@ -387,7 +468,7 @@ namespace SacraSlice.GameCode.Screens
             //debug.CustomRender();
 
             //GameContainer.GuiRenderer.EndLayout();
-
+            
 
         }
         Actor gameOver = new Actor();
@@ -422,7 +503,6 @@ namespace SacraSlice.GameCode.Screens
         public void StartSpawning(object sender, EventArgs e)
         {
             SpawnControl = true;
-           
         }
         public void StopSpawning(object sender, EventArgs e)
         {
@@ -569,7 +649,7 @@ namespace SacraSlice.GameCode.Screens
                 gameOver.AddAction(Actions.MoveFrom(gameOver,
                     0.5f, 0.6f, 0.5f, 0.35f, 1f, Interpolation.swingOut));
                 playAgain.AddAction(Actions.MoveFrom(playAgain,
-                   0.5f, 0.8f, 0.5f, 0.495f, 1f, Interpolation.swingOut));
+                   0.5f, 0.8f, 0.5f, 0.46f, 1f, Interpolation.swingOut));
                 yesNo.AddAction(Actions.MoveFrom(yesNo,
                    0.5f, 0.9f, 0.5f, 0.6f, 1f, Interpolation.swingOut));
             }
