@@ -248,6 +248,11 @@ namespace SacraSlice.GameCode.Screens
             StartDialog();
         }
 
+        public override void UnloadContent()
+        {
+            demonReset.Value = true;
+        }
+
         Cursor cursor = new Cursor(0.01f, 10);
         public static MouseStateExtended mouse;
         public static DebugWindow debugWindow;
@@ -457,7 +462,7 @@ namespace SacraSlice.GameCode.Screens
                 // draw game over 
                 TextDrawer.DrawTextStatic("Title Font", "GAME OVER", new Vector2(0.5f, gameOver.y),
                     0.2f, deadC, Color.Black, 4, 4, 4, 15);
-                if (SoundEffect.MasterVolume > 0.2f)
+                if (SoundEffect.MasterVolume > 0.4f)
                 {
                     SoundEffect.MasterVolume -= 0.05f * gameTime.GetElapsedSeconds() * 100;
                 }
@@ -581,14 +586,8 @@ namespace SacraSlice.GameCode.Screens
                 }
                 else
                 {
-                    if (started)
-                    {
-                        narrator.AddMessage("Main Font", "Too easy. Let's ramp it up!",
-                            duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth,
-                            0.5f, 1 + scale / 2, 0.5f, y);
-                    }
-                    else
-                    {
+                    if (!started) 
+                    { 
                         narrator.AddMessage("Main Font", "Is this too easy?",
                             duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth,
                             0.5f, 1 + scale / 2, 0.5f, y);
@@ -596,6 +595,12 @@ namespace SacraSlice.GameCode.Screens
                   
                 }
 
+                if (started)
+                {
+                    narrator.AddMessage("Main Font", "Too easy. Let's ramp it up!",
+                        duration: 1.5f, readDelay: 2f, endDelay: 0.5f, size: scale, Interpolation.swingOut, Interpolation.smooth,
+                        0.5f, 1 + scale / 2, 0.5f, y);
+                }
                 if (!started)
                 {
                     narrator.AddMessage("Main Font", "Hmm... How can I make this more interesting?",
@@ -637,6 +642,8 @@ namespace SacraSlice.GameCode.Screens
                 {
                     mySave.Data.highScore = score;
                     mySave.Save();
+                    if (score > highScoreHold)
+                        highScoreHold = score;
                 }
                 life.Value = -100;
 

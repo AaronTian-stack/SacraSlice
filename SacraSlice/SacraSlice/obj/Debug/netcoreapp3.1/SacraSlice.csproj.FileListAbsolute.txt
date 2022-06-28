@@ -105,3 +105,4 @@ C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\E
 C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\Banana.xnb
 C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\Cardboard.xnb
 C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\Wood.xnb
+C:\Aaron\Monogame\SacraSlice\SacraSlice\bin\Debug\netcoreapp3.1\Content\Sounds\EnergyDrain.xnb

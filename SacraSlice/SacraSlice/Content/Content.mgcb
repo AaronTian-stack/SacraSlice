@@ -170,6 +170,12 @@
 /processorParam:Quality=Best
 /build:Sounds/Emoji.wav
 
+#begin Sounds/EnergyDrain.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/EnergyDrain.wav
+
 #begin Sounds/FloorImpact.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

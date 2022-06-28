@@ -42,15 +42,15 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                 foreach (var entity in ActiveEntities)
                 {
                     var time = timeMapper.Get(entity);
-                    if (time.GetSwitch("IsDemon"))
-                        continue;
+                    //if (time.GetSwitch("IsDemon"))
+                        //continue;
                     var pos = posMapper.Get(entity);
                     ef.Free((int)pos.start);
                     DestroyEntity(entity);
                 }
+                ef.CreateDemon();
                 reset.Value = false;
             }
-           
 
         }
 

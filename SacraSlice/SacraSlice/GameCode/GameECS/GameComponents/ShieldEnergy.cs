@@ -21,6 +21,7 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
         RepeatAction ra;
 
         SoundEffectInstance beep;
+        EventAction ea;
         public ShieldEnergy(GameCamera cam)
         {
             this.gd = cam;
@@ -28,13 +29,29 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
 
             beep = GameContainer.sounds["Wrong"].CreateInstance();
             beep.Pitch = -1;
-
+            eh += PlayBeep;
 
             ra = new RepeatAction(a,
                new ColorAction(a, Color.White, Color.Red, 0.5f, Interpolation.smooth)
-
+               , new EventAction(a, eh)
                , new ColorAction(a, Color.Red, Color.White, 0.5f, Interpolation.smooth));
+
+            drain = GameContainer.sounds["EnergyDrain"].CreateInstance();
+            drain.IsLooped = true;
+
+            
+           
+            //so.IsLooped = true;
         }
+        EventHandler eh;
+        public void PlayBeep(object sender, EventArgs e)
+        {
+            var so = GameContainer.sounds["Wrong"].CreateInstance();
+            //so.Pitch = -0.5f;
+            so.Play();
+        }
+
+        SoundEffectInstance drain;
         NinePatch energy = new NinePatch(GameContainer.atlas.FindRegion("shieldbar"), 2, 2, 2, 2);
         Sprite pixel = new Sprite(GameContainer.atlas.FindRegion("whitepixel"));
 
@@ -64,26 +81,37 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
             a.Act(dt);
             if (PlayScreen.mouse.IsButtonDown(MouseButton.Right))
             {
+                
                 clickTimer += dt; realClick += dt;
                 
                 notclickTimer = 0;
                 if (energyTimer > 0)
                 {
+                    drain.Volume = 0.8f;
+                    drain.Play();
                     defending = true;
                     energyTimer -= dt;
                     recharge = rechargeWait;
                 }
                 else
                 {
+                    drain.Stop();
                     defending = false;
                     recharge = rechargeWaitLong;
                     if(a.actions.Count == 0)
+                    {
                         a.AddAction(ra);
+                    }
+                        
                 }
                 play = false;
             }
             else
             {
+                
+                float da = 0.1f;
+                drain.Volume = Math.Max(0, drain.Volume - da * dt * 100);
+                drain.Stop();
                 realClick = 0;
                 notclickTimer += dt;
 
@@ -116,9 +144,15 @@ namespace SacraSlice.GameCode.GameECS.GameComponents
             realClick = Math.Clamp(realClick, 0, 999);
             var opa = Interpolation.smooth.Apply(0, 255, clickTimer / clickTime);
             if (a.actions.Count != 0)
-                energy.color = a.color;
+            {
+                energy.color = a.color;      
+            }
             else
+            {
                 energy.color = Color.White;
+                //so.Stop();
+            }
+                
 
             energy.color.A = (byte)opa;
             energy.Draw(sb, ppm, 0.000002f);

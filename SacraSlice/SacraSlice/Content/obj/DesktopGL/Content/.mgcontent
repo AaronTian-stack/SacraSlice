@@ -25,6 +25,7 @@
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/Coin.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/Death.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/Emoji.wav</File>
+    <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/EnergyDrain.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/FloorImpact.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/HeavyImpact.wav</File>
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sounds/Jumpscare.wav</File>
@@ -50,6 +51,7 @@
     <File>C:/Aaron/Monogame/SacraSlice/SacraSlice/Content/Sprites/Sprites.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

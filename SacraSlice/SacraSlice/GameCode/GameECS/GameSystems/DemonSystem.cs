@@ -72,10 +72,6 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                 var time = tMapper.Get(entity);
                 var sprite = sMapper.Get(entity);
 
-               
-                if (!time.GetSwitch("IsDemon") || PlayScreen.score < PlayScreen.ScoreToSpawnDemon)
-                    continue;
-
                 if (demonReset)
                 {
                     a.ClearActions();
@@ -83,13 +79,19 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                     pos.currPosition.X = a.x;
                     pos.currPosition.Y = a.y;
                     robo.Stop();
+                    robo.Volume = 0;
                     so.Stop();
+                    so.Volume = 0;
                     jump.Stop();
+                    jump.Volume = 0;
                     timer = 0;
                     spawn = random.Next(range.X, range.Y);
                     demonReset.Value = false;
+                    PlayScreen.flash.normal.ClearActions();
                 }
-                   
+
+                if (!time.GetSwitch("IsDemon") || PlayScreen.score < PlayScreen.ScoreToSpawnDemon)
+                    continue;
 
                 time.GetTimer("Spawn Timer").Value = timer;
                 time.GetTimer("Time when spawn").Value = spawn;
@@ -131,6 +133,7 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
                     robo.Volume = 1;
                     so.Play();
                     so.Volume = 0.6f;
+                    jump.Volume = 1;
                     jump.Play();
                 }
 

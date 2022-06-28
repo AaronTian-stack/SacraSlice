@@ -224,7 +224,7 @@ namespace SacraSlice.GameCode.GameStates.Enemy
         Actor exclamationActor = new Actor();
         //float randomAttack;
         //float randomAttackTimer;
-        Vector2 attackInterval = new Vector2(3f, 5f);
+        Vector2 attackInterval = new Vector2(2.5f, 5f);
         public void Explode(SpriteBatch sb, float dt)
         {
 
