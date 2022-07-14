@@ -66,6 +66,23 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
         SoundEffectInstance so, robo, jump;
         public override void Draw(GameTime gameTime)
         {
+            if (demonReset)
+            {
+                a.ClearActions();
+                a.x = -1000; a.y = 1000;
+
+                robo.Stop();
+                robo.Volume = 0;
+                so.Stop();
+                so.Volume = 0;
+                jump.Stop();
+                jump.Volume = 0;
+                timer = 0;
+                spawn = random.Next(range.X, range.Y);
+                demonReset.Value = false;
+                PlayScreen.flash.normal.ClearActions();
+            }
+
             foreach (var entity in ActiveEntities)
             {
                 var pos = posMapper.Get(entity);
@@ -74,20 +91,8 @@ namespace SacraSlice.GameCode.GameECS.GameSystems
 
                 if (demonReset)
                 {
-                    a.ClearActions();
-                    a.x = -1000; a.y = 1000;
                     pos.currPosition.X = a.x;
                     pos.currPosition.Y = a.y;
-                    robo.Stop();
-                    robo.Volume = 0;
-                    so.Stop();
-                    so.Volume = 0;
-                    jump.Stop();
-                    jump.Volume = 0;
-                    timer = 0;
-                    spawn = random.Next(range.X, range.Y);
-                    demonReset.Value = false;
-                    PlayScreen.flash.normal.ClearActions();
                 }
 
                 if (!time.GetSwitch("IsDemon") || PlayScreen.score < PlayScreen.ScoreToSpawnDemon)

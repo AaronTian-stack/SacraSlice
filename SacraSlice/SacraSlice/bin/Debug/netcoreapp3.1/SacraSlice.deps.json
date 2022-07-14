@@ -15,7 +15,9 @@
           "MonoGame.Extended.Entities": "3.8.0",
           "MonoGame.Extended.Input": "3.8.0",
           "MonoGame.Extended.Particles": "3.8.0",
-          "MonoGame.Framework.DesktopGL": "3.8.0.1641"
+          "MonoGame.Framework.DesktopGL": "3.8.0.1641",
+          "nulastudio.NetBeauty": "2.0.0-beta.4",
+          "nulastudio.NetCoreBeauty": "1.2.9.3"
         },
         "runtime": {
           "SacraSlice.dll": {}
@@ -198,6 +200,8 @@
           }
         }
       },
+      "nulastudio.NetBeauty/2.0.0-beta.4": {},
+      "nulastudio.NetCoreBeauty/1.2.9.3": {},
       "System.Buffers/4.4.0": {},
       "System.Numerics.Vectors/4.4.0": {},
       "System.Runtime.CompilerServices.Unsafe/4.4.0": {}
@@ -292,6 +296,20 @@
       "sha512": "sha512-6mgjfnRB4jKMlzHSl+VD+oUc1IebOZabkbyWj2RiTgWwYPPuaK1H97G1sHqGwPlS5npiF5Q0OrxN1wni2n5QWg==",
       "path": "newtonsoft.json/12.0.3",
       "hashPath": "newtonsoft.json.12.0.3.nupkg.sha512"
+    },
+    "nulastudio.NetBeauty/2.0.0-beta.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-glf2/PajM6k9hTHqMXYYkm7ekKLsNNywI/P4GzdgyrV7vuIMKsfvxyomI6H03Vzr2OF0TxSVKaA6WewNLclDWw==",
+      "path": "nulastudio.netbeauty/2.0.0-beta.4",
+      "hashPath": "nulastudio.netbeauty.2.0.0-beta.4.nupkg.sha512"
+    },
+    "nulastudio.NetCoreBeauty/1.2.9.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ToUOoX/sNCg6oeMcSrHYBBRPjKp1gDS7I5WNnY+59t7iNFPcAojpc2lYmgCm3hxwXW/xCxyQIV4k5agegqc3fg==",
+      "path": "nulastudio.netcorebeauty/1.2.9.3",
+      "hashPath": "nulastudio.netcorebeauty.1.2.9.3.nupkg.sha512"
     },
     "System.Buffers/4.4.0": {
       "type": "package",

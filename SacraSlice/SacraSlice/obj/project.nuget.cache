@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "aFFcuYjoPv3TA8QEBaa1eJryWPgJwOA3HAnogQlwAZsA821BQCwv/bCZ+gRYNB+bmm3+GJMUSFPxtBTaWH2Pmw==",
+  "dgSpecHash": "h3njGvLX209jgkJ8Hbshhl3Hzbg3UfvN9F7yWXjMHp2ZtizN171DhWsZEUtClkGF9Qdki2zCM6ZDbTVM/Oyt7A==",
   "success": true,
   "projectFilePath": "C:\\Aaron\\Monogame\\SacraSlice\\SacraSlice\\SacraSlice.csproj",
   "expectedPackageFiles": [
@@ -16,9 +16,14 @@
     "C:\\Users\\aaron\\.nuget\\packages\\monogame.extended.tiled\\3.8.0\\monogame.extended.tiled.3.8.0.nupkg.sha512",
     "C:\\Users\\aaron\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.0.1641\\monogame.framework.desktopgl.3.8.0.1641.nupkg.sha512",
     "C:\\Users\\aaron\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\aaron\\.nuget\\packages\\nulastudio.netbeauty\\2.0.0-beta.4\\nulastudio.netbeauty.2.0.0-beta.4.nupkg.sha512",
+    "C:\\Users\\aaron\\.nuget\\packages\\nulastudio.netcorebeauty\\1.2.9.3\\nulastudio.netcorebeauty.1.2.9.3.nupkg.sha512",
     "C:\\Users\\aaron\\.nuget\\packages\\system.buffers\\4.4.0\\system.buffers.4.4.0.nupkg.sha512",
     "C:\\Users\\aaron\\.nuget\\packages\\system.numerics.vectors\\4.4.0\\system.numerics.vectors.4.4.0.nupkg.sha512",
-    "C:\\Users\\aaron\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.4.0\\system.runtime.compilerservices.unsafe.4.4.0.nupkg.sha512"
+    "C:\\Users\\aaron\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.4.0\\system.runtime.compilerservices.unsafe.4.4.0.nupkg.sha512",
+    "C:\\Users\\aaron\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\3.1.25\\microsoft.netcore.app.runtime.win-x64.3.1.25.nupkg.sha512",
+    "C:\\Users\\aaron\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\3.1.25\\microsoft.windowsdesktop.app.runtime.win-x64.3.1.25.nupkg.sha512",
+    "C:\\Users\\aaron\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\3.1.25\\microsoft.aspnetcore.app.runtime.win-x64.3.1.25.nupkg.sha512"
   ],
   "logs": []
 }

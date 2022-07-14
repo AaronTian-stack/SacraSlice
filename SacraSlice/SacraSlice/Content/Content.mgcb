@@ -14,23 +14,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Fonts/CandyBeans.fnt
-/importer:BitmapFontImporter
-/processor:BitmapFontProcessor
-/build:Fonts/CandyBeans.fnt
-
-#begin Fonts/CandyBeans_0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Fonts/CandyBeans_0.png
-
 #begin Fonts/FFFFoward.fnt
 /importer:BitmapFontImporter
 /processor:BitmapFontProcessor
@@ -47,23 +30,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Fonts/FFFFoward_0.png
-
-#begin Fonts/Helsinki.fnt
-/importer:BitmapFontImporter
-/processor:BitmapFontProcessor
-/build:Fonts/Helsinki.fnt
-
-#begin Fonts/Helsinki_0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Fonts/Helsinki_0.png
 
 #begin Fonts/JollyGoodSans.fnt
 /importer:BitmapFontImporter
@@ -82,230 +48,196 @@
 /processorParam:TextureFormat=Color
 /build:Fonts/JollyGoodSans_0.png
 
-#begin Fonts/Komika.fnt
-/importer:BitmapFontImporter
-/processor:BitmapFontProcessor
-/build:Fonts/Komika.fnt
-
-#begin Fonts/Komika_0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Fonts/Komika_0.png
-
-#begin Fonts/LanaPixel.fnt
-/importer:BitmapFontImporter
-/processor:BitmapFontProcessor
-/build:Fonts/LanaPixel.fnt
-
-#begin Fonts/LanaPixel_0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Fonts/LanaPixel_0.png
-
 #begin Music/JustFine.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Medium
 /build:Music/JustFine.mp3
 
 #begin Music/NotTheEnd.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Medium
 /build:Music/NotTheEnd.mp3
 
 #begin Music/Powerup.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Medium
 /build:Music/Powerup.mp3
 
 #begin Music/WatchBack.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Medium
 /build:Music/WatchBack.mp3
 
 #begin Sounds/Banana.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/Banana.wav
 
 #begin Sounds/Cardboard.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/Cardboard.wav
 
 #begin Sounds/Coin.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/Coin.wav
 
 #begin Sounds/Death.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/Death.wav
 
 #begin Sounds/Emoji.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/Emoji.wav
 
 #begin Sounds/EnergyDrain.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/EnergyDrain.wav
 
 #begin Sounds/FloorImpact.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/FloorImpact.wav
 
 #begin Sounds/HeavyImpact.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/HeavyImpact.wav
 
 #begin Sounds/Jumpscare.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/Jumpscare.wav
 
 #begin Sounds/Lose.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/Lose.wav
 
 #begin Sounds/LoseHealth.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/LoseHealth.wav
 
 #begin Sounds/Perfect.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/Perfect.wav
 
 #begin Sounds/PlayerHurt.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/PlayerHurt.wav
 
 #begin Sounds/PunchHard.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/PunchHard.wav
 
 #begin Sounds/Recharge.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/Recharge.wav
 
 #begin Sounds/RoboNoise.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/RoboNoise.wav
 
 #begin Sounds/Select.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/Select.wav
 
 #begin Sounds/Shield.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/Shield.wav
 
 #begin Sounds/Swoosh.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/Swoosh.wav
 
 #begin Sounds/SwordHit.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/SwordHit.wav
 
 #begin Sounds/SwordStrike.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/SwordStrike.wav
 
 #begin Sounds/Talk.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/Talk.wav
 
 #begin Sounds/TrackVHS.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/TrackVHS.wav
 
 #begin Sounds/Warning.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/Warning.wav
 
 #begin Sounds/Waves.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/Waves.wav
 
 #begin Sounds/Whistle.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/Whistle.wav
 
 #begin Sounds/Wood.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/Wood.wav
 
 #begin Sounds/Wrong.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
-/processorParam:Quality=Best
+/processorParam:Quality=Low
 /build:Sounds/Wrong.wav
 
 #begin Sprites/Sprites.atlas
