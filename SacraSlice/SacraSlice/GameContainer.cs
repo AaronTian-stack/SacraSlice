@@ -96,7 +96,7 @@ namespace SacraSlice
             var macos = "";
 
             if (Environment.OSVersion.Platform == PlatformID.Unix) // MAC OS
-                macos = System.AppDomain.CurrentDomain.BaseDirectory;
+                macos = "Content/"+System.AppDomain.CurrentDomain.BaseDirectory;
 
 
             atlasTexture = Content.Load<Texture2D>(macos + "Sprites/Sprites");
