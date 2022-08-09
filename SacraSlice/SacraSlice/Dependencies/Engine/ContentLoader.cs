@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -12,7 +13,12 @@ namespace SacraSlice.Dependencies.Engine
         {
             DirectoryInfo dir = new DirectoryInfo(contentManager.RootDirectory + "/" + contentFolder);
             if (!dir.Exists)
+            {
+                Console.WriteLine(dir);
+                Debug.WriteLine(dir);
                 throw new DirectoryNotFoundException();
+            }
+                
             Dictionary<string, T> result = new Dictionary<string, T>();
 
             FileInfo[] files = dir.GetFiles("*.*");
