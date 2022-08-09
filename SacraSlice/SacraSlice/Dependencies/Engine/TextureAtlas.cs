@@ -48,7 +48,13 @@ namespace SacraSlice.Dependencies.Engine
 
             // parse .ATLAS file and create table
 
-            StreamReader read = new StreamReader(@"Content/" + path);
+            StreamReader read;
+
+            if (Environment.OSVersion.Platform == PlatformID.Unix) // MAC OS
+                read = new StreamReader(path);
+            else // WINDOWS
+                read = new StreamReader(@"Content/" + path);
+
             char[] delimiterChars = { ' ', ',', '\t' };
 
             string animationName = null;
