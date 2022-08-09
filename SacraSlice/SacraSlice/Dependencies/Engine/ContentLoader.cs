@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace SacraSlice.Dependencies.Engine
@@ -11,14 +12,14 @@ namespace SacraSlice.Dependencies.Engine
     {
         public static Dictionary<string, T> LoadListContent<T>(this ContentManager contentManager, string contentFolder)
         {
-            DirectoryInfo dir = new DirectoryInfo(contentManager.RootDirectory + "/" + contentFolder);
-            if (!dir.Exists)
-            {
-                Console.WriteLine(dir);
-                Debug.WriteLine(dir);
-                throw new DirectoryNotFoundException();
-            }
-                
+            DirectoryInfo dir;
+
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT) // WINDOWS
+                dir = new DirectoryInfo(contentManager.RootDirectory + "/" + contentFolder);
+            else // MAC OS or Linux
+                dir = new DirectoryInfo(System.AppDomain.CurrentDomain.BaseDirectory
+                    + contentManager.RootDirectory + "/" + contentFolder);
+
             Dictionary<string, T> result = new Dictionary<string, T>();
 
             FileInfo[] files = dir.GetFiles("*.*");

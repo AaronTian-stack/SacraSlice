@@ -15,6 +15,7 @@ using SacraSlice.Dependencies.Engine.Scene;
 using SacraSlice.GameCode.Screens;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -67,7 +68,7 @@ namespace SacraSlice
 
             LoadScreen(splash, 1f);
 
-            GuiRenderer = new ImGUIRenderer(this).Initialize().RebuildFontAtlas();
+            //GuiRenderer = new ImGUIRenderer(this).Initialize().RebuildFontAtlas();
 
             this.Window.AllowUserResizing = true;
 
@@ -92,12 +93,18 @@ namespace SacraSlice
             sounds = ContentLoader.LoadListContent<SoundEffect>(this.Content, "Sounds");
             songs = ContentLoader.LoadListContent<Song>(this.Content, "Music");
 
-            atlasTexture = Content.Load<Texture2D>("Sprites/Sprites");
+            var macos = "";
 
-            atlas = new TextureAtlas(atlasTexture, "Sprites/Sprites.atlas");
+            if (Environment.OSVersion.Platform == PlatformID.Unix) // MAC OS
+                macos = System.AppDomain.CurrentDomain.BaseDirectory;
 
-            TextDrawer.AddFont("Main Font", Content.Load<BitmapFont>("Fonts/JollyGoodSans"));
-            TextDrawer.AddFont("Title Font", Content.Load<BitmapFont>("Fonts/FFFFoward"));
+
+            atlasTexture = Content.Load<Texture2D>(macos + "Sprites/Sprites");
+
+            atlas = new TextureAtlas(atlasTexture, macos + "Sprites/Sprites.atlas");
+
+            TextDrawer.AddFont("Main Font", Content.Load<BitmapFont>(macos + "Fonts/JollyGoodSans"));
+            TextDrawer.AddFont("Title Font", Content.Load<BitmapFont>(macos + "Fonts/FFFFoward"));
             TextDrawer.sb = _spriteBatch;
             TextDrawer.gd = GraphicsDevice;
             SpriteAligner.sb = _spriteBatch;

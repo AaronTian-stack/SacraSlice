@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "h3njGvLX209jgkJ8Hbshhl3Hzbg3UfvN9F7yWXjMHp2ZtizN171DhWsZEUtClkGF9Qdki2zCM6ZDbTVM/Oyt7A==",
+  "dgSpecHash": "YueYxIFAL4mAiWXOsFYfh9NWxKF5orlcUOrcGOiRyobn2xURVRPHRLrN8pQtFYM3fA145NgNXeAzPxefrYGaeA==",
   "success": true,
   "projectFilePath": "C:\\Aaron\\Monogame\\SacraSlice\\SacraSlice\\SacraSlice.csproj",
   "expectedPackageFiles": [
@@ -20,10 +20,7 @@
     "C:\\Users\\aaron\\.nuget\\packages\\nulastudio.netcorebeauty\\1.2.9.3\\nulastudio.netcorebeauty.1.2.9.3.nupkg.sha512",
     "C:\\Users\\aaron\\.nuget\\packages\\system.buffers\\4.4.0\\system.buffers.4.4.0.nupkg.sha512",
     "C:\\Users\\aaron\\.nuget\\packages\\system.numerics.vectors\\4.4.0\\system.numerics.vectors.4.4.0.nupkg.sha512",
-    "C:\\Users\\aaron\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.4.0\\system.runtime.compilerservices.unsafe.4.4.0.nupkg.sha512",
-    "C:\\Users\\aaron\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\3.1.25\\microsoft.netcore.app.runtime.win-x64.3.1.25.nupkg.sha512",
-    "C:\\Users\\aaron\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\3.1.25\\microsoft.windowsdesktop.app.runtime.win-x64.3.1.25.nupkg.sha512",
-    "C:\\Users\\aaron\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\3.1.25\\microsoft.aspnetcore.app.runtime.win-x64.3.1.25.nupkg.sha512"
+    "C:\\Users\\aaron\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.4.0\\system.runtime.compilerservices.unsafe.4.4.0.nupkg.sha512"
   ],
   "logs": []
 }
