@@ -4,7 +4,7 @@
 
 SacraSlice is an arcade style action game where you use your mouse to slice and fight through endless waves of enemies. How long can you survive the endless waves of reanimated junk?
 
-[Download and Play!](https://qhenki.itch.io/sacraslice)
+[Download and Play on itch.io!](https://qhenki.itch.io/sacraslice)
 
 [And watch the devlog too!](https://youtu.be/9SVrGz6ro0M)
 
