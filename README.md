@@ -9,3 +9,6 @@ SacraSlice is an arcade style action game where you use your mouse to slice and 
 [And watch the devlog too!](https://youtu.be/9SVrGz6ro0M)
 
 ![thumbnail](https://user-images.githubusercontent.com/84607804/189463017-4d62cb94-78b0-4f82-b865-ebf113af5ca9.png)
+
+https://user-images.githubusercontent.com/84607804/215403481-d05bdfc4-ae1c-4a3b-b059-6087e0f39d7f.mp4
+
